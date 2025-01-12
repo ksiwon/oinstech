@@ -1,0 +1,98 @@
+<!-- student_signup.hbs -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 정보 입력</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>학생 정보 입력</h1>
+    <form action="/signup_student" method="POST">
+        <input type="hidden" name="name" value="{{name}}">
+        <input type="hidden" name="password" value="{{password}}">
+        <input type="hidden" name="role" value="{{role}}">
+
+        <label for="student_gender">학생 성별:</label>
+        <select id="student_gender" name="studentInfo[학생_성별]">
+            <option value="상관없음">상관없음</option>
+            <option value="남성">남성</option>
+            <option value="여성">여성</option>
+        </select><br><br>
+
+        <label for="high_school_type">고교 유형:</label>
+        <select id="high_school_type" name="studentInfo[고교_유형]">
+            <option value="상관없음">상관없음</option>
+            <option value="일반고">일반고</option>
+            <option value="과학고/영재고">과학고/영재고</option>
+            <option value="자율고">자율고</option>
+            <option value="외고">외고</option>
+            <option value="국제고">국제고</option>
+        </select><br><br>
+
+        <label for="grade">학년:</label>
+        <select id="grade" name="studentInfo[학년]">
+            <option value="상관없음">상관없음</option>
+            <option value="초등학생">초등학생</option>
+            <option value="중1">중1</option>
+            <option value="중2">중2</option>
+            <option value="중3">중3</option>
+            <option value="고1">고1</option>
+            <option value="고2">고2</option>
+            <option value="고3">고3</option>
+            <option value="재수생">재수생</option>
+            <option value="대학생">대학생</option>
+        </select><br><br>
+
+        <label for="subjects">과목:</label>
+        <select id="subjects" name="studentInfo[과목]" multiple>
+            <option value="국어">국어</option>
+            <option value="수학">수학</option>
+            <option value="영어">영어</option>
+            <option value="물리학">물리학</option>
+            <option value="화학">화학</option>
+            <option value="생명과학">생명과학</option>
+            <option value="지구과학">지구과학</option>
+            <option value="정보/코딩">정보/코딩</option>
+        </select><br><br>
+
+        <label for="lesson_style">수업 성향:</label>
+        <select id="lesson_style" name="studentInfo[수업_성향]" multiple>
+            <option value="상관없음">상관없음</option>
+            <option value="개념부터 차근차근">개념부터 차근차근</option>
+            <option value="문제 풀이 중심">문제 풀이 중심</option>
+            <option value="내신 집중">내신 집중</option>
+            <option value="수능 집중">수능 집중</option>
+            <option value="단기간 집중 학습">단기간 집중 학습</option>
+            <option value="선행 위주 수업">선행 위주 수업</option>
+            <option value="창의력 강화">창의력 강화</option>
+            <option value="복습과 반복 강조">복습과 반복 강조</option>
+            <option value="약점 집중 보완">약점 집중 보완</option>
+        </select><br><br>
+
+        <label for="location">장소:</label>
+        <select id="location" name="studentInfo[장소]">
+            <option value="상관없음">상관없음</option>
+            <option value="강사 → 학생">강사 → 학생</option>
+            <option value="학생 → 강사">학생 → 강사</option>
+        </select><br><br>
+
+        <label for="face_to_face">대면 여부:</label>
+        <select id="face_to_face" name="studentInfo[대면_여부]">
+            <option value="상관없음">상관없음</option>
+            <option value="대면">대면</option>
+            <option value="비대면">비대면</option>
+        </select><br><br>
+
+        <label for="hourly_rate">시간당 가격:</label>
+        <select id="hourly_rate" name="studentInfo[시간당_가격]">
+            <option value="상관없음">상관없음</option>
+            <option value="3만원~">3만원~</option>
+            <option value="4만원~">4만원~</option>
+            <option value="5만원~">5만원~</option>
+        </select><br><br>
+
+        <button type
+::contentReference[oaicite:0]{index=0}
+ 
