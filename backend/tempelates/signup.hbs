@@ -1,25 +1,43 @@
+<!-- signup.hbs -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-        <link rel="stylesheet" href="css/login.css">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script>
+        function handleRoleChange() {
+            const role = document.getElementById('role').value;
+            const form = document.getElementById('signup-form');
+            if (role === 'student') {
+                form.action = '/signup/student';
+            } else if (role === 'teacher') {
+                form.action = '/signup/teacher';
+            } else {
+                form.action = '/signup';
+            }
+        }
+    </script>
 </head>
 <body>
-    
-<h1>Sign Up</h1>
+    <h1>회원가입</h1>
+    <form id="signup-form" action="/signup" method="POST">
+        <label for="name">이름:</label>
+        <input type="text" id="name" name="name" required><br><br>
 
-    <form action="/signup" method="post" >
-        <input placeholder="Name" name="name" type="text">
-        <br>
-        <input placeholder="Password" name="password" type="password">
-        <br>
-        <input class="sub" type="submit">
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="role">역할:</label>
+        <select id="role" name="role" required onchange="handleRoleChange()">
+            <option value="">선택하세요</option>
+            <option value="student">학생</option>
+            <option value="teacher">강사</option>
+        </select><br><br>
+
+        <button type="submit">다음</button>
+        
     </form>
-
-       <a href="/">Go back to login page</a>
-
 </body>
 </html>
