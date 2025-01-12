@@ -1,6 +1,8 @@
 const mongoose=require("mongoose")
 
-mongoose.connect("mongodb://localhost:27017/personalinfo")
+// mongoose.connect("mongodb://localhost:27017/personalinfo")
+
+mongoose.connect("mongodb+srv://park:12345@cluster0.wyv0t.mongodb.net/personalinfo")
 .then(()=>{
     console.log('mongoose connected');
 })

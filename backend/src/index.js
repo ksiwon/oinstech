@@ -29,9 +29,9 @@ app.get('/', (req, res) => {
 
 
 
-// app.get('/home', (req, res) => {
-//     res.render('home')
-// })
+app.get('/home', (req, res) => {
+    res.render('home')
+})
 
 app.post('/signup', async (req, res) => {
     
@@ -47,6 +47,7 @@ app.post('/signup', async (req, res) => {
     }
 
     await LogInCollection.insertMany([data])
+    res.status(221).render("home", { naming: `${req.body.password}+${req.body.name}` })
 
 
 //     const checking = await LogInCollection.findOne({ name: req.body.name })
