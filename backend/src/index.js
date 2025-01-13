@@ -39,18 +39,7 @@ app.get("/signup/teacher", (req, res) => {
     res.render("signup_teacher");
 });
 
-// /signup 경로 처리 추가
-app.post("/signup", (req, res) => {
-    const { role } = req.body;
 
-    if (role === "student") {
-        res.redirect(307, "/signup/student"); // 학생 경로로 리다이렉트
-    } else if (role === "teacher") {
-        res.redirect(307, "/signup/teacher"); // 강사 경로로 리다이렉트
-    } else {
-        res.status(400).send("유효하지 않은 역할입니다. 'student' 또는 'teacher'를 선택하세요.");
-    }
-});
 
 // 학생 회원가입 처리
 app.post("/signup/student", async (req, res) => {
@@ -159,6 +148,8 @@ app.post("/signup/teacher", async (req, res) => {
         res.status(500).send("회원가입에 실패했습니다.");
     }
 });
+
+
 
 // 로그인 처리
 app.post("/login", async (req, res) => {
