@@ -3,6 +3,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,7 +15,7 @@ app.use(cors({ origin: "*"}));
 
 // MongoDB 연결
 mongoose
-  .connect("mongodb+srv://park:12345@cluster0.wyv0t.mongodb.net/personalinfo2", {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
