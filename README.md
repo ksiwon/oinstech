@@ -1,6 +1,7 @@
 # 화면 실행하는 법
 
 cd backend -> yarn install -> yarn nodemon
+
 cd frontend -> yarn install -> yarn start
 
 # git merge 하는 법
