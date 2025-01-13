@@ -1,184 +1,121 @@
 const express = require("express");
 const path = require("path");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+require("dotenv").config();
+
 const app = express();
-const LogInCollection = require("./mongo_signup"); // 학생/강사 컬렉션 통합
-const Student = require("./mongo_student");
-const Teacher = require("./mongo_teacher");
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors({ origin: "*"}));
 
-const templatePath = path.join(__dirname, "../tempelates");
-const publicPath = path.join(__dirname, "../public");
-console.log(publicPath);
+// MongoDB 연결
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB connected"))
+  .catch((error) => console.error("MongoDB connection error:", error));
 
-app.set("view engine", "hbs");
-app.set("views", templatePath);
-app.use(express.static(publicPath));
-
-// 회원가입 화면 렌더링
-app.get("/signup", (req, res) => {
-    res.render("signup");
+// Student Schema
+const studentSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  gender: { type: String, required: true },
+  birth: { type: String, required: true },
+  phone: { type: String, required: true },
+  address: { type: String, required: true },
+  school: { type: String, required: true },
+  gradeHighschool: { type: [String] },
+  otherGradeHighschool: { type: String },
+  subject: { type: [String], required: true },
+  tendency: { type: [String], required: true },
+  location: { type: String, required: true },
+  face: { type: String, required: true },
+  payWant: { type: String },
+  introduction: { type: String, required: true },
+  detail: { type: String, required: true },
 });
 
-// 로그인 화면 렌더링
+const Student = mongoose.model("Student", studentSchema);
+
+// Teacher Schema
+const teacherSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  gender: { type: String, required: true },
+  birth: { type: String, required: true },
+  phone: { type: String, required: true },
+  address: { type: String, required: true },
+  university: { type: String, required: true },
+  otherUniversity: { type: String },
+  major: { type: String, required: true },
+  gradeUniversity: { type: Number, required: true },
+  personality: { type: [String], required: true },
+  subject: { type: [String], required: true },
+  tendency: { type: [String], required: true },
+  location: { type: String, required: true },
+  face: { type: String, required: true },
+  pay: { type: Number, required: true },
+  introduction: { type: String, required: true },
+  detail: { type: String, required: true },
+});
+
+const Teacher = mongoose.model("Teacher", teacherSchema);
+
+// 기본 라우트
 app.get("/", (req, res) => {
-    res.render("login");
+  res.send("Backend server is running!");
 });
 
-// 홈 화면 렌더링
-app.get("/home", (req, res) => {
-    res.render("home");
-});
+// 학생 API
+app.post("/api/students", async (req, res) => {
+  const studentData = req.body;
 
-// 학생 회원가입 화면
-app.get("/signup/student", (req, res) => {
-    res.render("signup_student");
-});
-
-// 강사 회원가입 화면
-app.get("/signup/teacher", (req, res) => {
-    res.render("signup_teacher");
-});
-
-
-
-// 학생 회원가입 처리
-app.post("/signup/student", async (req, res) => {
-    const {
-        id,
-        password,
-        name,
-        gender,
-        birth,
-        phone,
-        address,
-        school,
-        gradeHighschool,
-        otherGradeHighschool,
-        subject,
-        tendency,
-        location,
-        face,
-        payWant,
-        introduction,
-        detail
-    } = req.body;
-
-    const data = {
-        id,
-        password,
-        role: "student",
-        name,
-        gender,
-        birth,
-        phone,
-        address,
-        school,
-        gradeHighschool,
-        otherGradeHighschool,
-        subject,
-        tendency,
-        location,
-        face,
-        payWant,
-        introduction,
-        detail
-    };
-
-    try {
-        await Student.create(data);
-        res.status(201).render("home", { naming: `${name}` });
-    } catch (error) {
-        console.error("학생 회원가입 오류:", error);
-        res.status(500).send("회원가입에 실패했습니다.");
+  try {
+    // 중복 확인
+    const existingStudent = await Student.findOne({ id: studentData.id });
+    if (existingStudent) {
+        return res.status(400).json({ message: "Student with this ID already exists" });
     }
+    
+    const newStudent = new Student(studentData);
+    await newStudent.save();
+    res.status(201).json({ message: "Student created successfully", student: newStudent });
+  } catch (error) {
+    console.error("Error creating student:", error);
+    res.status(500).json({ message: "Failed to create student", error });
+  }
 });
 
-// 강사 회원가입 처리
-app.post("/signup/teacher", async (req, res) => {
-    const {
-        id,
-        password,
-        name,
-        gender,
-        birth,
-        phone,
-        address,
-        university,
-        otherUniversity,
-        major,
-        gradeUniversity,
-        personality,
-        subject,
-        tendency,
-        location,
-        face,
-        pay,
-        introduction,
-        detail
-    } = req.body;
+// 선생님 API
+app.post("/api/teachers", async (req, res) => {
+  const teacherData = req.body;
 
-    const data = {
-        id,
-        password,
-        role: "teacher",
-        name,
-        gender,
-        birth,
-        phone,
-        address,
-        university,
-        otherUniversity,
-        major,
-        gradeUniversity,
-        personality,
-        subject,
-        tendency,
-        location,
-        face,
-        pay,
-        introduction,
-        detail
-    };
-
-    try {
-        await Teacher.create(data);
-        res.status(201).render("home", { naming: `${name}` });
-    } catch (error) {
-        console.error("강사 회원가입 오류:", error);
-        res.status(500).send("회원가입에 실패했습니다.");
+  try {
+    // 중복 확인
+    const existingTeacher = await Teacher.findOne({ id: teacherData.id });
+    if (existingTeacher) {
+        return res.status(400).json({ message: "Teacher with this ID already exists" });
     }
+
+    const newTeacher = new Teacher(teacherData);
+    await newTeacher.save();
+    res.status(201).json({ message: "Teacher created successfully", teacher: newTeacher });
+  } catch (error) {
+    console.error("Error creating teacher:", error);
+    res.status(500).json({ message: "Failed to create teacher", error });
+  }
 });
 
-
-
-// 로그인 처리
-app.post("/login", async (req, res) => {
-    const { id, password } = req.body;
-
-    try {
-        // 학생 모델에서 찾기
-        const student = await Student.findOne({ id });
-        if (student && student.password === password) {
-            return res.status(201).render("home", { naming: `${student.name}`, role: "student" });
-        }
-
-        // 강사 모델에서 찾기
-        const teacher = await Teacher.findOne({ id });
-        if (teacher && teacher.password === password) {
-            return res.status(201).render("home", { naming: `${teacher.name}`, role: "teacher" });
-        }
-
-        // 아이디 또는 비밀번호가 잘못된 경우
-        res.status(400).send("아이디 또는 비밀번호가 올바르지 않습니다.");
-    } catch (error) {
-        console.error("로그인 오류:", error);
-        res.status(500).send("로그인 중 오류가 발생했습니다.");
-    }
-});
-
-
+// 서버 시작
 app.listen(port, () => {
-    console.log("서버가 실행되었습니다. 포트:", port);
+  console.log(`Server is running on port ${port}`);
 });
