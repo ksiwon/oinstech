@@ -1,18 +1,5 @@
 const mongoose = require("mongoose");
 
-mongoose
-  .connect("mongodb://localhost:27017/personalinfo2", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Mongoose connected");
-  })
-  .catch((e) => {
-    console.log("Connection failed", e);
-  });
-
-
 const studentSchema = new mongoose.Schema(
   {
     id: {
