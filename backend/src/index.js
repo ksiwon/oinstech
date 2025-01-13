@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const LogInCollection = require("./mongo_signup"); // 학생/강사 컬렉션 통합
+const Student = require("./mongo_student");
+const Teacher = require("./mongo_teacher");
 const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -85,7 +87,7 @@ app.post("/signup/student", async (req, res) => {
     };
 
     try {
-        await LogInCollection.create(data);
+        await Student.create(data);
         res.status(201).render("home", { naming: `${name}` });
     } catch (error) {
         console.error("학생 회원가입 오류:", error);
@@ -141,7 +143,7 @@ app.post("/signup/teacher", async (req, res) => {
     };
 
     try {
-        await LogInCollection.create(data);
+        await Teacher.create(data);
         res.status(201).render("home", { naming: `${name}` });
     } catch (error) {
         console.error("강사 회원가입 오류:", error);
@@ -156,18 +158,26 @@ app.post("/login", async (req, res) => {
     const { id, password } = req.body;
 
     try {
-        const user = await LogInCollection.findOne({ id });
-
-        if (user && user.password === password) {
-            res.status(201).render("home", { naming: `${user.name}`, role: user.role });
-        } else {
-            res.status(400).send("아이디 또는 비밀번호가 올바르지 않습니다.");
+        // 학생 모델에서 찾기
+        const student = await Student.findOne({ id });
+        if (student && student.password === password) {
+            return res.status(201).render("home", { naming: `${student.name}`, role: "student" });
         }
+
+        // 강사 모델에서 찾기
+        const teacher = await Teacher.findOne({ id });
+        if (teacher && teacher.password === password) {
+            return res.status(201).render("home", { naming: `${teacher.name}`, role: "teacher" });
+        }
+
+        // 아이디 또는 비밀번호가 잘못된 경우
+        res.status(400).send("아이디 또는 비밀번호가 올바르지 않습니다.");
     } catch (error) {
         console.error("로그인 오류:", error);
         res.status(500).send("로그인 중 오류가 발생했습니다.");
     }
 });
+
 
 app.listen(port, () => {
     console.log("서버가 실행되었습니다. 포트:", port);
