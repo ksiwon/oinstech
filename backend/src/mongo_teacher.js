@@ -138,7 +138,7 @@ const teacherSchema = new mongoose.Schema(
     },
     prefered_school: {
         type: String,
-        enum: ["일반고", "과학고/영재고", "자율고", "외고", "국제고", "해당없음"],
+        enum: ["일반고", "과학고/영재고", "자율고", "외고", "국제고", "고교 미선호"],
         required: true,
       },
     tendency: {

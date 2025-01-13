@@ -38,7 +38,7 @@ const Header: React.FC = () => {
   }
 
   const handleTeacherLogin = () => {
-    navigate("/tester");
+    navigate("/login/teacher");
   }
 
   return (
