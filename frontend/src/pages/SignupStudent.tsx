@@ -252,6 +252,25 @@ const SignupStudent: React.FC = () => {
         </ContentInput>
       </Content>
 
+      {/* 성별 */}
+            <Content>
+        <ContentName>성별</ContentName>
+        <ContentInputContainer>
+        {optionsMap.gender.map((gender) => (
+          <ContentInput key={gender}>
+            <input
+              type="radio"
+              name="gender"
+              value={gender}
+              checked={formData.gender === gender}
+              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+            />
+            {gender}
+          </ContentInput>
+        ))}
+        </ContentInputContainer>
+      </Content>
+
       {/* 생년월일 */}
       <Content>
         <ContentName>생년월일</ContentName>
@@ -276,25 +295,6 @@ const SignupStudent: React.FC = () => {
         <ContentInput>
             <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} />
         </ContentInput>
-      </Content>
-
-      {/* 성별 */}
-      <Content>
-        <ContentName>성별</ContentName>
-        <ContentInputContainer>
-        {optionsMap.gender.map((gender) => (
-          <ContentInput key={gender}>
-            <input
-              type="radio"
-              name="gender"
-              value={gender}
-              checked={formData.gender === gender}
-              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-            />
-            {gender}
-          </ContentInput>
-        ))}
-        </ContentInputContainer>
       </Content>
 
         {/* 지역 */}
@@ -391,6 +391,23 @@ const SignupStudent: React.FC = () => {
         ))}
         </ContentInputContainer>
       </Content>
+      
+      {/* 과목 */}
+      <Content>
+        <ContentName>과목</ContentName>
+        <ContentInputContainer>
+        {optionsMap.subject.map((subject) => (
+          <ContentInput key={subject}>
+            <input
+              type="checkbox"
+              checked={formData.subject.includes(subject)}
+              onChange={() => handleCheckboxSelect("subject", subject)}
+            />
+            {subject}
+          </ContentInput>
+        ))}
+        </ContentInputContainer>
+      </Content>
 
       {/* 선호 성별 */}
       <Content>
@@ -421,23 +438,6 @@ const SignupStudent: React.FC = () => {
               onChange={() => handleCheckboxSelect("perfered_school", perfered_school)}
             />
             {perfered_school}
-          </ContentInput>
-        ))}
-        </ContentInputContainer>
-      </Content>
-
-      {/* 과목 */}
-      <Content>
-        <ContentName>과목</ContentName>
-        <ContentInputContainer>
-        {optionsMap.subject.map((subject) => (
-          <ContentInput key={subject}>
-            <input
-              type="checkbox"
-              checked={formData.subject.includes(subject)}
-              onChange={() => handleCheckboxSelect("subject", subject)}
-            />
-            {subject}
           </ContentInput>
         ))}
         </ContentInputContainer>

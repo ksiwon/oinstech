@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setStudentData } from "../redux/slices/userSlice"; // Redux 액션 가져오기
+import { setTeacherData } from "../redux/slices/userSlice"; // Redux 액션 가져오기
 
-const LoginStudent: React.FC = () => {
+const LoginTeacher: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch(); // Redux 디스패치 함수
     const [id, setId] = useState<string>(""); // ID 상태
@@ -16,7 +16,7 @@ const LoginStudent: React.FC = () => {
 
     // 회원가입 버튼 클릭 핸들러
     const handleSignupClick = () => {
-        navigate("/signup/student");
+        navigate("/signup/teacher");
     };
 
     // 로그인 버튼 클릭 핸들러
@@ -24,13 +24,13 @@ const LoginStudent: React.FC = () => {
         setError(""); // 오류 메시지 초기화
         try {
             // API 호출
-            const response = await axios.post("http://localhost:5000/api/students/login", {
+            const response = await axios.post("http://localhost:5000/api/teachers/login", {
                 id,
                 password,
             });
 
             // Redux에 로그인 데이터 저장
-            dispatch(setStudentData(response.data));
+            dispatch(setTeacherData(response.data));
 
             // 로그인 성공 후 대시보드로 이동
             navigate("/");
@@ -55,8 +55,8 @@ const LoginStudent: React.FC = () => {
                         <ContentInput>
                             <input
                                 type="text"
-                                id="student-id"
-                                name="student-id"
+                                id="teacher-id"
+                                name="teacher-id"
                                 value={id}
                                 onChange={(e) => setId(e.target.value)} // ID 입력 핸들러
                                 required
@@ -87,7 +87,7 @@ const LoginStudent: React.FC = () => {
     );
 };
 
-export default LoginStudent;
+export default LoginTeacher;
 
 const Wrapper = styled.div`
     display: flex;
