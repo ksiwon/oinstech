@@ -54,6 +54,7 @@ export const NavItem = styled.div`
 export const AuthSection = styled.div`
   display: flex;
   align-items: center;
+  gap: 16px;
 `;
 
 // 유저 섹션 (로그인 상태)

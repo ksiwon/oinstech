@@ -7,6 +7,7 @@ import GlobalStyle from './styles/GlobalStyle';
 import Tester from './pages/Tester';
 import Home from './pages/Home';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import SignupStudent from './pages/SignupStudent';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/schedule" element={<div>Schedule Page</div>} />
             <Route path="/chat" element={<div>Chat Page</div>} />
             <Route path="/tester" element={<Tester />} />
+            <Route path="/signup/student" element={<div><SignupStudent /></div>} />
           </Routes>
         </Router>
       </ThemeProvider>

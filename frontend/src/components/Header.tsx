@@ -33,7 +33,11 @@ const Header: React.FC = () => {
     navigate("/");
   };
 
-  const handleLogin = () => {
+  const handleStudentLogin = () => {
+    navigate("/signup/student");
+  }
+
+  const handleTeacherLogin = () => {
     navigate("/tester");
   }
 
@@ -62,7 +66,8 @@ const Header: React.FC = () => {
         </UserSection>
       ) : (
         <AuthSection>
-          <AuthButton onClick={handleLogin}>Login</AuthButton>
+          <AuthButton onClick={handleStudentLogin}>학생 Login</AuthButton>
+          <AuthButton onClick={handleTeacherLogin}>강사 Login</AuthButton>
         </AuthSection>
       )}
     </HeaderContainer>
