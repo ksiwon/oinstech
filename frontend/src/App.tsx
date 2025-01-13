@@ -1,11 +1,12 @@
 import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // BrowserRouter와 Routes, Route를 가져옵니다.
-import { theme } from './styles/theme'; // theme.ts 경로에 맞게 수정
 import './App.css';
+import { ThemeProvider } from 'styled-components';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { theme } from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Tester from './pages/Tester';
 import Home from './pages/Home';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
   return (
