@@ -3,9 +3,11 @@ import { useDispatch } from "react-redux";
 import { setStudentData, setTeacherData, clearUserData } from "../redux/slices/userSlice";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Tester: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // 학생 로그인 핸들러
   const handleStudentLogin = () => {
@@ -30,6 +32,7 @@ const Tester: React.FC = () => {
         detail: "수학과 영어를 배우고 싶습니다.",
       })
     );
+    navigate("/");
   };
 
   // 선생 로그인 핸들러
@@ -57,11 +60,13 @@ const Tester: React.FC = () => {
         detail: "10년 경력의 강사입니다.",
       })
     );
+    navigate("/");
   };
 
   // 로그아웃 핸들러
   const handleLogout = () => {
     dispatch(clearUserData());
+    navigate("/");
   };
 
   return (
