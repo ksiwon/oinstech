@@ -17,7 +17,7 @@ const Tester: React.FC = () => {
   const navigate = useNavigate();
 
   const studentData = {
-    id: "student1",
+    id: "student2",
     password: "password123",
     name: "홍길동",
     gender: "남성",
@@ -37,7 +37,7 @@ const Tester: React.FC = () => {
   };
 
   const teacherData = {
-    id: "teacher1",
+    id: "teacher2",
     password: "password123",
     name: "김선생",
     gender: "여성",
@@ -62,7 +62,7 @@ const Tester: React.FC = () => {
   const handleStudentLogin = () => {
     dispatch(
       setStudentData({
-        id: "student1",
+        id: "student2",
         password: "password123",
         name: "홍길동",
         gender: "남성",
@@ -88,7 +88,7 @@ const Tester: React.FC = () => {
   const handleTeacherLogin = () => {
     dispatch(
       setTeacherData({
-        id: "teacher1",
+        id: "teacher2",
         password: "password123",
         name: "김선생",
         gender: "여성",

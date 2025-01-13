@@ -26,6 +26,7 @@ mongoose
 const studentSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: { type: String, enum: ["student"], required: true },
   name: { type: String, required: true },
   gender: { type: String, required: true },
   prefered_gender: { type: [String], required: true },
@@ -34,19 +35,18 @@ const studentSchema = new mongoose.Schema({
   district: { type: String, required: true },
   neighborhood: { type: String, required: true },
   phone: { type: String, required: true },
-  address: { type: String, required: true },
   school: { type: String, required: true },
-  prefered_school: { type: String, required: true },
+  prefered_school: { type: [String], required: true },
   prefered_personality: { type: [String], required: true },
-  university: { type: String, required: true },
   gradeHighschool: { type: [String] },
   otherGradeHighschool: { type: String },
   subject: { type: [String], required: true },
   prefered_tendency: { type: [String], required: true },
-  face: { type: String, required: true },
+  face: { type: [String], required: true },
   payWant: { type: String },
   introduction: { type: String, required: true },
   detail: { type: String, required: true },
+  location: { type: [String], required: true },
 });
 
 const Student = mongoose.model("Student", studentSchema);
@@ -55,6 +55,7 @@ const Student = mongoose.model("Student", studentSchema);
 const teacherSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: { type: String, enum: ["teacher"], required: true },
   name: { type: String, required: true },
   gender: { type: String, required: true },
   prefered_gender: { type: [String], required: true },
@@ -78,6 +79,7 @@ const teacherSchema = new mongoose.Schema({
   pay: { type: Number, required: true },
   introduction: { type: String, required: true },
   detail: { type: String, required: true },
+  location: { type: [String], required: true },
 });
 
 const Teacher = mongoose.model("Teacher", teacherSchema);
