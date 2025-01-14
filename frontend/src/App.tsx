@@ -12,6 +12,7 @@ import LoginStudent from './pages/LoginStudent';
 import SignupTeacher from './pages/SignupTeacher';
 import LoginTeacher from './pages/LoginTeacher';
 import Mypage from './pages/Mypage';
+import Chat from './pages/Chat';
 
 function App() {
   return (
@@ -24,13 +25,13 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<div>Search Page</div>} />
             <Route path="/match" element={<div>Match Page</div>} />
-            <Route path="/chat" element={<div>Chat Page</div>} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/tester" element={<Tester />} />
-            <Route path="/signup/student" element={<div><SignupStudent /></div>} />
-            <Route path="/login/student" element={<div><LoginStudent /></div>} />
-            <Route path="/signup/teacher" element={<div><SignupTeacher /></div>} />
-            <Route path="/login/teacher" element={<div><LoginTeacher /></div>} />
-            <Route path="/mypage" element={<div><Mypage /></div>} />
+            <Route path="/signup/student" element={<SignupStudent />} />
+            <Route path="/login/student" element={<LoginStudent />} />
+            <Route path="/signup/teacher" element={<SignupTeacher />} />
+            <Route path="/login/teacher" element={<LoginTeacher />} />
+            <Route path="/mypage" element={<Mypage />} />
           </Routes>
         </Router>
       </ThemeProvider>

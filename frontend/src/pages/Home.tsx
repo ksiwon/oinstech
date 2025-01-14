@@ -5,9 +5,12 @@ import Footer from "../components/Footer";
 import homeBg from "../assets/homeBg.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const role = useSelector((state: RootState) => state.user.role);
+  const navigate = useNavigate();
+  const handleNavClick = (path: string) => navigate(path);
 
   const buttonText = role === "student" ? "강사 찾기" : "학생 찾기";
 
@@ -53,15 +56,15 @@ const Home: React.FC = () => {
               <Subtitle>내게 맞는 튜터와 함께, 미래로 가는 한 걸음</Subtitle>
             </TextContainer>
             <ButtonContainer>
-              <ActionButton color="green">
+              <ActionButton color="green" onClick={() => handleNavClick("/search")}>
                 <Icon className="fas fa-search" />
                 <ButtonText>{buttonText}</ButtonText>
               </ActionButton>
-              <ActionButton color="turkey">
+              <ActionButton color="turkey" onClick={() => handleNavClick("/match")}>
                 <Icon className="fas fa-users" />
                 <ButtonText>그룹 매칭</ButtonText>
               </ActionButton>
-              <ActionButton color="blue">
+              <ActionButton color="blue" onClick={() => handleNavClick("/chat")}>
                 <Icon className="fas fa-comments" />
                 <ButtonText>채팅</ButtonText>
               </ActionButton>
