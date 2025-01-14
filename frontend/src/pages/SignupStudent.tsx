@@ -550,7 +550,7 @@ const SignupStudent: React.FC = () => {
 
       {/* 제출 버튼 */}
       <ButtonContainer>
-        <Button1 onClick={() => navigate("/")}>이전</Button1>
+        <Button1 onClick={() => navigate(-1)}>이전</Button1>
         <Button2 onClick={() => handleSubmit()}>회원가입</Button2>
       </ButtonContainer>
       <Footer /> 

@@ -15,8 +15,6 @@ interface TeacherCardProps {
     tendency: string[];
 }
 
-
-
 const TeacherCard: React.FC<TeacherCardProps> = ({ id, name, university, major, gradeUniversity, neighborhood, introduction, subject, personality, tendency }) => {
     const navigate = useNavigate();
     return (
