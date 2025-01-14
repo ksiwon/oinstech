@@ -62,8 +62,8 @@ const Home: React.FC = () => {
                 <ButtonText>그룹 매칭</ButtonText>
               </ActionButton>
               <ActionButton color="blue">
-                <Icon className="fas fa-calendar-alt" />
-                <ButtonText>스케줄 관리</ButtonText>
+                <Icon className="fas fa-comments" />
+                <ButtonText>채팅</ButtonText>
               </ActionButton>
             </ButtonContainer>
           </TextButtonContainer>
