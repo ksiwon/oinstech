@@ -1,50 +1,71 @@
 const express = require('express');
-const socket = require('socket.io');
 const http = require('http');
+const socket = require('socket.io');
 const fs = require('fs');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
 const io = socket(server);
 
-app.get('/', function (req, res) {
-    fs.readFile('./client/index.html', function (error, data) {
-        if (error) {
-            res.send('에러');
-        } else {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(data);
-        }
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// 유저별 채팅 데이터
+let chatData = {}; // { "학생": { "선생님": [ ...messages ] } }
+
+// 채팅 데이터 읽기/저장
+function saveChatData() {
+    fs.writeFileSync('./chatData.json', JSON.stringify(chatData, null, 2));
+}
+
+function loadChatData() {
+    if (fs.existsSync('./chatData.json')) {
+        chatData = JSON.parse(fs.readFileSync('./chatData.json'));
+    }
+}
+loadChatData();
+
+io.on('connection', (socket) => {
+    console.log("새로운 유저가 연결되었습니다.");
+
+    // 새 사용자 접속 처리
+    socket.on('newUser', (username) => {
+        socket.username = username;
+
+        if (!chatData[username]) chatData[username] = {}; // 사용자 데이터 초기화
+
+        // 사용자 목록 전송
+        socket.emit('userList', Object.keys(chatData[username]));
     });
-});
 
-// 새로운 유저 연결 처리
-io.on('connection', function (socket) {
-    console.log("새로운 유저가 입장했습니다.");
-
-    // 유저가 접속했을 때
-    socket.on('newUser', function (name) {
-        socket.name = name;
-        io.sockets.emit('update', { type: 'connect', name: 'SERVER', message: `${name}님이 접속하였습니다.` });
+    // 특정 사용자와의 채팅 불러오기
+    socket.on('loadChat', (otherUser) => {
+        const userChats = chatData[socket.username]?.[otherUser] || [];
+        socket.emit('chatHistory', userChats);
     });
 
     // 메시지 전송 처리
-    socket.on('message', function (data) {
-        data.name = socket.name;
-        console.log(data);
+    socket.on('message', ({ to, message }) => {
+        const timestamp = new Date().toISOString();
 
-        // 모든 사용자에게 메시지 전송
-        io.sockets.emit('update', data);
-    });
+        // 채팅 데이터 저장
+        if (!chatData[socket.username][to]) chatData[socket.username][to] = [];
+        if (!chatData[to][socket.username]) chatData[to][socket.username] = [];
 
-    // 유저가 나갔을 때
-    socket.on('disconnect', function () {
-        console.log(`${socket.name}님이 나가셨습니다.`);
-        io.sockets.emit('update', { type: 'disconnect', name: 'SERVER', message: `${socket.name}님이 나가셨습니다.` });
+        const newMessage = { message, timestamp, from: socket.username };
+
+        chatData[socket.username][to].push(newMessage);
+        chatData[to][socket.username].push(newMessage);
+
+        saveChatData();
+
+        // 상대방에게 메시지 전송
+        socket.broadcast.emit('updateChat', newMessage);
     });
 });
 
-// 서버 실행
-server.listen(3000, function () {
-    console.log('서버 실행 중: http://localhost:3000');
+server.listen(3000, () => {
+    console.log("서버 실행 중: http://localhost:3000");
 });
