@@ -1653,6 +1653,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@noonnu/handletter@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@noonnu/handletter/-/handletter-0.1.0.tgz#dff0656eeba3370e2f1caf0660da3af3e0944476"
+  integrity sha512-DWcE5B1RKnWLEXR5PCg8x3flMEG8zcWfx06P/kMnULYzyoZEVuSSkUKiuiCqYCbIJYIozLoyh/i8fcfdZKk4rA==
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"

@@ -13,6 +13,8 @@ import SignupTeacher from './pages/SignupTeacher';
 import LoginTeacher from './pages/LoginTeacher';
 import Mypage from './pages/Mypage';
 import Chat from './pages/Chat';
+import FindStudent from './pages/FindStudent';
+import FindTeacher from './pages/FindTeacher';
 
 function App() {
   return (
@@ -23,7 +25,8 @@ function App() {
           <Routes>
             {/* 라우트 설정 */}
             <Route path="/" element={<Home />} />
-            <Route path="/search" element={<div>Search Page</div>} />
+            <Route path="/search/teacher" element={<FindStudent />} />
+            <Route path="/search/student" element={<FindTeacher />} />
             <Route path="/match" element={<div>Match Page</div>} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/tester" element={<Tester />} />

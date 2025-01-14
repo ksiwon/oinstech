@@ -12,8 +12,6 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const handleNavClick = (path: string) => navigate(path);
 
-  const buttonText = role === "student" ? "강사 찾기" : "학생 찾기";
-
   const lines = [
     "과외 플랫폼의 새로운 패러다임",
     "성공적인 여정을 위한 최고의 커넥션",
@@ -47,8 +45,8 @@ const Home: React.FC = () => {
             </LineContainer>
           ))}
         </Main>
-      ) : (
-        // Login 상태
+      ) : ( role === "student" ? (
+        // Student Login 상태
         <MainLoggedIn>
           <TextButtonContainer>
             <TextContainer>
@@ -56,9 +54,9 @@ const Home: React.FC = () => {
               <Subtitle>내게 맞는 튜터와 함께, 미래로 가는 한 걸음</Subtitle>
             </TextContainer>
             <ButtonContainer>
-              <ActionButton color="green" onClick={() => handleNavClick("/search")}>
+              <ActionButton color="green" onClick={() => handleNavClick("/search/teacher")}>
                 <Icon className="fas fa-search" />
-                <ButtonText>{buttonText}</ButtonText>
+                <ButtonText>강사 찾기</ButtonText>
               </ActionButton>
               <ActionButton color="turkey" onClick={() => handleNavClick("/match")}>
                 <Icon className="fas fa-users" />
@@ -72,7 +70,32 @@ const Home: React.FC = () => {
           </TextButtonContainer>
           <ImageContainer />
         </MainLoggedIn>
-      )}
+      ) : (
+        // Teacher Login 상태
+        <MainLoggedIn>
+          <TextButtonContainer>
+            <TextContainer>
+              <MainTitle>Co:next</MainTitle>
+              <Subtitle>내게 맞는 튜터와 함께, 미래로 가는 한 걸음</Subtitle>
+            </TextContainer>
+            <ButtonContainer>
+              <ActionButton color="green" onClick={() => handleNavClick("/search/student")}>
+                <Icon className="fas fa-search" />
+                <ButtonText>학생 찾기</ButtonText>
+              </ActionButton>
+              <ActionButton color="turkey" onClick={() => handleNavClick("/match")}>
+                <Icon className="fas fa-users" />
+                <ButtonText>그룹 매칭</ButtonText>
+              </ActionButton>
+              <ActionButton color="blue" onClick={() => handleNavClick("/chat")}>
+                <Icon className="fas fa-comments" />
+                <ButtonText>채팅</ButtonText>
+              </ActionButton>
+            </ButtonContainer>
+          </TextButtonContainer>
+          <ImageContainer />
+        </MainLoggedIn>
+      ))}
       <Footer />
     </Wrapper>
   );

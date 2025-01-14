@@ -3,7 +3,6 @@ const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
 const app = express();
