@@ -135,23 +135,13 @@ interface TeacherData {
     | "복습과 반복 강조"
     | "약점 집중 보완"
   )[];
+  prefered_school: string[];
   location: "강사 → 학생" | "학생 → 강사";
   face: "대면" | "비대면";
   pay: number;
   introduction: string;
   detail: string;
-  prefered_gender: "남성" | "여성";
-  prefered_personality?: (
-    | "열정적임"
-    | "친근함"
-    | "다정함"
-    | "유머러스함"
-    | "이해심 많음"
-    | "꼼꼼함"
-    | "책임감 강함"
-    | "차분함"
-    | "창의적임"
-  )[];
+  prefered_gender: ("남성" | "여성")[];
   prefered_gradeHighschool?: (
     | "초등학생"
     | "중1"

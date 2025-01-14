@@ -67,6 +67,7 @@ export const UserSection = styled(AuthSection)`
 // 사용자 이름
 export const UserName = styled.div`
   margin-right: 16px;
+  cursor: pointer;
 `;
 
 // 인증 버튼

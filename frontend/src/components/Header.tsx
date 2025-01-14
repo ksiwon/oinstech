@@ -41,6 +41,10 @@ const Header: React.FC = () => {
     navigate("/login/teacher");
   }
 
+  const handleMypage = () => {
+    navigate("/mypage");
+  }
+
   return (
     <HeaderContainer>
       {/* 로고 및 네비게이션 */}
@@ -52,7 +56,6 @@ const Header: React.FC = () => {
               {role === "teacher" ? "학생 찾기" : "강사 찾기"}
             </NavItem>
             <NavItem onClick={() => handleNavClick("/match")}>그룹 매칭</NavItem>
-            <NavItem onClick={() => handleNavClick("/schedule")}>스케줄 관리</NavItem>
             <NavItem onClick={() => handleNavClick("/chat")}>채팅</NavItem>
           </Nav>
         )}
@@ -61,7 +64,7 @@ const Header: React.FC = () => {
       {/* 인증 섹션 */}
       {isLoggedIn ? (
         <UserSection>
-          <UserName>{username} 님</UserName>
+          <UserName onClick={handleMypage}>{username} 님</UserName>
           <AuthButton onClick={handleLogout}>Log Out</AuthButton>
         </UserSection>
       ) : (
