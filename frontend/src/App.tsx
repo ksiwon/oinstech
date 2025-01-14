@@ -12,13 +12,16 @@ import LoginStudent from './pages/LoginStudent';
 import SignupTeacher from './pages/SignupTeacher';
 import LoginTeacher from './pages/LoginTeacher';
 import Mypage from './pages/Mypage';
-//import Chat from './pages/Chat';
+import Chat from './pages/Chat';
 import FindStudent from './pages/FindStudent';
 import FindTeacher from './pages/FindTeacher';
 import OtherpageTeacher from './pages/OtherpageTeacher';
 import OtherpageStudent from './pages/OtherpageStudent';
-import Chat1 from './pages/Chat';
+import Chat1 from './pages/Chat1';
 import Chat2 from './pages/Chat2';
+import FindGroup from './pages/FindGroup';
+import Grouppage from './pages/Grouppage';
+import Mygroup from './pages/Mygroup';
 
 function App() {
   return (
@@ -33,9 +36,15 @@ function App() {
             <Route path="/search/student" element={<FindTeacher />} />
             <Route path="/search/teacher/:id" element={<OtherpageTeacher />} />
             <Route path="/search/student/:id" element={<OtherpageStudent />} />
-            <Route path="/match" element={<div>Match Page</div>} />
+            
             <Route path="/chat/student/:id" element={<Chat1 />} />
             <Route path="/chat/teacher/:id" element={<Chat2 />} />
+        
+            <Route path="/search/group" element={<FindGroup />} />
+            <Route path="/search/group/:id" element={<Grouppage />} />
+            <Route path="/mygroup" element={<Mygroup />} />
+            <Route path="/chat" element={<Chat />} />
+
             <Route path="/tester" element={<Tester />} />
             <Route path="/signup/student" element={<SignupStudent />} />
             <Route path="/login/student" element={<LoginStudent />} />
