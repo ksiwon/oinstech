@@ -50,11 +50,16 @@ const Header: React.FC = () => {
       {/* 로고 및 네비게이션 */}
       <LogoAndNav>
         <Logo onClick={() => handleNavClick("/")}>Co:next</Logo>
-        {isLoggedIn && (
+        {isLoggedIn && (role === "teacher") && (
           <Nav>
-            <NavItem onClick={() => handleNavClick("/search")}>
-              {role === "teacher" ? "학생 찾기" : "강사 찾기"}
-            </NavItem>
+            <NavItem onClick={() => handleNavClick("/search/student")}>학생 찾기</NavItem>
+            <NavItem onClick={() => handleNavClick("/match")}>그룹 매칭</NavItem>
+            <NavItem onClick={() => handleNavClick("/chat")}>채팅</NavItem>
+          </Nav>
+        )}
+        {isLoggedIn && (role === "student") && (
+          <Nav>
+            <NavItem onClick={() => handleNavClick("/search/teacher")}>강사 찾기</NavItem>
             <NavItem onClick={() => handleNavClick("/match")}>그룹 매칭</NavItem>
             <NavItem onClick={() => handleNavClick("/chat")}>채팅</NavItem>
           </Nav>
