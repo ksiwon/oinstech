@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface StudentData {
   id: string;
   password: string;
+  role: "student";
   name: string;
   gender: "남성" | "여성";
   birth: string;
@@ -69,6 +70,7 @@ interface StudentData {
 interface TeacherData {
   id: string;
   password: string;
+  role: "teacher";
   name: string;
   gender: "남성" | "여성";
   birth: string;
