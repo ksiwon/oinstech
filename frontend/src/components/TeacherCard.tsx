@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import {CardFrame, TopFrame, ImageFrame, TopContent, TopContentAbove, TopName, TopFlagLocFrame, TopFlag, TopLoc, TopContentBelow, CenterFrame, BottomFrame, BottomName, BottomContentAbove, BottomContentBelow} from "./Card.styles";
 import SubjectSmall from "./SubjectSmall";
 
 interface TeacherCardProps {
+    id: string;
     name: string;
     university: string;
     major: string;
@@ -13,9 +15,12 @@ interface TeacherCardProps {
     tendency: string[];
 }
 
-const TeacherCard: React.FC<TeacherCardProps> = ({ name, university, major, gradeUniversity, neighborhood, introduction, subject, personality, tendency }) => {
+
+
+const TeacherCard: React.FC<TeacherCardProps> = ({ id, name, university, major, gradeUniversity, neighborhood, introduction, subject, personality, tendency }) => {
+    const navigate = useNavigate();
     return (
-        <CardFrame>
+        <CardFrame onClick={() => navigate("/search/teacher/"+id)}>
             <TopFrame>
                 <ImageFrame>
                     <i className="fas fa-user"></i>

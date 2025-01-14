@@ -1,42 +1,72 @@
-import { useState } from "react";
-import Header from "../components/Header"
-import SearchTab from "../components/SearchTab"
-import Title from "../components/Title"
+import React, { useEffect, useState } from "react";
+import Header from "../components/Header";
+import SearchTab from "../components/SearchTab";
+import Title from "../components/Title";
 import Pagination from "../components/Pagination";
 import Footer from "../components/Footer";
 import TeacherCard from "../components/TeacherCard";
 import styled from "styled-components";
+import axios from "axios";
 
 const FindStudent: React.FC = () => {
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [teachers, setTeachers] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [totalPages, setTotalPages] = useState<number>(1);
 
-    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 상태 관리
-    const totalPages = 10; // 총 페이지 수 (예시로 10페이지로 설정)
-    
-    // 페이지 변경 핸들러
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" }); // 페이지 상단으로 스크롤 이동
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
-    
+
+    useEffect(() => {
+        const fetchTeachers = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get("http://localhost:5000/api/teachers/list", {
+                    params: { page: currentPage, limit: 10 },
+                });
+                setTeachers(response.data.teachers);
+                setTotalPages(Math.ceil(response.data.total / 10));
+            } catch (error) {
+                console.error("Failed to fetch teachers:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTeachers();
+    }, [currentPage]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div>
             <Header />
-            <Title text="학생 찾기" />
+            <Title text="강사 찾기" />
             <WholeWrapper>
                 <SearchTabWrapper>
-                    <SearchTabCover><SearchTab onSearch={(value) => alert(value)}/></SearchTabCover>
+                    <SearchTabCover>
+                        <SearchTab onSearch={(value) => alert(value)} />
+                    </SearchTabCover>
                 </SearchTabWrapper>
                 <CardWrapper>
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />           
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
-                    <TeacherCard name={"김철수"} university={"서울대학교"} major={"컴퓨터공학과"} gradeUniversity={23} neighborhood={"서울시 강남구"} introduction={"안녕하세요. 저는 김철수입니다."} subject={["수학", "물리학", "영어"]} personality={["친절함", "성실함"]} tendency={["열정적인", "창의적인"]} />
+                    {teachers.map((teacher) => (
+                        <TeacherCard
+                            id={teacher.id}
+                            name={teacher.name}
+                            university={teacher.university}
+                            major={teacher.major}
+                            gradeUniversity={teacher.gradeUniversity}
+                            neighborhood={teacher.neighborhood}
+                            introduction={teacher.introduction}
+                            subject={teacher.subject}
+                            personality={teacher.personality}
+                            tendency={teacher.tendency}
+                        />
+                    ))}
                 </CardWrapper>
             </WholeWrapper>
             <Pagination
@@ -47,7 +77,7 @@ const FindStudent: React.FC = () => {
             <Footer />
         </div>
     );
-}
+};
 
 export default FindStudent;
 

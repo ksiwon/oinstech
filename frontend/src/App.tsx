@@ -15,6 +15,8 @@ import Mypage from './pages/Mypage';
 import Chat from './pages/Chat';
 import FindStudent from './pages/FindStudent';
 import FindTeacher from './pages/FindTeacher';
+import OtherpageTeacher from './pages/OtherpageTeacher';
+import OtherpageStudent from './pages/OtherpageStudent';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search/teacher" element={<FindStudent />} />
             <Route path="/search/student" element={<FindTeacher />} />
+            <Route path="/search/teacher/:id" element={<OtherpageTeacher />} />
+            <Route path="/search/student/:id" element={<OtherpageStudent />} />
             <Route path="/match" element={<div>Match Page</div>} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/tester" element={<Tester />} />

@@ -274,7 +274,70 @@ app.get("/api/match-students/:teacherId", async (req, res) => {
 });
 
 
+// 학생 Otherpage용 API
+app.post("/api/students/find", async (req, res) => {
+  const { id } = req.body;
 
+  try {
+    // ID로 학생 찾기
+    const student = await Student.findOne({ id });
+    if (!student) {
+      return res.status(404).json({ message: "존재하지 않는 ID입니다." });
+    }
+
+    res.status(200).json(student);
+  } catch (error) {
+    console.error("불러오기 오류:", error);
+    res.status(500).json({ message: "불러오기 중 오류가 발생했습니다.", error });
+  }
+});
+
+// 강사 Otherpage용 API
+app.post("/api/teachers/find", async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    // ID로 학생 찾기
+    const teacher = await Teacher.findOne({ id });
+    if (!teacher) {
+      return res.status(404).json({ message: "존재하지 않는 ID입니다." });
+    }
+
+    res.status(200).json(teacher);
+  } catch (error) {
+    console.error("불러오기 오류:", error);
+    res.status(500).json({ message: "불러오기 중 오류가 발생했습니다.", error });
+  }
+});
+
+// List
+app.get('/api/teachers/list', async (req, res) => {
+  try {
+      const { page = 1, limit = 10 } = req.query;
+      const skip = (page - 1) * limit;
+      const teachers = await Teacher.find().skip(skip).limit(parseInt(limit));
+      const total = await Teacher.countDocuments();
+
+      res.json({ teachers, total });
+  } catch (error) {
+      console.error("Error fetching teachers:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get('/api/students/list', async (req, res) => {
+  try {
+      const { page = 1, limit = 10 } = req.query;
+      const skip = (page - 1) * limit;
+      const students = await Student.find().skip(skip).limit(parseInt(limit));
+      const total = await Student.countDocuments();
+
+      res.json({ students, total });
+  } catch (error) {
+      console.error("Error fetching students:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 
 // 서버 시작
