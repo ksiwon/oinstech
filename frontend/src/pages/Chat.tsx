@@ -1,153 +1,312 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Header from '../components/Header';
-import Pagination from '../components/Pagination';
-import Footer from '../components/Footer';
-import SearchTab from '../components/SearchTab';
-import ChatList from '../components/ChatList';
-import Answer from '../components/Answer';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Header from "../components/Header";
+import Pagination from "../components/Pagination";
+import Footer from "../components/Footer";
+import SearchTab from "../components/SearchTab";
+import ChatList from "../components/ChatList";
+import Answer from "../components/Answer";
+
+interface Message {
+  text: string;
+  isSent: boolean; // 보낸 메시지 여부
+}
 
 const Chat: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState<string>("");
 
-    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 상태 관리
-    const totalPages = 10; // 총 페이지 수 (예시로 10페이지로 설정)
-    
-    // 페이지 변경 핸들러
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" }); // 페이지 상단으로 스크롤 이동
-    };
-      
-    return (
-        <div>
-            <Header />
-            <WholeWrapper>
-                <LeftWrapper>
-                    <SearchTabWrapper>
-                        <SearchTab onSearch={(value) => alert(value)} />
-                    </SearchTabWrapper>
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"2025-01-01"} answerType={"unread"} clicked={false} />
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"1일 전"} answerType={"read"} clicked={false} />
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"2025-01-01"} answerType={"replied"} clicked={false} />
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"2025-01-01"} answerType={"unread"} clicked={false} />
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"2025-01-01"} answerType={"unread"} clicked={false} />
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"2025-01-01"} answerType={"unread"} clicked={false} />
-                    <ChatList username={"김철수"} usergrade={"고2"} answerTime={"1시간 전"} answerType={"unread"} clicked={true} />
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"2025-01-01"} answerType={"unread"} clicked={false} />
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"1일 전"} answerType={"read"} clicked={false} />
-                    <ChatList username={"이지은"} usergrade={"고2"} answerTime={"2025-01-01"} answerType={"replied"} clicked={false} />
-                </LeftWrapper>
-                <RightWrapper>
-                    <ChatHeader>
-                        <BackUserWrapper>
-                            <Back>
-                                <i className="fas fa-chevron-left" />
-                            </Back>
-                            <UserWrapper>
-                                <UserSection>김철수</UserSection>
-                                <UserGrade>고2</UserGrade>
-                            </UserWrapper>
-                        </BackUserWrapper>
-                        <DetailsSection>
-                        <Answer type={"unread"} />
-                        <DateText>1시간 전</DateText>
-                        </DetailsSection>
-                    </ChatHeader>
-                </RightWrapper>
-            </WholeWrapper>
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-            />
-            <Footer />
-        </div>
-    );
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      // 메시지 추가 (보낸 메시지)
+      setMessages([...messages, { text: newMessage, isSent: true }]);
+      setNewMessage(""); // 입력창 초기화
+
+      // 답변 메시지 추가 (예시: 1초 후)
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          { text: "네, 답변 드렸습니다!", isSent: false },
+        ]);
+      }, 1000);
+    }
+  };
+
+  return (
+    <div>
+      <Header />
+      <WholeWrapper>
+        <LeftWrapper>
+          <SearchTabWrapper>
+            <SearchTab onSearch={(value) => alert(value)} />
+          </SearchTabWrapper>
+                    <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+                    <ChatList
+            username={"김철수"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={true}
+          />
+                    <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+                    <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+                    <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+                    <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+                    <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+                     <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+                     <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+                     <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+
+ 
+          {/* 다른 ChatList 항목 생략 */}
+        </LeftWrapper>
+        <RightWrapper>
+          <ChatHeader>
+            <BackUserWrapper>
+              <Back>
+                <i className="fas fa-chevron-left" />
+              </Back>
+              <UserWrapper>
+                <UserSection>김철수</UserSection>
+                <UserGrade>고2</UserGrade>
+              </UserWrapper>
+            </BackUserWrapper>
+            <DetailsSection>
+              <Answer type={"unread"} />
+              <DateText>1시간 전</DateText>
+            </DetailsSection>
+          </ChatHeader>
+          <ChatContent>
+            {/* 메시지를 표시하는 영역 */}
+            <MessagesWrapper>
+              {messages.map((msg, index) => (
+                <MessageBubble key={index} isSent={msg.isSent}>
+                  {msg.text}
+                </MessageBubble>
+              ))}
+            </MessagesWrapper>
+            {/* 입력창과 전송 버튼 */}
+            <InputWrapper>
+              <Input
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="메시지를 입력하세요"
+              />
+              <SendButton onClick={handleSendMessage}>전송</SendButton>
+            </InputWrapper>
+          </ChatContent>
+        </RightWrapper>
+      </WholeWrapper>
+      <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
+      <Footer />
+    </div>
+  );
 };
 
 export default Chat;
 
+// Styled Components
+const WholeWrapper = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
 const LeftWrapper = styled.div`
-    width: 320px;
-    display: flex;
-    flex-shrink: 0;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    background-color: ${({ theme }) => theme.colors.primary};
+  width: 320px;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${({ theme }) => theme.colors.primary};
 `;
 
 const SearchTabWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px;
-    width: 100%;
-    height: 100px;
-    box-sizing: border-box; /* 여백 포함 크기 계산 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  width: 100%;
+  height: 100px;
+  box-sizing: border-box;
 `;
 
 const RightWrapper = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const ChatHeader = styled.div`
-    width: 100%;
-    height: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
-    background-color: ${({ theme }) => theme.colors.primary};
-    box-sizing: border-box;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  box-sizing: border-box;
 `;
 
-const WholeWrapper = styled.div`
-    display: flex;
-    width: 100%;
+
+
+const ChatContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const MessagesWrapper = styled.div`
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column; /* 메시지가 순서대로 쌓이도록 설정 */
+  gap: 8px; /* 메시지 간 간격 */
+`;
+
+const MessageBubble = styled.div<{ isSent: boolean }>`
+  max-width: 70%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background-color: ${({ isSent, theme }) =>
+    isSent ? theme.colors.blue[300] : theme.colors.gray[200]};
+  color: ${({ isSent, theme }) =>
+    isSent ? theme.colors.white : theme.colors.black};
+  align-self: ${({ isSent }) => (isSent ? "flex-end" : "flex-start")}; /* 위치 설정 */
+  text-align: ${({ isSent }) => (isSent ? "right" : "left")}; /* 텍스트 정렬 */
+  font-size: ${({ theme }) => theme.typography.T6.fontSize};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  word-break: break-word; /* 긴 텍스트를 다음 줄로 자동으로 넘기기 */
+`;
+
+
+const InputWrapper = styled.div`
+  display: flex;
+  padding: 16px;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray[200]};
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
+
+const Input = styled.input`
+  flex: 1;
+  padding: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-radius: 8px;
+  font-size: ${({ theme }) => theme.typography.T7.fontSize};
+`;
+
+const SendButton = styled.button`
+  margin-left: 8px;
+  padding: 12px 16px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  border: none;
+  border-radius: 8px;
+  font-size: ${({ theme }) => theme.typography.T6.fontSize};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.blue[800]};
+  }
 `;
 
 const BackUserWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-sizing: border-box;
 `;
 
 const Back = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    font-size: 40px;
-    color: ${({ theme }) => theme.colors.white};
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  font-size: 40px;
+  color: ${({ theme }) => theme.colors.white};
+  cursor: pointer;
 `;
 
 const UserWrapper = styled.div`
-    display: flex;
-    width: 120px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 8px;
+  display: flex;
+  width: 120px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
 `;
 
 const UserSection = styled.div`
   font-size: ${({ theme }) => theme.typography.T4.fontSize};
   font-weight: ${({ theme }) => theme.typography.T2.fontWeight};
-  color: ${({ theme}) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const UserGrade = styled.div`
-    font-size: ${({ theme }) => theme.typography.T6.fontSize};
-    font-weight: ${({ theme }) => theme.typography.T6.fontWeight};
-    color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.T6.fontSize};
+  font-weight: ${({ theme }) => theme.typography.T6.fontWeight};
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const DetailsSection = styled.div`
