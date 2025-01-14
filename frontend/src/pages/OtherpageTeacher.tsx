@@ -8,6 +8,8 @@ import SubjectBig from '../components/SubjectBig';
 import Title from '../components/Title';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 function getAge(birth: string): number {
     const today = new Date();
@@ -27,6 +29,9 @@ const OtherpageTeacher: React.FC = () => {
     const navigate = useNavigate();
     const [teacherData, setTeacherData] = useState<any>(null); // API로 가져온 데이터를 저장
     const [loading, setLoading] = useState<boolean>(true); // 로딩 상태 관리
+
+    const user = useSelector((state: RootState) => state.user.studentData);
+    const myId = user?.id;
 
     useEffect(() => {
         const fetchTeacherData = async () => {
@@ -182,7 +187,7 @@ const OtherpageTeacher: React.FC = () => {
                 </WholeFrame>
                 <ButtonContainer>
                     <Button1 onClick={() => navigate(-1)}>이전</Button1>
-                    <Button2 onClick={() => navigate("/chat")}>문의하기</Button2>
+                    <Button2 onClick={() => navigate("/chat/"+myId+"/"+teacherId)}>문의하기</Button2>
                 </ButtonContainer>
             </div>
             <Footer />

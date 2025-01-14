@@ -9,6 +9,8 @@ import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const socket = io("http://localhost:3000");
 
@@ -19,7 +21,7 @@ interface Message {
   isSent: boolean;
 }
 
-const Chat1: React.FC = () => {
+const Chat: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
@@ -51,6 +53,9 @@ const Chat1: React.FC = () => {
       setNewMessage("");
     }
   };
+
+  const user = useSelector((state: RootState) => state.user.teacherData);
+  const myId = user?.id;
 
   if (!studentData) return <div>Loading student data...</div>;
   return (
@@ -178,7 +183,7 @@ const Chat1: React.FC = () => {
   );
 };
 
-export default Chat1;
+export default Chat;
 
 // Styled Components
 const WholeWrapper = styled.div`
