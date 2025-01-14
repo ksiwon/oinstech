@@ -1,132 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Socket.IO Chat</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f9;
-      color: #333;
-    }
-
-    .chat-container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .messages {
-      height: 300px;
-      overflow-y: scroll;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 10px;
-      margin-bottom: 20px;
-      background: #f9f9f9;
-    }
-
-    .message {
-      margin: 10px 0;
-    }
-
-    .message .sender {
-      font-weight: bold;
-    }
-
-    .input-container {
-      display: flex;
-      gap: 10px;
-    }
-
-    input[type="text"] {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-  </style>
+    <title>채팅</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
 <body>
-  <div class="chat-container">
-    <h2>Welcome to the Chat!</h2>
-    <div id="login-section">
-      <input type="text" id="username" placeholder="Enter your name">
-      <button id="join-chat">Join Chat</button>
+    <div id="chat">
+        <div id="messages"></div>
+        <input type="text" id="message" placeholder="메시지를 입력하세요">
+        <button onclick="sendMessage()">전송</button>
     </div>
-    <div id="chat-section" style="display: none;">
-      <div class="messages" id="messages"></div>
-      <div class="input-container">
-        <input type="text" id="message" placeholder="Type a message">
-        <button id="send-message">Send</button>
-      </div>
-    </div>
-  </div>
 
-  <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
-  <script>
-    const socket = io();
+    <script>
+        const socket = io();
 
-    // HTML Elements
-    const loginSection = document.getElementById('login-section');
-    const chatSection = document.getElementById('chat-section');
-    const usernameInput = document.getElementById('username');
-    const joinChatBtn = document.getElementById('join-chat');
-    const messagesDiv = document.getElementById('messages');
-    const messageInput = document.getElementById('message');
-    const sendMessageBtn = document.getElementById('send-message');
+        // 새로운 유저가 접속할 때 이름 설정
+        const name = prompt("이름을 입력하세요:");
+        socket.emit('newUser', name);
 
-    // Join chat
-    joinChatBtn.addEventListener('click', () => {
-      const username = usernameInput.value.trim();
-      if (username) {
-        socket.emit('newUser', username);
-        loginSection.style.display = 'none';
-        chatSection.style.display = 'block';
-      }
-    });
+        // 서버에서 받은 메시지를 화면에 출력
+        socket.on('update', function(data) {
+            const messageBox = document.getElementById('messages');
+            const message = document.createElement('div');
+            message.innerHTML = `<strong>${data.name}</strong>: ${data.message}`;
+            messageBox.appendChild(message);
+        });
 
-    // Send message
-    sendMessageBtn.addEventListener('click', sendMessage);
-    messageInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
+        // 메시지 전송
+        function sendMessage() {
+            const input = document.getElementById('message');
+            const message = input.value;
 
-    function sendMessage() {
-      const message = messageInput.value.trim();
-      if (message) {
-        socket.emit('message', { message });
-        messageInput.value = '';
-      }
-    }
+            // 서버로 메시지 전송
+            socket.emit('message', { message: message });
 
-    // Display messages
-    socket.on('update', (data) => {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message');
-      messageElement.innerHTML = `<span class="sender">${data.name}: </span>${data.message}`;
-      messagesDiv.appendChild(messageElement);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
-    });
-  </script>
+            // 입력 필드 초기화
+            input.value = '';
+        }
+    </script>
 </body>
 </html>
