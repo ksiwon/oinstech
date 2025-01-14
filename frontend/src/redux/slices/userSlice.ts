@@ -8,7 +8,9 @@ interface StudentData {
   gender: "남성" | "여성";
   birth: string;
   phone: string;
-  address: string;
+  city: string;
+  district: string;
+  neighborhood: string;
   school: "일반고" | "과학고/영재고" | "자율고" | "외고" | "국제고" | "해당없음";
   gradeHighschool: (
     | "초등학생"
@@ -33,7 +35,7 @@ interface StudentData {
     | "지구과학"
     | "정보/코딩"
   )[];
-  tendency: (
+  prefered_tendency: (
     | "기본 개념부터 차근차근"
     | "문제 풀이 중심"
     | "내신 집중"
@@ -44,11 +46,24 @@ interface StudentData {
     | "복습과 반복 강조"
     | "약점 집중 보완"
   )[];
-  location: "상관없음" | "강사 → 학생" | "학생 → 강사";
-  face: "상관없음" | "대면" | "비대면";
+  location: "강사 → 학생" | "학생 → 강사";
+  face: "대면" | "비대면";
   payWant: "상관없음" | "~3만원" | "~4만원" | "~5만원";
   introduction: string;
   detail: string;
+  prefered_gender: ("남성" | "여성")[];
+  prefered_school: string[];
+  prefered_personality?: (
+    | "열정적임"
+    | "친근함"
+    | "다정함"
+    | "유머러스함"
+    | "이해심 많음"
+    | "꼼꼼함"
+    | "책임감 강함"
+    | "차분함"
+    | "창의적임"
+  )[];
 }
 
 interface TeacherData {
@@ -58,7 +73,9 @@ interface TeacherData {
   gender: "남성" | "여성";
   birth: string;
   phone: string;
-  address: string;
+  city: string;
+  district: string;
+  neighborhood: string;
   university:
     | "서울대학교"
     | "연세대학교"
@@ -116,11 +133,35 @@ interface TeacherData {
     | "복습과 반복 강조"
     | "약점 집중 보완"
   )[];
-  location: "상관없음" | "강사 → 학생" | "학생 → 강사";
-  face: "상관없음" | "대면" | "비대면";
+  location: "강사 → 학생" | "학생 → 강사";
+  face: "대면" | "비대면";
   pay: number;
   introduction: string;
   detail: string;
+  prefered_gender: "남성" | "여성";
+  prefered_personality?: (
+    | "열정적임"
+    | "친근함"
+    | "다정함"
+    | "유머러스함"
+    | "이해심 많음"
+    | "꼼꼼함"
+    | "책임감 강함"
+    | "차분함"
+    | "창의적임"
+  )[];
+  prefered_gradeHighschool?: (
+    | "초등학생"
+    | "중1"
+    | "중2"
+    | "중3"
+    | "고1"
+    | "고2"
+    | "고3"
+    | "재수생"
+    | "대학생"
+    | "기타"
+  )[];
 }
 
 interface UserState {

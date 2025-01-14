@@ -34,11 +34,11 @@ const Header: React.FC = () => {
   };
 
   const handleStudentLogin = () => {
-    navigate("/signup/student");
+    navigate("/login/student");
   }
 
   const handleTeacherLogin = () => {
-    navigate("/tester");
+    navigate("/login/teacher");
   }
 
   return (

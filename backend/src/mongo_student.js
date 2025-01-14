@@ -55,10 +55,6 @@ const studentSchema = new mongoose.Schema(
       enum: ["일반고", "과학고/영재고", "자율고", "외고", "국제고", "해당없음"],
       required: true,
     },
-    prefered_school: { 
-        type: String, 
-        required: true
-    },
     gradeHighschool: {
       type: String,
       enum: [
@@ -74,7 +70,7 @@ const studentSchema = new mongoose.Schema(
         "기타"
       ],
     },
-    university: {
+    prefered_school: {
         type: [String],
         enum: [
           "서울대학교",
