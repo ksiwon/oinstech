@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Pagination from "../components/Pagination";
@@ -6,32 +5,54 @@ import Footer from "../components/Footer";
 import SearchTab from "../components/SearchTab";
 import ChatList from "../components/ChatList";
 import Answer from "../components/Answer";
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
+const socket = io("http://localhost:3000");
 
 interface Message {
   text: string;
-  isSent: boolean; // 보낸 메시지 여부
+  sender: string;
+  timestamp: string;
+  isSent: boolean;
 }
 
-const Chat: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+const Chat1: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
+  const [studentData, setStudentData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/api/students/find", {
+          id,
+        });
+        setStudentData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch student data:", error);
+      }
+    };
+
+    fetchStudentData();
+  }, [id]);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
-      // 메시지 추가 (보낸 메시지)
-      setMessages([...messages, { text: newMessage, isSent: true }]);
-      setNewMessage(""); // 입력창 초기화
-
-      // 답변 메시지 추가 (예시: 1초 후)
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          { text: "네, 답변 드렸습니다!", isSent: false },
-        ]);
-      }, 1000);
+      const newMessageData = {
+        text: newMessage,
+        sender: "student",
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, newMessageData]);
+      setNewMessage("");
     }
   };
 
+  if (!studentData) return <div>Loading student data...</div>;
   return (
     <div>
       <Header />
@@ -157,7 +178,7 @@ const Chat: React.FC = () => {
   );
 };
 
-export default Chat;
+export default Chat1;
 
 // Styled Components
 const WholeWrapper = styled.div`
