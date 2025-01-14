@@ -33,7 +33,7 @@ const optionsMap = {
     "대학생",
     "기타",
   ],
-  perfered_school: [
+  prefered_school: [
     "서울대학교",
     "연세대학교",
     "고려대학교",
@@ -113,7 +113,7 @@ const SignupStudent: React.FC = () => {
     school: "",
     gradeHighschool: "",
     otherGradeHighschool: "",
-    perfered_school: [] as string[],
+    prefered_school: [] as string[],
     subject: [] as string[],
     prefered_tendency: [] as string[],
     prefered_personality: [] as string[],
@@ -140,7 +140,7 @@ const SignupStudent: React.FC = () => {
       "payWant",
       "location",
       "prefered_gender",
-      "perfered_school",
+      "prefered_school",
       "subject",
       "prefered_tendency",
       "prefered_personality",
@@ -430,14 +430,14 @@ const SignupStudent: React.FC = () => {
       <Content>
         <ContentName>선호 강사 대학</ContentName>
         <ContentInputContainer>
-        {optionsMap.perfered_school.map((perfered_school) => (
-          <ContentInput key={perfered_school}>
+        {optionsMap.prefered_school.map((prefered_school) => (
+          <ContentInput key={prefered_school}>
             <input
               type="checkbox"
-              checked={formData.perfered_school.includes(perfered_school)}
-              onChange={() => handleCheckboxSelect("perfered_school", perfered_school)}
+              checked={formData.prefered_school.includes(prefered_school)}
+              onChange={() => handleCheckboxSelect("prefered_school", prefered_school)}
             />
-            {perfered_school}
+            {prefered_school}
           </ContentInput>
         ))}
         </ContentInputContainer>

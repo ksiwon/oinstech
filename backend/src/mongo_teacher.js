@@ -31,7 +31,7 @@ const teacherSchema = new mongoose.Schema(
         required: true,
       },
 
-    preferend_personality: {
+    personality: {
     type: [String],
     enum: [
         "열정적임",
