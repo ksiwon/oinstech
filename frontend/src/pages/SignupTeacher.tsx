@@ -66,7 +66,7 @@ const optionsMap = {
     "지구과학",
     "정보/코딩",
   ],
-  prefered_personality: [
+  personality: [
     "열정적임",
     "친근함",
     "다정함",
@@ -372,7 +372,7 @@ const SignupTeacher: React.FC = () => {
         <Content>
           <ContentName>성격 (1~3개)</ContentName>
           <ContentInputContainer>
-            {optionsMap.prefered_personality.map((personality) => (
+            {optionsMap.personality.map((personality) => (
               <ContentInput key={personality}>
                 <input
                   type="checkbox"

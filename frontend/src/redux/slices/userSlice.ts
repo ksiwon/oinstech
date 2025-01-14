@@ -139,7 +139,7 @@ interface TeacherData {
   introduction: string;
   detail: string;
   prefered_gender: "남성" | "여성";
-  preferend_personality?: (
+  prefered_personality?: (
     | "열정적임"
     | "친근함"
     | "다정함"

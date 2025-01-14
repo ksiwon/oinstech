@@ -60,7 +60,6 @@ const teacherSchema = new mongoose.Schema({
   name: { type: String, required: true },
   gender: { type: String, required: true },
   prefered_gender: { type: [String], required: true },
-  prefered_personality: { type: [String], required: true },
   birth: { type: String, required: true },
   phone: { type: String, required: true },
   city: { type: String, required: true },
