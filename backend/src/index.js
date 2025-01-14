@@ -82,6 +82,28 @@ const teacherSchema = new mongoose.Schema({
 
 const Teacher = mongoose.model("Teacher", teacherSchema);
 
+// Group Schema
+const groupSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true }, // 그룹 고유 ID
+  teacherId: { type: String, required: true }, // 강사 ID
+  name: { type: String, required: true }, // 리더 이름
+  gender: { type: String, required: true }, // 리더 성별
+  university: { type: String, required: true }, // 리더 대학
+  major: { type: String, required: true }, // 리더 전공
+  gradeUniversity: { type: Number, required: true }, // 리더 학년
+  pay: { type: Number, required: true }, // 시간당 수업료
+  introduction: { type: String, required: true }, // 그룹 소개
+  detail: { type: String, required: true }, // 세부 설명
+  subject: { type: String, required: true }, // 수업 과목
+  personality: { type: [String], required: true }, // 리더 성격
+  tendency: { type: [String], required: true }, // 수업 방식
+  address: { type: String, required: true }, // 구체적인 주소
+  personnel: { type: Number, required: true }, // 최대 참여 인원
+  currentPersonnel: { type: Number, default: 0 }, // 현재 참여 인원
+});
+
+const Group = mongoose.model("Group", groupSchema);
+
 // 기본 라우트
 app.get("/", (req, res) => {
   res.send("Backend server is running!");
@@ -336,6 +358,100 @@ app.get('/api/students/list', async (req, res) => {
   } catch (error) {
       console.error("Error fetching students:", error);
       res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// Group APIs
+
+// Create Group
+app.post("/api/groups", async (req, res) => {
+  const groupData = req.body;
+
+  try {
+    // Check for duplicate group ID
+    const existingGroup = await Group.findOne({ id: groupData.id });
+    if (existingGroup) {
+      return res.status(400).json({ message: "Group with this ID already exists" });
+    }
+
+    const newGroup = new Group(groupData);
+    await newGroup.save();
+    res.status(201).json({ message: "Group created successfully", group: newGroup });
+  } catch (error) {
+    console.error("Error creating group:", error);
+    res.status(500).json({ message: "Failed to create group", error });
+  }
+});
+
+// Get Group by ID
+app.get("/api/groups/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const group = await Group.findOne({ id });
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    res.status(200).json(group);
+  } catch (error) {
+    console.error("Error fetching group:", error);
+    res.status(500).json({ message: "Error fetching group", error });
+  }
+});
+
+// Update Group
+app.put("/api/groups/:id", async (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+
+  try {
+    const updatedGroup = await Group.findOneAndUpdate({ id }, updatedData, {
+      new: true,
+    });
+
+    if (!updatedGroup) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    res.status(200).json({ message: "Group updated successfully", group: updatedGroup });
+  } catch (error) {
+    console.error("Error updating group:", error);
+    res.status(500).json({ message: "Failed to update group", error });
+  }
+});
+
+// Delete Group
+app.delete("/api/groups/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedGroup = await Group.findOneAndDelete({ id });
+
+    if (!deletedGroup) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    res.status(200).json({ message: "Group deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting group:", error);
+    res.status(500).json({ message: "Failed to delete group", error });
+  }
+});
+
+// List Groups with Pagination
+app.get("/api/groups", async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
+
+  try {
+    const groups = await Group.find().skip(skip).limit(parseInt(limit));
+    const total = await Group.countDocuments();
+
+    res.status(200).json({ groups, total });
+  } catch (error) {
+    console.error("Error fetching groups:", error);
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 

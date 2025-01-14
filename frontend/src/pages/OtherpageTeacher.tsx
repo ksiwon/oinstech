@@ -152,9 +152,9 @@ const OtherpageTeacher: React.FC = () => {
                             <Content>
                                 <ContentName>강사 성격</ContentName>
                                 <ContentInput>
-                                    {Array.isArray(teacherData.prefered_personality) 
-                                    ? teacherData.prefered_personality.join(', ') 
-                                    : teacherData.prefered_personality}
+                                    {Array.isArray(teacherData.personality) 
+                                    ? teacherData.personality.join(', ') 
+                                    : teacherData.personality}
                                 </ContentInput>
                             </Content>
                             <Content>
@@ -180,6 +180,10 @@ const OtherpageTeacher: React.FC = () => {
                         </Content>
                     </BottomFrame>
                 </WholeFrame>
+                <ButtonContainer>
+                    <Button1 onClick={() => navigate(-1)}>이전</Button1>
+                    <Button2 onClick={() => navigate("/chat")}>문의하기</Button2>
+                </ButtonContainer>
             </div>
             <Footer />
         </div>
@@ -291,3 +295,44 @@ const WholeFrame = styled.div`
     gap: 16px;
     padding: 32px 0;
 `;
+
+const ButtonContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    justify-content: center;
+    background: var(--Primary, #38E);
+    padding: 16px 0;
+`;
+
+const Button1 = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--White, #FFF);
+    width: 160px;
+    height: 56px;
+    border-radius: 8px;
+    background: var(--Gray-400, #AFAFAF);
+
+    align-item: center;
+    font-size: 30px;
+    font-weight: 600;
+    cursor: pointer;
+`
+
+const Button2 = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--Primary, #38E);
+    width: 160px;
+    height: 56px;
+    border-radius: 8px;
+    background: var(--White, #FFF);
+
+    align-item: center;
+    font-size: 30px;
+    font-weight: 600;
+    cursor: pointer;
+`

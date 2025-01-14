@@ -17,6 +17,9 @@ import FindStudent from './pages/FindStudent';
 import FindTeacher from './pages/FindTeacher';
 import OtherpageTeacher from './pages/OtherpageTeacher';
 import OtherpageStudent from './pages/OtherpageStudent';
+import FindGroup from './pages/FindGroup';
+import Grouppage from './pages/Grouppage';
+import Mygroup from './pages/Mygroup';
 
 function App() {
   return (
@@ -31,7 +34,9 @@ function App() {
             <Route path="/search/student" element={<FindTeacher />} />
             <Route path="/search/teacher/:id" element={<OtherpageTeacher />} />
             <Route path="/search/student/:id" element={<OtherpageStudent />} />
-            <Route path="/match" element={<div>Match Page</div>} />
+            <Route path="/search/group" element={<FindGroup />} />
+            <Route path="/search/group/:id" element={<Grouppage />} />
+            <Route path="/mygroup" element={<Mygroup />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/tester" element={<Tester />} />
             <Route path="/signup/student" element={<SignupStudent />} />

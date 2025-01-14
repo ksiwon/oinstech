@@ -138,3 +138,18 @@ export const BottomContentBelow = styled.div`
     font-weight: ${({ theme }) => theme.typography.T7.fontWeight};
     flex-wrap: wrap;
 `;
+
+export const SubjectAddressWrapper = styled.div`
+    display: flex;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: 16px;
+`;
+
+export const SubjectWrapper = styled.div`
+    display: flex;
+    width: 100px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+`;

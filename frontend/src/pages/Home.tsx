@@ -58,7 +58,7 @@ const Home: React.FC = () => {
                 <Icon className="fas fa-search" />
                 <ButtonText>강사 찾기</ButtonText>
               </ActionButton>
-              <ActionButton color="turkey" onClick={() => handleNavClick("/match")}>
+              <ActionButton color="turkey" onClick={() => handleNavClick("/search/group")}>
                 <Icon className="fas fa-users" />
                 <ButtonText>그룹 매칭</ButtonText>
               </ActionButton>
@@ -83,7 +83,7 @@ const Home: React.FC = () => {
                 <Icon className="fas fa-search" />
                 <ButtonText>학생 찾기</ButtonText>
               </ActionButton>
-              <ActionButton color="turkey" onClick={() => handleNavClick("/match")}>
+              <ActionButton color="turkey" onClick={() => handleNavClick("/mygroup")}>
                 <Icon className="fas fa-users" />
                 <ButtonText>그룹 매칭</ButtonText>
               </ActionButton>
