@@ -1,7 +1,9 @@
 import {CardFrame, TopFrame, ImageFrame, TopContent, TopContentAbove, TopName, TopFlagLocFrame, TopFlag, TopLoc, TopContentBelow, CenterFrame, BottomFrame, BottomName, BottomContentAbove, BottomContentBelow} from "./Card.styles";
 import SubjectSmall from "./SubjectSmall";
+import { useNavigate } from "react-router-dom";
 
 interface StudentCardProps {
+    id: string;
     name: string;
     gradeHighschool: string;
     neighborhood: string;
@@ -11,9 +13,10 @@ interface StudentCardProps {
     prefered_tendency: string[];
 }
 
-const StudentCard: React.FC<StudentCardProps> = ({ name, gradeHighschool, neighborhood, introduction, subject, prefered_personality, prefered_tendency }) => {
+const StudentCard: React.FC<StudentCardProps> = ({ id, name, gradeHighschool, neighborhood, introduction, subject, prefered_personality, prefered_tendency }) => {
+    const navigate = useNavigate();
     return (
-        <CardFrame>
+        <CardFrame onClick={() => navigate("/search/student/"+id)}>
             <TopFrame>
                 <ImageFrame>
                     <i className="fas fa-user"></i>

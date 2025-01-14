@@ -136,4 +136,5 @@ export const BottomContentBelow = styled.div`
     color: ${({ theme }) => theme.colors.black};
     font-size: ${({ theme }) => theme.typography.T7.fontSize};
     font-weight: ${({ theme }) => theme.typography.T7.fontWeight};
+    flex-wrap: wrap;
 `;
