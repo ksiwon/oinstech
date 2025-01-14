@@ -10,6 +10,8 @@ export const HeaderContainer = styled.header`
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+  z-index: 1000;
+  position: relative;
 `;
 
 // 로고와 네비게이션 묶음

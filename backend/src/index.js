@@ -6,9 +6,6 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
-const Student = require("./mongo_student");
-const Teacher = require("./mongo_teacher");
-
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -101,9 +98,6 @@ app.post("/api/students", async (req, res) => {
     if (existingStudent) {
         return res.status(400).json({ message: "Student with this ID already exists" });
     }
-
-    const hashedPassword = await bcrypt.hash(studentData.password, 10);
-    studentData.password = hashedPassword;
     
     const newStudent = new Student(studentData);
     await newStudent.save();
@@ -124,9 +118,6 @@ app.post("/api/teachers", async (req, res) => {
     if (existingTeacher) {
         return res.status(400).json({ message: "Teacher with this ID already exists" });
     }
-
-    const hashedPassword = await bcrypt.hash(teacherData.password, 10);
-    teacherData.password = hashedPassword;
 
     const newTeacher = new Teacher(teacherData);
     await newTeacher.save();
@@ -149,7 +140,7 @@ app.post("/api/students/login", async (req, res) => {
       }
   
       // 비밀번호 검증
-      const isMatch = await bcrypt.compare(password, student.password);
+      const isMatch = (password === student.password);
       if (!isMatch) {
         return res.status(401).json({ message: "비밀번호가 일치하지 않습니다." });
       }
@@ -174,7 +165,7 @@ app.post("/api/teachers/login", async (req, res) => {
       }
   
       // 비밀번호 검증
-      const isMatch = await bcrypt.compare(password, teacher.password);
+      const isMatch = (password === teacher.password);
       if (!isMatch) {
         return res.status(401).json({ message: "비밀번호가 일치하지 않습니다." });
       }
