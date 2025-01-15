@@ -21,14 +21,14 @@ interface Message {
   isSent: boolean;
 }
 
-
 const Chat: React.FC = () => {
   const { userId, partnerId } = useParams<{ userId: string; partnerId: string }>();
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
 
-  // Generate consistent roomId
-  const roomId = [userId, partnerId].sort().join("-");
+  // Normalize user IDs to create a consistent room ID
+  const [sortedUserId, sortedPartnerId] = [userId, partnerId].sort();
+  const roomId = `${sortedUserId}-${sortedPartnerId}`;
 
   // Fetch chat messages
   useEffect(() => {
@@ -40,23 +40,10 @@ const Chat: React.FC = () => {
         console.error("Failed to fetch messages:", error);
       }
     };
-     fetchMessages();
-     socket.emit("joinRoom", { id1: userId, id2: partnerId });
-     console.log("Joining room", { id1: userId, id2: partnerId });
 
-     socket.on("newMessage", (message: Message) => {
-      setMessages((prev) => [...prev, message]);
-    });
-    return () => {
-      socket.off("newMessage");
-    };
-  },  [userId, partnerId]);
+    fetchMessages();
+    socket.emit("joinRoom", { id1: sortedUserId, id2: sortedPartnerId });
 
-
-  // Join WebSocket room and listen for new messages
-  useEffect(() => {
-    socket.emit("joinRoom", { id1: userId, id2: partnerId });
-    console.log("Joining room", { id1: userId, id2: partnerId });
     socket.on("newMessage", (message: Message) => {
       setMessages((prev) => [...prev, message]);
     });
@@ -64,31 +51,30 @@ const Chat: React.FC = () => {
     return () => {
       socket.off("newMessage");
     };
-  }, [userId, partnerId]);
-
-
+  }, [sortedUserId, sortedPartnerId]);
 
   // Handle sending messages
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
-      const message = { text: newMessage, sender: userId, timestamp: new Date().toISOString() };
+      const message = {
+        text: newMessage,
+        sender: sortedUserId,
+        timestamp: new Date().toISOString(),
+        isSent: true,
+      };
 
-      // Send message via REST API
-      // try {
-      //   await axios.post(`http://localhost:5000/chat/${userId}/${partnerId}`, message);
-      // } catch (error) {
-      //   console.error("Failed to send message via REST API:", error);
-      // }
+      try {
+        await axios.post(`http://localhost:5000/chat/${sortedUserId}/${sortedPartnerId}`, message);
+      } catch (error) {
+        console.error("Failed to send message via REST API:", error);
+      }
 
-      // Emit message to WebSocket for real-time updates
-      socket.emit("sendMessage", { id1: userId, id2: partnerId, ...message });
+      socket.emit("sendMessage", { id1: sortedUserId, id2: sortedPartnerId, ...message });
 
-      // Update local state
       setMessages((prev) => [...prev, message]);
       setNewMessage("");
     }
   };
-
 
   return (
     <div>
@@ -98,80 +84,9 @@ const Chat: React.FC = () => {
           <SearchTabWrapper>
             <SearchTab onSearch={(value) => alert(value)} />
           </SearchTabWrapper>
-                    <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-                    <ChatList
-            username={"김철수"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"replied"}
-            clicked={true}
-          />
-                    <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-                    <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-                    <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-                    <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-                    <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-                     <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-                     <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-                     <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
-            answerType={"unread"}
-            clicked={false}
-          />
-
- 
-          {/* 다른 ChatList 항목 생략 */}
+          {/* Other ChatList components */}
         </LeftWrapper>
+
         <RightWrapper>
           <ChatHeader>
             <BackUserWrapper>
@@ -179,7 +94,7 @@ const Chat: React.FC = () => {
                 <i className="fas fa-chevron-left" />
               </Back>
               <UserWrapper>
-                <UserSection>김철수</UserSection>
+                <UserSection>{partnerId}</UserSection>
                 <UserGrade>고2</UserGrade>
               </UserWrapper>
             </BackUserWrapper>
@@ -189,16 +104,14 @@ const Chat: React.FC = () => {
             </DetailsSection>
           </ChatHeader>
           <ChatContent>
-            {/* 메시지를 표시하는 영역 */}
             <MessagesWrapper>
               {messages.map((msg, index) => (
-                <MessageBubble key={index} isSent={msg.sender === userId}>
+                <MessageBubble key={index} isSent={msg.sender === sortedUserId}>
                   <strong>{msg.sender}</strong>: {msg.text}
                 </MessageBubble>
-               
               ))}
             </MessagesWrapper>
-            {/* 입력창과 전송 버튼 */}
+
             <InputWrapper>
               <Input
                 value={newMessage}
@@ -210,6 +123,7 @@ const Chat: React.FC = () => {
           </ChatContent>
         </RightWrapper>
       </WholeWrapper>
+
       <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
       <Footer />
     </div>
@@ -239,145 +153,86 @@ const SearchTabWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 12px;
-  width: 100%;
-  height: 100px;
-  box-sizing: border-box;
 `;
 
 const RightWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-grow: 1;
+  padding: 12px;
 `;
 
 const ChatHeader = styled.div`
-  width: 100%;
-  height: 100px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 16px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  box-sizing: border-box;
-`;
-
-
-
-const ChatContent = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const MessagesWrapper = styled.div`
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column; /* 메시지가 순서대로 쌓이도록 설정 */
-  gap: 8px; /* 메시지 간 간격 */
-`;
-
-const MessageBubble = styled.div<{ isSent: boolean }>`
-  max-width: 70%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  background-color: ${({ isSent, theme }) =>
-    isSent ? theme.colors.blue[300] : theme.colors.gray[200]};
-  color: ${({ isSent, theme }) =>
-    isSent ? theme.colors.white : theme.colors.black};
-  align-self: ${({ isSent }) => (isSent ? "flex-end" : "flex-start")}; /* 위치 설정 */
-  text-align: ${({ isSent }) => (isSent ? "right" : "left")}; /* 텍스트 정렬 */
-  font-size: ${({ theme }) => theme.typography.T6.fontSize};
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: inline-block;
-  word-break: break-word; /* 긴 텍스트를 다음 줄로 자동으로 넘기기 */
-`;
-
-
-const InputWrapper = styled.div`
-  display: flex;
-  padding: 16px;
-  border-top: 1px solid ${({ theme }) => theme.colors.gray[200]};
-  background-color: ${({ theme }) => theme.colors.gray[100]};
-`;
-
-const Input = styled.input`
-  flex: 1;
-  padding: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
-  border-radius: 8px;
-  font-size: ${({ theme }) => theme.typography.T7.fontSize};
-`;
-
-const SendButton = styled.button`
-  margin-left: 8px;
-  padding: 12px 16px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
-  border: none;
-  border-radius: 8px;
-  font-size: ${({ theme }) => theme.typography.T6.fontSize};
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.blue[800]};
-  }
+  padding-bottom: 12px;
 `;
 
 const BackUserWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
-  box-sizing: border-box;
 `;
 
 const Back = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  font-size: 40px;
-  color: ${({ theme }) => theme.colors.white};
   cursor: pointer;
+  margin-right: 12px;
 `;
 
 const UserWrapper = styled.div`
   display: flex;
-  width: 120px;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 8px;
 `;
 
-const UserSection = styled.div`
-  font-size: ${({ theme }) => theme.typography.T4.fontSize};
-  font-weight: ${({ theme }) => theme.typography.T2.fontWeight};
-  color: ${({ theme }) => theme.colors.white};
-`;
-
+const UserSection = styled.div``;
 const UserGrade = styled.div`
-  font-size: ${({ theme }) => theme.typography.T6.fontSize};
-  font-weight: ${({ theme }) => theme.typography.T6.fontWeight};
-  color: ${({ theme }) => theme.colors.white};
+  font-size: 12px;
 `;
 
 const DetailsSection = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
+  text-align: right;
 `;
 
 const DateText = styled.div`
-  font-size: ${({ theme }) => theme.typography.T6.fontSize};
-  font-weight: ${({ theme }) => theme.typography.T7.fontWeight};
-  color: ${({ theme }) => theme.colors.white};
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.gray};
 `;
+
+const ChatContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const MessagesWrapper = styled.div`
+  flex-grow: 1;
+  margin-bottom: 12px;
+`;
+
+const MessageBubble = styled.div<{ isSent: boolean }>`
+  background-color: ${({ isSent, theme }) => (isSent ? theme.colors.primary : theme.colors.gray[100])};
+  padding: 8px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Input = styled.input`
+  width: 80%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.gray};
+`;
+
+const SendButton = styled.button`
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: white;
+  border: none;
+  cursor: pointer;
+`;
+

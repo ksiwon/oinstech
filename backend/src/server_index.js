@@ -1,108 +1,85 @@
-// Import dependencies
-const express = require("express");
-const http = require("http");
-const socket = require("socket.io");
-const fs = require("fs");
-const cors = require("cors");
-
-// Initialize server
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const app = express();
 const server = http.createServer(app);
-const io = socket(server);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3000",  // Update this to your front-end URL
+    methods: ["GET", "POST"]
+  }
+});
 
-// Middleware
-app.use(cors());
 app.use(express.json());
 
-// Chat data storage
-let chatData = {};
+// Sample in-memory storage for chat messages (use a real database in production)
+const chats = {};
 
-// Read chat data from file
-function loadChatData() {
-  if (fs.existsSync("./chatData.json")) {
-    chatData = JSON.parse(fs.readFileSync("./chatData.json", "utf-8"));
+// REST API to get chat messages between two users
+app.get('/chat/:userId/:partnerId', (req, res) => {
+  const { userId, partnerId } = req.params;
+  const roomId = [userId, partnerId].sort().join('-');
+  
+  // Retrieve messages from memory (or database)
+  if (!chats[roomId]) {
+    chats[roomId] = [];
   }
-}
-
-// Save chat data to file
-function saveChatData() {
-  fs.writeFileSync("./chatData.json", JSON.stringify(chatData, null, 2));
-}
-
-// Load chat data on server start
-loadChatData();
-
-// REST API to fetch chat messages
-app.get("/chat/:id1/:id2", (req, res) => {
-  const { id1, id2 } = req.params;
-  const roomId = [id1, id2].sort().join("-");
-  console.log(`Fetching messages for roomId: ${roomId}`);
-
-  try {
-    const messages = chatData[roomId] || [];
-    res.status(200).json(messages);
-  } catch (error) {
-    console.error("Error fetching messages:", error);
-    res.status(500).json({ error: "Failed to fetch messages" });
-  }
+  
+  res.json(chats[roomId]);
 });
 
 // REST API to send a new chat message
-app.post("/chat/:id1/:id2", (req, res) => {
-  const { id1, id2 } = req.params;
-  const roomId = [id1, id2].sort().join("-");
-  const { text, sender, timestamp } = req.body;
+app.post('/chat/:userId/:partnerId', (req, res) => {
+  const { userId, partnerId } = req.params;
+  const { text } = req.body;
 
-  if (!chatData[roomId]) {
-    chatData[roomId] = [];
+  if (!text) {
+    return res.status(400).json({ error: 'Message cannot be empty' });
   }
 
-  const message = { text, sender, timestamp };
-  chatData[roomId].push(message);
-  saveChatData();
+  const roomId = [userId, partnerId].sort().join('-');
+  const message = { text, sender: userId, timestamp: new Date().toISOString() };
 
-  io.to(roomId).emit("newMessage", message);
-  res.status(200).json({ message: "Message sent", message });
+  // Save message in memory (or database)
+  if (!chats[roomId]) {
+    chats[roomId] = [];
+  }
+  
+  chats[roomId].push(message);
+
+  // Emit message to WebSocket clients
+  io.to(roomId).emit('newMessage', message);
+
+  res.status(200).json(message);
 });
 
-// WebSocket connection
-io.on("connection", (socket) => {
-  console.log("New client connected");
+// WebSocket communication
+io.on('connection', (socket) => {
+  console.log('a user connected');
 
-  socket.on("joinRoom", ({ id1, id2 }) => {
-    const roomId = [id1, id2].sort().join("-");
+  // Listen for room joining
+  socket.on('joinRoom', ({ id1, id2 }) => {
+    const roomId = [id1, id2].sort().join('-');
     socket.join(roomId);
     console.log(`User joined room: ${roomId}`);
   });
 
-  socket.on("sendMessage", ({ id1, id2, text, sender, timestamp }) => {
-    const roomId = [id1, id2].sort().join("-");
+  // Handle new message event
+  socket.on('sendMessage', ({ id1, id2, text, sender, timestamp }) => {
+    const roomId = [id1, id2].sort().join('-');
     const message = { text, sender, timestamp };
-
-    console.log(`Message received from ${sender} in room: ${roomId}`, message);
-
-    if (!chatData[roomId]) {
-      chatData[roomId] = [];
-    }
-
-    chatData[roomId].push(message);
-    saveChatData();
-
-    io.to(roomId).emit("newMessage", message);
-    console.log(`Message sent to room: ${roomId}`, message);
+    
+    // Emit the message to the room
+    io.to(roomId).emit('newMessage', message);
   });
 
-
-
-
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
   });
 });
 
-// Start the server
-const PORT = 5000;
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// Start server
+const port = 5000;
+server.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
