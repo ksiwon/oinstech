@@ -383,20 +383,21 @@ app.post("/api/groups", async (req, res) => {
   }
 });
 
-// Get Group by ID
-app.get("/api/groups/:id", async (req, res) => {
-  const { id } = req.params;
+// List Groups with Pagination
+app.get("/api/groups", async (req, res) => {
+  const { teacherId, page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
 
   try {
-    const group = await Group.findOne({ id });
-    if (!group) {
-      return res.status(404).json({ message: "Group not found" });
-    }
+    // teacherId로 필터링
+    const query = teacherId ? { teacherId } : {}; // teacherId가 있으면 필터링, 없으면 전체 검색
+    const groups = await Group.find(query).skip(skip).limit(parseInt(limit));
+    const total = await Group.countDocuments(query); // 동일한 query로 문서 수 계산
 
-    res.status(200).json(group);
+    res.status(200).json({ groups, total });
   } catch (error) {
-    console.error("Error fetching group:", error);
-    res.status(500).json({ message: "Error fetching group", error });
+    console.error("Error fetching groups:", error);
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 
