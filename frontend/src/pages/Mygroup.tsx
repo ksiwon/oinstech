@@ -96,7 +96,7 @@ const Mygroup: React.FC = () => {
         return (
             <GlobalWrapper>
                 <Header />
-                <Title text="내가 만든 그룹" />
+                <Title text="My Group" />
                 <ContentWrapper>
                     <p>현재 생성된 그룹이 없습니다.</p>
                     <Button onClick={() => navigate("/create-group")}>그룹 생성</Button>
@@ -109,9 +109,9 @@ const Mygroup: React.FC = () => {
     return (
         <GlobalWrapper>
             <Header />
-            <Title text="내가 만든 그룹" />
+            <Title text="My Group" />
             <WholeWrapper>
-                <Button onClick={() => navigate("/create-group")}>그룹 생성</Button>
+                <Button2 onClick={() => navigate("/mygroup/create")}>그룹 생성</Button2>
                 <ContentWrapper>
                     <GroupList>
                         {groups.map(group => (
@@ -132,12 +132,6 @@ const Mygroup: React.FC = () => {
                     </GroupList>
                 </ContentWrapper>
             </WholeWrapper>
-            <Pagination
-                currentPage={currentPage}
-                totalPages={Math.ceil(totalGroups / groupsPerPage)}
-                onPageChange={handlePageChange}
-            />
-            <Footer />
             {showModal && selectedGroup && (
                 <EditModal
                     group={selectedGroup}
@@ -145,6 +139,12 @@ const Mygroup: React.FC = () => {
                     onClose={() => setShowModal(false)}
                 />
             )}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(totalGroups / groupsPerPage)}
+                onPageChange={handlePageChange}
+            />
+            <Footer />
         </GlobalWrapper>
     );
 };
@@ -237,4 +237,22 @@ const WholeWrapper = styled.div`
     width: 100%;
     align-items: center;
     background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
+
+const Button2 = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--Primary, #38E);
+    border-radius: 8px;
+    color: var(--White, #FFF);
+    padding: 8px 16px;
+    margin: 32px 0 0 0;
+
+    align-item: center;
+    font-family: ${({ theme }) => theme.typography.T3.fontFamily};
+    font-size: ${({ theme }) => theme.typography.T3.fontSize};
+    font-weight: ${({ theme }) => theme.typography.T3.fontWeight};
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 `;

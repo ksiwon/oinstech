@@ -363,19 +363,30 @@ app.get('/api/students/list', async (req, res) => {
 
 // Group APIs
 
-// Create Group
-app.post("/api/groups", async (req, res) => {
-  const groupData = req.body;
+// Generate Unique Group ID
+const generateUniqueGroupId = async () => {
+  let uniqueId = "";
+  let isUnique = false;
 
+  while (!isUnique) {
+    const randomNum = Math.floor(Math.random() * 10000);
+    uniqueId = `group_${randomNum}`;
+    const existingGroup = await Group.findOne({ id: uniqueId });
+    isUnique = !existingGroup;
+  }
+
+  return uniqueId;
+};
+
+// Create Group with Unique ID
+app.post("/api/groups", async (req, res) => {
   try {
-    // Check for duplicate group ID
-    const existingGroup = await Group.findOne({ id: groupData.id });
-    if (existingGroup) {
-      return res.status(400).json({ message: "Group with this ID already exists" });
-    }
+    const uniqueId = await generateUniqueGroupId();
+    const groupData = { ...req.body, id: uniqueId };
 
     const newGroup = new Group(groupData);
     await newGroup.save();
+
     res.status(201).json({ message: "Group created successfully", group: newGroup });
   } catch (error) {
     console.error("Error creating group:", error);
@@ -383,7 +394,7 @@ app.post("/api/groups", async (req, res) => {
   }
 });
 
-// List Groups with Pagination
+// List Groups with Pagination and Optional Filtering
 app.get("/api/groups", async (req, res) => {
   const { teacherId, page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
@@ -440,22 +451,23 @@ app.delete("/api/groups/:id", async (req, res) => {
   }
 });
 
-// List Groups with Pagination
-app.get("/api/groups", async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  const skip = (page - 1) * limit;
+// Get Group by ID
+app.get("/api/groups/:id", async (req, res) => {
+  const { id } = req.params;
 
   try {
-    const groups = await Group.find().skip(skip).limit(parseInt(limit));
-    const total = await Group.countDocuments();
+    // 해당 id를 가진 그룹을 찾기
+    const group = await Group.findOne({ id });
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
 
-    res.status(200).json({ groups, total });
+    res.status(200).json(group);
   } catch (error) {
-    console.error("Error fetching groups:", error);
+    console.error("Error fetching group:", error);
     res.status(500).json({ message: "Internal Server Error", error });
   }
 });
-
 
 // 서버 시작
 app.listen(port, () => {

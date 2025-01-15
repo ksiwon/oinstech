@@ -8,6 +8,8 @@ import boy from '../assets/boy.png';
 import girl from '../assets/girl.png';
 import axios from 'axios';
 import SubjectBig from '../components/SubjectBig';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 function GetSubject(subject: string) {
     switch (subject) {
@@ -37,6 +39,8 @@ const Grouppage: React.FC = () => {
     const navigate = useNavigate();
     const [groupData, setGroupData] = useState<any>(null); // API로 가져온 데이터를 저장
     const [loading, setLoading] = useState<boolean>(true); // 로딩 상태 관리
+    const user = useSelector((state: RootState) => state.user.studentData);
+    const userId = user?.id;
 
     useEffect(() => {
         const fetchGroupData = async () => {
@@ -139,7 +143,7 @@ const Grouppage: React.FC = () => {
             </WholeFrame>
             <ButtonContainer>
                 <Button1 onClick={() => navigate(-1)}>이전</Button1>
-                <Button2 onClick={() => navigate("/chat")}>문의하기</Button2>
+                <Button2 onClick={() => navigate("/chat/"+userId+"/"+groupData.teacherId)}>문의하기</Button2>
             </ButtonContainer>
             <Footer />
         </GlobalWrapper>
