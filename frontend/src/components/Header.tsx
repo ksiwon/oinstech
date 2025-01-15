@@ -23,6 +23,7 @@ const Header: React.FC = () => {
   const { role, studentData, teacherData } = useSelector((state: RootState) => state.user);
   const isLoggedIn = role !== null;
   const username = role === "student" ? studentData?.name : teacherData?.name;
+  const userId = role === "student" ? studentData?.id : teacherData?.id;
 
   // 네비게이션 핸들러
   const handleNavClick = (path: string) => navigate(path);
@@ -54,14 +55,14 @@ const Header: React.FC = () => {
           <Nav>
             <NavItem onClick={() => handleNavClick("/search/student")}>학생 찾기</NavItem>
             <NavItem onClick={() => handleNavClick("/mygroup")}>그룹 매칭</NavItem>
-            <NavItem onClick={() => handleNavClick("/chat")}>채팅</NavItem>
+            <NavItem onClick={() => handleNavClick("/chat/"+userId)}>채팅</NavItem>
           </Nav>
         )}
         {isLoggedIn && (role === "student") && (
           <Nav>
             <NavItem onClick={() => handleNavClick("/search/teacher")}>강사 찾기</NavItem>
             <NavItem onClick={() => handleNavClick("/search/group")}>그룹 매칭</NavItem>
-            <NavItem onClick={() => handleNavClick("/chat")}>채팅</NavItem>
+            <NavItem onClick={() => handleNavClick("/chat/"+userId)}>채팅</NavItem>
           </Nav>
         )}
       </LogoAndNav>

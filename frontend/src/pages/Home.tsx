@@ -8,7 +8,8 @@ import { RootState } from "../redux/store";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
-  const role = useSelector((state: RootState) => state.user.role);
+  const { role, studentData, teacherData } = useSelector((state: RootState) => state.user);
+  const userId = role === "student" ? studentData?.id : teacherData?.id;
   const navigate = useNavigate();
   const handleNavClick = (path: string) => navigate(path);
 
@@ -21,7 +22,7 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <Wrapper>
+    <GlobalWrapper>
       <Header />
       {role === null ? (
         // Logout 상태
@@ -62,7 +63,7 @@ const Home: React.FC = () => {
                 <Icon className="fas fa-users" />
                 <ButtonText>그룹 매칭</ButtonText>
               </ActionButton>
-              <ActionButton color="blue" onClick={() => handleNavClick("/chat")}>
+              <ActionButton color="blue" onClick={() => handleNavClick("/chat/"+userId)}>
                 <Icon className="fas fa-comments" />
                 <ButtonText>채팅</ButtonText>
               </ActionButton>
@@ -87,7 +88,7 @@ const Home: React.FC = () => {
                 <Icon className="fas fa-users" />
                 <ButtonText>그룹 매칭</ButtonText>
               </ActionButton>
-              <ActionButton color="blue" onClick={() => handleNavClick("/chat")}>
+              <ActionButton color="blue" onClick={() => handleNavClick("/chat/"+userId)}>
                 <Icon className="fas fa-comments" />
                 <ButtonText>채팅</ButtonText>
               </ActionButton>
@@ -97,7 +98,7 @@ const Home: React.FC = () => {
         </MainLoggedIn>
       ))}
       <Footer />
-    </Wrapper>
+    </GlobalWrapper>
   );
 };
 
@@ -116,7 +117,7 @@ const moveAnimation = keyframes`
 `;
 
 // 전체 Wrapper
-const Wrapper = styled.div`
+const GlobalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;

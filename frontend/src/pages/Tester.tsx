@@ -11,6 +11,7 @@ import CheckBoxWrapper from "../components/CheckBox";
 import SubjectSmall from "../components/SubjectSmall";
 import SubjectBig from "../components/SubjectBig";
 import axios from "axios";
+import styled from "styled-components";
 
 const Tester: React.FC = () => {
   const dispatch = useDispatch();
@@ -107,7 +108,7 @@ const Tester: React.FC = () => {
   const subjects = ["국어", "영어", "수학", "물리", "화학", "생물", "지학", "정보"];
 
   return (
-    <div>
+    <GlobalWrapper>
       {/* Header 컴포넌트 */}
       <Header />
       <Title text="Tester Page" />
@@ -141,9 +142,11 @@ const Tester: React.FC = () => {
       <SubjectSmall subjects={subjects} />
       <SubjectBig subjects={subjects} />
       <Footer />
-    </div>
+    </GlobalWrapper>
   );
 };
+
+export default Tester;
 
 // 버튼 스타일
 const buttonStyle: React.CSSProperties = {
@@ -153,4 +156,9 @@ const buttonStyle: React.CSSProperties = {
   cursor: "pointer",
 };
 
-export default Tester;
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
