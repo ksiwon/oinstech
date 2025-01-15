@@ -38,7 +38,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     if (!userId || !partnerId) {
-      navigate("/error", { replace: true });
+      navigate("/", { replace: true });
       return;
     }
 
@@ -65,7 +65,7 @@ const Chat: React.FC = () => {
         socket.on("newMessage", handleNewMessage);
       } catch (error) {
         console.error("Failed to fetch messages:", error);
-        navigate("/error", { replace: true });
+        navigate("/", { replace: true });
       }
     };
 
@@ -113,18 +113,74 @@ const Chat: React.FC = () => {
             <SearchTab onSearch={(value) => alert(value)} />
           </SearchTabWrapper>
           <ChatList
-            username={"이지은"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
+            username={"장효진"}
+            usergrade={"성균관대학교"}
+            answerTime={"2025-01-15"}
+            answerType={"replied"}
+            clicked={true}
+          />
+          <ChatList
+            username={"김지수"}
+            usergrade={"서울대학교"}
+            answerTime={"2025-01-14"}
+            answerType={"replied"}
+            clicked={false}
+          />
+          <ChatList
+            username={"박민준"}
+            usergrade={"연세대학교"}
+            answerTime={"2025-01-13"}
+            answerType={"read"}
+            clicked={false}
+          />
+          <ChatList
+            username={"최서연"}
+            usergrade={"고려대학교"}
+            answerTime={"2025-01-15"}
             answerType={"unread"}
             clicked={false}
           />
           <ChatList
-            username={"김철수"}
-            usergrade={"고2"}
-            answerTime={"2025-01-01"}
+            username={"이하늘"}
+            usergrade={"KAIST"}
+            answerTime={"2025-01-13"}
             answerType={"replied"}
-            clicked={true}
+            clicked={false}
+          />
+          <ChatList
+            username={"정하윤"}
+            usergrade={"POSTECH"}
+            answerTime={"2025-01-12"}
+            answerType={"read"}
+            clicked={false}
+          />
+          <ChatList
+            username={"김도윤"}
+            usergrade={"서울대학교"}
+            answerTime={"2025-01-15"}
+            answerType={"unread"}
+            clicked={false}
+          />
+          <ChatList
+            username={"장은비"}
+            usergrade={"연세대학교"}
+            answerTime={"2025-01-14"}
+            answerType={"replied"}
+            clicked={false}
+          />
+          <ChatList
+            username={"이승현"}
+            usergrade={"고려대학교"}
+            answerTime={"2025-01-13"}
+            answerType={"read"}
+            clicked={false}
+          />
+          <ChatList
+            username={"한지우"}
+            usergrade={"KAIST"}
+            answerTime={"2025-01-14"}
+            answerType={"unread"}
+            clicked={false}
           />
         </LeftWrapper>
         <RightWrapper>
@@ -134,8 +190,8 @@ const Chat: React.FC = () => {
                 <i className="fas fa-chevron-left" />
               </Back>
               <UserWrapper>
-                <UserSection>{partnerId}</UserSection>
-                <UserGrade>고2</UserGrade>
+                <UserSection>장효진</UserSection>
+                <UserGrade>성균관대학교 소프트웨어학과 23</UserGrade>
               </UserWrapper>
             </BackUserWrapper>
             <DetailsSection>
@@ -167,7 +223,7 @@ const Chat: React.FC = () => {
           </ChatContent>
         </RightWrapper>
       </WholeWrapper>
-      <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
+      <Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
       <Footer />
     </GlobalWrapper>
   );

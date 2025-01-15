@@ -63,7 +63,7 @@ const Home: React.FC = () => {
                 <Icon className="fas fa-users" />
                 <ButtonText>그룹 매칭</ButtonText>
               </ActionButton>
-              <ActionButton color="blue" onClick={() => handleNavClick("/chat/"+userId)}>
+              <ActionButton color="blue" onClick={() => handleNavClick("/chat/"+userId+"/poiu")}>
                 <Icon className="fas fa-comments" />
                 <ButtonText>채팅</ButtonText>
               </ActionButton>
