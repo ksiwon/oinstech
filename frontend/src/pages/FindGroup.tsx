@@ -7,79 +7,104 @@ import Footer from "../components/Footer";
 import GroupCard from "../components/GroupCard";
 import styled from "styled-components";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const FindGroup: React.FC = () => {
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const [groups, setGroups] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [totalPages, setTotalPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+  // Redux에서 학생 데이터를 가져온다고 가정
+  const student = useSelector((state: RootState) => state.user.studentData);
+  const studentId = student?.id;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        setLoading(true);
+        let response;
+        if (studentId) {
+          response = await axios.get(`http://localhost:5000/api/match-groups/${studentId}`, {
+            params: { page: currentPage, limit: 10, search: searchTerm },
+          });
+        } else {
+          response = await axios.get("http://localhost:5000/api/groups", {
+            params: { page: currentPage, limit: 10, search: searchTerm },
+          });
+        }
+        setGroups(response.data.groups);
+        setTotalPages(Math.ceil(response.data.total / 10));
+      } catch (error) {
+        console.error("Failed to fetch groups:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    useEffect(() => {
-        const fetchGroups = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get("http://localhost:5000/api/groups", {
-                    params: { page: currentPage, limit: 10 },
-                });
-                setGroups(response.data.groups);
-                setTotalPages(Math.ceil(response.data.total / 10));
-            } catch (error) {
-                console.error("Failed to fetch groups:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    fetchGroups();
+  }, [studentId, currentPage, searchTerm]);
 
-        fetchGroups();
-    }, [currentPage]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    return (
-        <GlobalWrapper>
-            <Header />
-            <Title text="그룹 찾기" />
-            <WholeWrapper>
-                <SearchTabWrapper>
-                    <SearchTabCover>
-                        <SearchTab onSearch={(value) => alert(value)} />
-                    </SearchTabCover>
-                </SearchTabWrapper>
-                <CardWrapper>
-                    {groups.map((group) => (
-                        <GroupCard
-                            id={group.id}
-                            teacherId={group.teacherId}
-                            name={group.name}
-                            university={group.university}
-                            major={group.major}
-                            gradeUniversity={group.gradeUniversity}
-                            introduction={group.introduction}
-                            subject={group.subject}
-                            personality={group.personality}
-                            tendency={group.tendency}
-                            address={group.address}
-                            personnel={group.personnel}
-                            currentPersonnel={group.currentPersonnel}
-                        />
-                    ))}
-                </CardWrapper>
-            </WholeWrapper>
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-            />
-            <Footer />
-        </GlobalWrapper>
-    );
+  return (
+    <GlobalWrapper>
+      <Header />
+      <Title text="그룹 찾기" />
+      <WholeWrapper>
+        <SearchTabWrapper>
+          <SearchTabCover>
+            <SearchTab onSearch={handleSearch} />
+          </SearchTabCover>
+        </SearchTabWrapper>
+        <CardWrapper>
+          {groups.length > 0 ? (
+            groups.map((group) => (
+              <GroupCard
+                key={group.id}
+                id={group.id}
+                teacherId={group.teacherId}
+                name={group.name}
+                university={group.university}
+                major={group.major}
+                gradeUniversity={group.gradeUniversity}
+                introduction={group.introduction}
+                subject={group.subject}
+                personality={group.personality}
+                tendency={group.tendency}
+                address={group.address}
+                personnel={group.personnel}
+                currentPersonnel={group.currentPersonnel}
+                score={group.score || 0}
+              />
+            ))
+          ) : (
+            <div>검색 결과가 없습니다.</div>
+          )}
+        </CardWrapper>
+      </WholeWrapper>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
+      <Footer />
+    </GlobalWrapper>
+  );
 };
 
 export default FindGroup;
@@ -92,24 +117,24 @@ const GlobalWrapper = styled.div`
 `;
 
 const WholeWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
-    background-color: ${({ theme }) => theme.colors.gray[100]};
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
 `;
 
 const SearchTabWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    background-color: ${({ theme }) => theme.colors.primary};
-    width: 100%;
-    padding: 32px 0;
-    align-self: center;
+  display: flex;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.colors.primary};
+  width: 100%;
+  padding: 32px 0;
+  align-self: center;
 `;
 
 const SearchTabCover = styled.div`
-    width: 80%;
+  width: 80%;
 `;
 
 const CardWrapper = styled.div`
@@ -121,6 +146,6 @@ const CardWrapper = styled.div`
     gap: 32px;
     align-self: stretch;
     flex-wrap: wrap;
-    margin: 0 auto;
-    justify-content: space-evenly;
+    margin: 0 auto; /* 가운데 정렬 */
+    justify-content: space-evenly; /* 카드 간 간격 균등 */
 `;

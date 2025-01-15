@@ -11,9 +11,10 @@ interface StudentCardProps {
     subject: string[];
     prefered_personality: string[];
     prefered_tendency: string[];
+    score: number;
 }
 
-const StudentCard: React.FC<StudentCardProps> = ({ id, name, gradeHighschool, neighborhood, introduction, subject, prefered_personality, prefered_tendency }) => {
+const StudentCard: React.FC<StudentCardProps> = ({ id, name, gradeHighschool, neighborhood, introduction, subject, prefered_personality, prefered_tendency, score }) => {
     const navigate = useNavigate();
     return (
         <CardFrame onClick={() => navigate("/search/student/"+id)}>
@@ -29,6 +30,10 @@ const StudentCard: React.FC<StudentCardProps> = ({ id, name, gradeHighschool, ne
                                 <i className="fas fa-flag"></i>
                             </TopFlag>
                             <TopLoc>{neighborhood}</TopLoc>
+                            <TopFlag style={{ color: "#DFC100" }}>
+                                <i className="fas fa-star"></i>
+                            </TopFlag>
+                            <TopLoc>{score}</TopLoc>
                         </TopFlagLocFrame>
                     </TopContentAbove>
                     <TopContentBelow>

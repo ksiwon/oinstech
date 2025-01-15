@@ -200,16 +200,17 @@ app.post("/api/teachers/login", async (req, res) => {
 });
 
 
-// Match teachers based on student preferences
+// Match teachers based on student preferences (with search)
 app.get("/api/match-teachers/:studentId", async (req, res) => {
   const { studentId } = req.params;
+  const { page = 1, limit = 10, search = "" } = req.query; // 검색어 추가
+  const skip = (page - 1) * parseInt(limit, 10);
 
   try {
     const student = await Student.findOne({ id: studentId });
     if (!student) {
       return res.status(404).json({ message: "학생 정보를 찾을 수 없습니다." });
     }
-
     const {
       prefered_gender,
       prefered_school,
@@ -220,49 +221,76 @@ app.get("/api/match-teachers/:studentId", async (req, res) => {
       payWant,
     } = student;
 
-    // payWant에 따른 필터링 범위 설정
     let payRange = {};
-
     switch (payWant) {
       case "~3만원":
-        payRange = { pay: { $gte: 30000, $lte: 39000 } };
+        payRange = { pay: { $gte: 0, $lte: 30000 } };
         break;
       case "~4만원":
-        payRange = { pay: { $gte: 40000, $lte: 49000 } };
+        payRange = { pay: { $gte: 30001, $lte: 40000 } };
         break;
       case "~5만원":
-        payRange = { pay: { $gte: 50000, $lte: 59000 } };
+        payRange = { pay: { $gte: 40001, $lte: 50000 } };
         break;
       case "상관 없음":
-        payRange = { pay: { $gte: 60000 } }; // 상관없으면 60000 이상
+        payRange = { pay: { $gte: 0 } };
         break;
       default:
-        payRange = {}; // 예외가 없으면 필터링 하지 않음
+        payRange = {};
     }
 
-    const matchingTeachers = await Teacher.find({
-      gender: { $in: prefered_gender },
-      university: { $in: prefered_school },
-      personality: { $in: prefered_personality },
-      subject: { $in: subject },
-      tendency: { $in: prefered_tendency },
-      location: { $in: location },
-      ...payRange, // payRange 필터 적용
+    // 검색어가 있으면 name 필터 추가 (대소문자 구분 없이)
+    const searchFilter = search
+      ? { name: { $regex: search, $options: "i" } }
+      : {};
+
+    // 모든 강사를 대상으로 조회 (검색 필터 및 pay 필터 적용)
+    const allTeachers = await Teacher.find({
+      ...payRange,
+      ...searchFilter,
     });
 
-    res.status(200).json(matchingTeachers);
+    const teachersWithScores = allTeachers.map((teacher) => {
+      let score = 0;
+      if (prefered_gender.includes(teacher.gender)) score++;
+      if (prefered_school.includes(teacher.university)) score++;
+      if (
+        teacher.personality &&
+        teacher.personality.some((p) => prefered_personality.includes(p))
+      )
+        score++;
+      if (subject.includes(teacher.subject)) score++;
+      if (
+        teacher.tendency &&
+        teacher.tendency.some((t) => prefered_tendency.includes(t))
+      )
+        score++;
+      if (location.includes(teacher.location)) score++;
+      return { id: teacher._id, ...teacher.toObject(), score };
+    });
+
+    teachersWithScores.sort((a, b) => b.score - a.score);
+    const paginatedTeachers = teachersWithScores.slice(
+      skip,
+      skip + parseInt(limit, 10)
+    );
+    const total = teachersWithScores.length;
+
+    res.status(200).json({ teachers: paginatedTeachers, total });
   } catch (error) {
     console.error("Error matching teachers:", error);
     res.status(500).json({ message: "Error matching teachers.", error });
   }
 });
 
-// Match students based on teacher preferences
+// Match students based on teacher preferences (with search)
 app.get("/api/match-students/:teacherId", async (req, res) => {
   const { teacherId } = req.params;
+  const { page = 1, limit = 10, search = "" } = req.query; // 검색어 추가
+  const skip = (page - 1) * parseInt(limit, 10);
 
   try {
-    const teacher = await Teacher.findById(teacherId);
+    const teacher = await Teacher.findOne({ id: teacherId });
     if (!teacher) {
       return res.status(404).json({ message: "강사 정보를 찾을 수 없습니다." });
     }
@@ -274,27 +302,43 @@ app.get("/api/match-students/:teacherId", async (req, res) => {
       subject,
       prefered_gradeHighschool,
       location,
-      pay,
     } = teacher;
 
-    const matchingStudents = await Student.find({
-      gender: { $in: prefered_gender },
-      school: { $in: prefered_school },
-      prefered_personality: { $in: personality },
-      subject: { $in: subject },
-      gradeHighschool: { $in: prefered_gradeHighschool },
-      location: { $in: location },
-      // 여기서는 pay를 그대로 비교할 수 있게 수정
-      pay: { $lte: pay }, 
+    // 검색어가 있으면 학생 name 필터 적용
+    const searchFilter = search
+      ? { name: { $regex: search, $options: "i" } }
+      : {};
+
+    const allStudents = await Student.find(searchFilter);
+
+    const studentsWithScores = allStudents.map((student) => {
+      let score = 0;
+      if (prefered_gender.includes(student.gender)) score++;
+      if (prefered_school.includes(student.school)) score++;
+      if (
+        student.prefered_personality &&
+        student.prefered_personality.some((p) => personality.includes(p))
+      )
+        score++;
+      if (subject.includes(student.subject)) score++;
+      if (prefered_gradeHighschool.includes(student.gradeHighschool)) score++;
+      if (location.includes(student.location)) score++;
+      return { id: student._id, ...student.toObject(), score };
     });
 
-    res.status(200).json(matchingStudents);
+    studentsWithScores.sort((a, b) => b.score - a.score);
+    const paginatedStudents = studentsWithScores.slice(
+      skip,
+      skip + parseInt(limit, 10)
+    );
+    const total = studentsWithScores.length;
+
+    res.status(200).json({ students: paginatedStudents, total });
   } catch (error) {
     console.error("Error matching students:", error);
     res.status(500).json({ message: "Error matching students.", error });
   }
 });
-
 
 // 학생 Otherpage용 API
 app.post("/api/students/find", async (req, res) => {
@@ -363,19 +407,30 @@ app.get('/api/students/list', async (req, res) => {
 
 // Group APIs
 
-// Create Group
-app.post("/api/groups", async (req, res) => {
-  const groupData = req.body;
+// Generate Unique Group ID
+const generateUniqueGroupId = async () => {
+  let uniqueId = "";
+  let isUnique = false;
 
+  while (!isUnique) {
+    const randomNum = Math.floor(Math.random() * 10000);
+    uniqueId = `group_${randomNum}`;
+    const existingGroup = await Group.findOne({ id: uniqueId });
+    isUnique = !existingGroup;
+  }
+
+  return uniqueId;
+};
+
+// Create Group with Unique ID
+app.post("/api/groups", async (req, res) => {
   try {
-    // Check for duplicate group ID
-    const existingGroup = await Group.findOne({ id: groupData.id });
-    if (existingGroup) {
-      return res.status(400).json({ message: "Group with this ID already exists" });
-    }
+    const uniqueId = await generateUniqueGroupId();
+    const groupData = { ...req.body, id: uniqueId };
 
     const newGroup = new Group(groupData);
     await newGroup.save();
+
     res.status(201).json({ message: "Group created successfully", group: newGroup });
   } catch (error) {
     console.error("Error creating group:", error);
@@ -383,7 +438,7 @@ app.post("/api/groups", async (req, res) => {
   }
 });
 
-// List Groups with Pagination
+// List Groups with Pagination and Optional Filtering
 app.get("/api/groups", async (req, res) => {
   const { teacherId, page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
@@ -440,22 +495,71 @@ app.delete("/api/groups/:id", async (req, res) => {
   }
 });
 
-// List Groups with Pagination
-app.get("/api/groups", async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  const skip = (page - 1) * limit;
+// Get Group by ID
+app.get("/api/groups/:id", async (req, res) => {
+  const { id } = req.params;
 
   try {
-    const groups = await Group.find().skip(skip).limit(parseInt(limit));
-    const total = await Group.countDocuments();
+    // 해당 id를 가진 그룹을 찾기
+    const group = await Group.findOne({ id });
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
 
-    res.status(200).json({ groups, total });
+    res.status(200).json(group);
   } catch (error) {
-    console.error("Error fetching groups:", error);
+    console.error("Error fetching group:", error);
     res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 
+// Match groups based on student preferences (with search)
+app.get("/api/match-groups/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+  const { page = 1, limit = 10, search = "" } = req.query;
+  const skip = (page - 1) * parseInt(limit, 10);
+
+  try {
+    const student = await Student.findOne({ id: studentId });
+    if (!student) {
+      return res.status(404).json({ message: "학생 정보를 찾을 수 없습니다." });
+    }
+
+    const {
+      prefered_gender = [],
+      prefered_school = [],
+      prefered_personality = [],
+      prefered_tendency = [],
+      subject: studentSubjects = []
+    } = student;
+
+    // 검색어가 있으면 그룹 name 필터 적용
+    const searchFilter = search
+      ? { name: { $regex: search, $options: "i" } }
+      : {};
+
+    const allGroups = await Group.find(searchFilter);
+
+    const groupsWithScores = allGroups.map((group) => {
+      let score = 0;
+      if (prefered_gender.includes(group.gender)) score++;
+      if (prefered_school.includes(group.university)) score++;
+      if (studentSubjects.includes(group.subject)) score++;
+      if (group.tendency && group.tendency.some(t => prefered_tendency.includes(t))) score++;
+      if (group.personality && group.personality.some(p => prefered_personality.includes(p))) score++;
+      return { id: group._id, ...group.toObject(), score };
+    });
+
+    groupsWithScores.sort((a, b) => b.score - a.score);
+    const paginatedGroups = groupsWithScores.slice(skip, skip + parseInt(limit, 10));
+    const total = groupsWithScores.length;
+
+    res.status(200).json({ groups: paginatedGroups, total });
+  } catch (error) {
+    console.error("Error matching groups:", error);
+    res.status(500).json({ message: "Error matching groups.", error });
+  }
+});
 
 // 서버 시작
 app.listen(port, () => {

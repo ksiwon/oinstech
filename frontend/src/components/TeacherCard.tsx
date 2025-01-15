@@ -13,9 +13,10 @@ interface TeacherCardProps {
     subject: string[];
     personality: string[];
     tendency: string[];
+    score: number;
 }
 
-const TeacherCard: React.FC<TeacherCardProps> = ({ id, name, university, major, gradeUniversity, neighborhood, introduction, subject, personality, tendency }) => {
+const TeacherCard: React.FC<TeacherCardProps> = ({ id, name, university, major, gradeUniversity, neighborhood, introduction, subject, personality, tendency, score }) => {
     const navigate = useNavigate();
     return (
         <CardFrame onClick={() => navigate("/search/teacher/"+id)}>
@@ -31,6 +32,10 @@ const TeacherCard: React.FC<TeacherCardProps> = ({ id, name, university, major, 
                                 <i className="fas fa-flag"></i>
                             </TopFlag>
                             <TopLoc>{neighborhood}</TopLoc>
+                            <TopFlag style={{ color: "#DFC100" }}>
+                                <i className="fas fa-star"></i>
+                            </TopFlag>
+                            <TopLoc>{score}</TopLoc>
                         </TopFlagLocFrame>
                     </TopContentAbove>
                     <TopContentBelow>
