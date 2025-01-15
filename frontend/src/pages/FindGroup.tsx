@@ -43,7 +43,7 @@ const FindGroup: React.FC = () => {
     }
 
     return (
-        <div>
+        <GlobalWrapper>
             <Header />
             <Title text="그룹 찾기" />
             <WholeWrapper>
@@ -78,11 +78,18 @@ const FindGroup: React.FC = () => {
                 onPageChange={handlePageChange}
             />
             <Footer />
-        </div>
+        </GlobalWrapper>
     );
 };
 
 export default FindGroup;
+
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
 
 const WholeWrapper = styled.div`
     display: flex;

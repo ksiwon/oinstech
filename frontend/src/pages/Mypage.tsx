@@ -31,7 +31,7 @@ const Mypage: React.FC = () => {
     }
 
     return (
-        <div>
+        <GlobalWrapper>
             <Header />
             {user.role === 'student' ? (
                 <div>
@@ -281,11 +281,18 @@ const Mypage: React.FC = () => {
                 </div>
             ) : null}
             <Footer />
-        </div>
+        </GlobalWrapper>
     );
 };
 
 export default Mypage;
+
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
 
 const ImageFrame = styled.div<{ imageUrl: string }>`
     width: 328px;

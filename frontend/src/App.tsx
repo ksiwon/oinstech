@@ -35,6 +35,7 @@ function App() {
             <Route path="/search/teacher/:id" element={<OtherpageTeacher />} />
             <Route path="/search/student/:id" element={<OtherpageStudent />} />
             
+            <Route path="/chat/:id" element={<Chat />} />
             <Route path="/chat/:id/:id" element={<Chat />} />
         
             <Route path="/search/group" element={<FindGroup />} />
