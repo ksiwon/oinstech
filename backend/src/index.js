@@ -3,7 +3,9 @@ const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const http = require('http');
 require("dotenv").config();
+const { Server } = require('socket.io');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -561,7 +563,68 @@ app.get("/api/match-groups/:studentId", async (req, res) => {
   }
 });
 
+// Chat API Endpoints
+app.get('/chat/:userId/:partnerId', async (req, res) => {
+  const { userId, partnerId } = req.params;
+  // 실제 데이터베이스 로직으로 교체 필요
+  // 예시로 빈 배열 반환
+  return res.status(200).json([]);
+});
+
+app.post('/chat/:userId/:partnerId', async (req, res) => {
+  const { userId, partnerId } = req.params;
+  const message = req.body;
+  // 실제 데이터베이스 로직으로 교체 필요
+  // 예시로 수신 확인 반환
+  return res.status(201).json({ message: 'Message received' });
+});
+
+// Create HTTP server
+const server = http.createServer(app);
+
+// Initialize Socket.io
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000', // 프론트엔드 URL에 맞게 조정
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
+
+// Handle Socket.io connections
+io.on('connection', (socket) => {
+  console.log(`New client connected: ${socket.id}`);
+
+  // Join Room
+  socket.on('joinRoom', ({ id1, id2 }) => {
+    const roomId = [id1, id2].sort().join('-');
+    socket.join(roomId);
+    console.log(`Socket ${socket.id} joined room ${roomId}`);
+  });
+
+  // Send Message
+  socket.on('sendMessage', ({ id1, id2, text, sender, timestamp, isSent }) => {
+    const roomId = [id1, id2].sort().join('-');
+    const message = { text, sender, timestamp, isSent };
+    // Broadcast the message to the room
+    io.to(roomId).emit('newMessage', message);
+    console.log(`Message sent to room ${roomId}:`, message);
+  });
+
+  // Leave Room
+  socket.on('leaveRoom', ({ id1, id2 }) => {
+    const roomId = [id1, id2].sort().join('-');
+    socket.leave(roomId);
+    console.log(`Socket ${socket.id} left room ${roomId}`);
+  });
+
+  // Handle Disconnection
+  socket.on('disconnect', () => {
+    console.log(`Client disconnected: ${socket.id}`);
+  });
+});
+
 // 서버 시작
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

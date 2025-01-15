@@ -38,7 +38,6 @@ function App() {
             <Route path="/search/student/:id" element={<OtherpageStudent />} />
            
             <Route path="/chat/:userId/:partnerId" element={<Chat />} />
-            <Route path="/chat/:partnerId/:userId" element={<Chat />} />
             <Route path="/chat/:id" element={<Chat />} />
 
             <Route path="/search/group" element={<FindGroup />} />

@@ -1,3 +1,5 @@
+// frontend/src/pages/Chat.tsx
+
 import styled from "styled-components";
 import Header from "../components/Header";
 import Pagination from "../components/Pagination";
@@ -6,13 +8,16 @@ import SearchTab from "../components/SearchTab";
 import ChatList from "../components/ChatList";
 import Answer from "../components/Answer";
 import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { useParams } from "react-router-dom";
+import { io, Socket } from "socket.io-client";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 
-const socket = io("http://localhost:5000");
+const BACKEND_URL = "http://localhost:5000";
+
+const socket: Socket = io(BACKEND_URL, {
+  transports: ["websocket", "polling"],
+  autoConnect: false,
+});
 
 interface Message {
   text: string;
@@ -23,40 +28,59 @@ interface Message {
 
 const Chat: React.FC = () => {
   const { userId, partnerId } = useParams<{ userId: string; partnerId: string }>();
-  const [messages, setMessages] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
 
-  // Normalize user IDs to create a consistent room ID
-  const [sortedUserId, sortedPartnerId] = [userId, partnerId].sort();
-  const roomId = `${sortedUserId}-${sortedPartnerId}`;
+  const sortedUserId = userId ?? "";
+  const sortedPartnerId = partnerId ?? "";
+  const roomId = [sortedUserId, sortedPartnerId].sort().join("-");
 
-  // Fetch chat messages
   useEffect(() => {
-    const fetchMessages = async () => {
+    if (!userId || !partnerId) {
+      navigate("/error", { replace: true });
+      return;
+    }
+
+    const handleNewMessage = (message: Message) => {
+      setMessages((prev) => {
+        if (!prev.some((msg) => msg.text === message.text && msg.timestamp === message.timestamp)) {
+          return [...prev, message];
+        }
+        return prev;
+      });
+    };
+
+    const initializeChat = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/chat/${userId}/${partnerId}`);
+        const response = await axios.get<Message[]>(
+          `${BACKEND_URL}/chat/${userId}/${partnerId}`
+        );
         setMessages(response.data);
+
+        socket.connect();
+        socket.emit("joinRoom", { id1: sortedUserId, id2: sortedPartnerId });
+
+        socket.off("newMessage", handleNewMessage);
+        socket.on("newMessage", handleNewMessage);
       } catch (error) {
         console.error("Failed to fetch messages:", error);
+        navigate("/error", { replace: true });
       }
     };
 
-    fetchMessages();
-    socket.emit("joinRoom", { id1: sortedUserId, id2: sortedPartnerId });
-
-    socket.on("newMessage", (message: Message) => {
-      setMessages((prev) => [...prev, message]);
-    });
+    initializeChat();
 
     return () => {
-      socket.off("newMessage");
+      socket.off("newMessage", handleNewMessage);
+      socket.emit("leaveRoom", { id1: sortedUserId, id2: sortedPartnerId });
+      socket.disconnect();
     };
-  }, [sortedUserId, sortedPartnerId]);
+  }, [userId, partnerId, sortedUserId, sortedPartnerId, navigate]);
 
-  // Handle sending messages
   const handleSendMessage = async () => {
-    if (newMessage.trim()) {
-      const message = {
+    if (newMessage.trim() && userId && partnerId) {
+      const message: Message = {
         text: newMessage,
         sender: sortedUserId,
         timestamp: new Date().toISOString(),
@@ -64,7 +88,7 @@ const Chat: React.FC = () => {
       };
 
       try {
-        await axios.post(`http://localhost:5000/chat/${sortedUserId}/${sortedPartnerId}`, message);
+        await axios.post(`${BACKEND_URL}/chat/${sortedUserId}/${sortedPartnerId}`, message);
       } catch (error) {
         console.error("Failed to send message via REST API:", error);
       }
@@ -76,21 +100,37 @@ const Chat: React.FC = () => {
     }
   };
 
+  if (!userId || !partnerId) {
+    return null;
+  }
+
   return (
-    <div>
+    <GlobalWrapper>
       <Header />
       <WholeWrapper>
         <LeftWrapper>
           <SearchTabWrapper>
             <SearchTab onSearch={(value) => alert(value)} />
           </SearchTabWrapper>
-          {/* Other ChatList components */}
+          <ChatList
+            username={"이지은"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"unread"}
+            clicked={false}
+          />
+          <ChatList
+            username={"김철수"}
+            usergrade={"고2"}
+            answerTime={"2025-01-01"}
+            answerType={"replied"}
+            clicked={true}
+          />
         </LeftWrapper>
-
         <RightWrapper>
           <ChatHeader>
             <BackUserWrapper>
-              <Back>
+              <Back onClick={() => navigate(-1)}>
                 <i className="fas fa-chevron-left" />
               </Back>
               <UserWrapper>
@@ -107,132 +147,204 @@ const Chat: React.FC = () => {
             <MessagesWrapper>
               {messages.map((msg, index) => (
                 <MessageBubble key={index} isSent={msg.sender === sortedUserId}>
-                  <strong>{msg.sender}</strong>: {msg.text}
+                  <strong>{msg.sender === sortedUserId ? "You" : "Partner"}:</strong> {msg.text}
                 </MessageBubble>
               ))}
             </MessagesWrapper>
-
             <InputWrapper>
               <Input
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="메시지를 입력하세요"
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleSendMessage();
+                  }
+                }}
               />
               <SendButton onClick={handleSendMessage}>전송</SendButton>
             </InputWrapper>
           </ChatContent>
         </RightWrapper>
       </WholeWrapper>
-
       <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
       <Footer />
-    </div>
+    </GlobalWrapper>
   );
 };
 
 export default Chat;
 
 // Styled Components
+const GlobalWrapper = styled.div`
+display: flex;
+flex-direction: column;
+height: 100vh;
+background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
+
+// Styled Components (continued)
 const WholeWrapper = styled.div`
-  display: flex;
-  width: 100%;
+display: flex;
+flex: 1;
+width: 100%;
 `;
 
 const LeftWrapper = styled.div`
-  width: 320px;
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  background-color: ${({ theme }) => theme.colors.primary};
+width: 320px;
+display: flex;
+flex-direction: column;
+background-color: ${({ theme }) => theme.colors.primary};
+overflow-y: auto;
 `;
 
 const SearchTabWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px;
+background-color: ${({ theme }) => theme.colors.primary};
+box-sizing: border-box;
 `;
 
 const RightWrapper = styled.div`
-  flex-grow: 1;
-  padding: 12px;
+flex: 1;
+display: flex;
+flex-direction: column;
+background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const ChatHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 12px;
+width: 100%;
+height: 100px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 16px;
+background-color: ${({ theme }) => theme.colors.primary};
+box-sizing: border-box;
 `;
 
 const BackUserWrapper = styled.div`
-  display: flex;
-  align-items: center;
+display: flex;
+align-items: center;
+gap: 16px;
+box-sizing: border-box;
 `;
 
 const Back = styled.div`
-  cursor: pointer;
-  margin-right: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+width: 48px;
+height: 48px;
+font-size: 24px; /* Adjusted for better icon sizing */
+color: ${({ theme }) => theme.colors.white};
+cursor: pointer;
 `;
 
 const UserWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+gap: 4px;
 `;
 
-const UserSection = styled.div``;
+const UserSection = styled.div`
+font-size: ${({ theme }) => theme.typography.T4.fontSize};
+font-weight: ${({ theme }) => theme.typography.T2.fontWeight};
+color: ${({ theme }) => theme.colors.white};
+`;
+
 const UserGrade = styled.div`
-  font-size: 12px;
+font-size: ${({ theme }) => theme.typography.T6.fontSize};
+font-weight: ${({ theme }) => theme.typography.T6.fontWeight};
+color: ${({ theme }) => theme.colors.white};
 `;
 
 const DetailsSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: right;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 4px;
 `;
 
 const DateText = styled.div`
-  font-size: 12px;
-  color: ${({ theme }) => theme.colors.gray};
+font-size: ${({ theme }) => theme.typography.T6.fontSize};
+font-weight: ${({ theme }) => theme.typography.T7.fontWeight};
+color: ${({ theme }) => theme.colors.white};
 `;
 
 const ChatContent = styled.div`
-  display: flex;
-  flex-direction: column;
+flex: 1;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+width: 100%;
 `;
 
 const MessagesWrapper = styled.div`
-  flex-grow: 1;
-  margin-bottom: 12px;
+flex: 1;
+padding: 16px;
+overflow-y: auto;
+display: flex;
+flex-direction: column;
+gap: 8px;
 `;
 
 const MessageBubble = styled.div<{ isSent: boolean }>`
-  background-color: ${({ isSent, theme }) => (isSent ? theme.colors.primary : theme.colors.gray[100])};
-  padding: 8px;
-  border-radius: 10px;
-  margin-bottom: 8px;
+max-width: 70%;
+padding: 12px;
+border-radius: 12px;
+background-color: ${({ isSent, theme }) =>
+  isSent ? theme.colors.blue[300] : theme.colors.gray[200]};
+color: ${({ isSent, theme }) =>
+  isSent ? theme.colors.white : theme.colors.black};
+align-self: ${({ isSent }) => (isSent ? "flex-end" : "flex-start")};
+text-align: ${({ isSent }) => (isSent ? "right" : "left")};
+font-size: ${({ theme }) => theme.typography.T6.fontSize};
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+word-break: break-word;
 `;
 
 const InputWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+display: flex;
+padding: 16px;
+border-top: 1px solid ${({ theme }) => theme.colors.gray[200]};
+background-color: ${({ theme }) => theme.colors.gray[100]};
 `;
 
 const Input = styled.input`
-  width: 80%;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.gray};
+flex: 1;
+padding: 12px;
+border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+border-radius: 8px;
+font-size: ${({ theme }) => theme.typography.T7.fontSize};
+outline: none;
+
+&:focus {
+  border-color: ${({ theme }) => theme.colors.primary};
+}
 `;
 
 const SendButton = styled.button`
-  padding: 8px 16px;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: white;
-  border: none;
-  cursor: pointer;
-`;
+margin-left: 8px;
+padding: 12px 16px;
+background-color: ${({ theme }) => theme.colors.primary};
+color: ${({ theme }) => theme.colors.white};
+border: none;
+border-radius: 8px;
+font-size: ${({ theme }) => theme.typography.T6.fontSize};
+cursor: pointer;
+transition: background-color 0.3s ease;
 
+&:hover {
+  background-color: ${({ theme }) => theme.colors.blue[800]};
+}
+
+&:active {
+  transform: scale(0.98);
+}
+`;
