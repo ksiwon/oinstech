@@ -30,8 +30,8 @@ const Header: React.FC = () => {
 
   // 로그아웃 핸들러
   const handleLogout = () => {
-    dispatch(clearUserData());
     navigate("/");
+    dispatch(clearUserData());
   };
 
   const handleStudentLogin = () => {
