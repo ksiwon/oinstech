@@ -77,7 +77,7 @@ const Chat: React.FC = () => {
             username={"김철수"}
             usergrade={"고2"}
             answerTime={"2025-01-01"}
-            answerType={"unread"}
+            answerType={"replied"}
             clicked={true}
           />
                     <ChatList
