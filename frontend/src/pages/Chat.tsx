@@ -21,43 +21,44 @@ interface Message {
   isSent: boolean;
 }
 
+
 const Chat: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { userId, partnerId } = useParams<{ userId: string; partnerId: string }>();
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
-  const [studentData, setStudentData] = useState<any>(null);
 
+  // Generate consistent roomId
+  const roomId = [userId, partnerId].sort().join("-");
+
+  // Fetch chat messages
   useEffect(() => {
-    const fetchStudentData = async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/api/students/find", {
-          id,
-        });
-        setStudentData(response.data);
-      } catch (error) {
-        console.error("Failed to fetch student data:", error);
-      }
-    };
-
-    fetchStudentData();
-  }, [id]);
-
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      const newMessageData = {
-        text: newMessage,
-        sender: "student",
-        timestamp: new Date().toISOString(),
+      const fetchMessages = async () => {
+          try {
+              const response = await axios.get(`http://localhost:5000/chat/${userId}/${partnerId}`);
+              setMessages(response.data);
+          } catch (error) {
+              console.error("Failed to fetch messages:", error);
+          }
       };
-      setMessages((prev) => [...prev, newMessageData]);
-      setNewMessage("");
-    }
+      fetchMessages();
+  }, [userId, partnerId]);
+
+  // Handle sending messages
+  const handleSendMessage = async () => {
+      if (newMessage.trim()) {
+          const message = { text: newMessage, sender: userId, timestamp: new Date().toISOString() };
+          try {
+              await axios.post(`http://localhost:5000/chat/${userId}/${partnerId}`, message);
+              setMessages((prev) => [...prev, message]);
+              setNewMessage("");
+          } catch (error) {
+              console.error("Failed to send message:", error);
+          }
+      }
   };
 
-  const user = useSelector((state: RootState) => state.user.teacherData);
-  const myId = user?.id;
 
-  if (!studentData) return <div>Loading student data...</div>;
+
   return (
     <div>
       <Header />
