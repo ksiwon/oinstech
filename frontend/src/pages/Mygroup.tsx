@@ -26,8 +26,8 @@ const Mygroup: React.FC = () => {
     useEffect(() => {
         const fetchGroups = async () => {
             if (!teacherId) {
-                alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
-                navigate("/login");
+                alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+                navigate("/");
                 return;
             }
 
@@ -99,7 +99,7 @@ const Mygroup: React.FC = () => {
                 <Title text="My Group" />
                 <ContentWrapper>
                     <p>현재 생성된 그룹이 없습니다.</p>
-                    <Button onClick={() => navigate("/create-group")}>그룹 생성</Button>
+                    <Button onClick={() => navigate("/mygroup/create")}>그룹 생성</Button>
                 </ContentWrapper>
                 <Footer />
             </GlobalWrapper>
@@ -197,7 +197,7 @@ const GroupInfo = styled.div`
 const GroupName = styled.h3`
     font-family: pretendard;
     margin: 4px 0 8px;
-    font-size: 18px;
+    font-size: 24px;
 `;
 
 const GroupDetail = styled.p`
@@ -205,7 +205,7 @@ const GroupDetail = styled.p`
     margin: 4px 0;
     width: 100%;
     text-align: left;
-    font-size: 14px;
+    font-size: 18px;
     color: #555;
     overflow: hidden;
     text-overflow: ellipsis;
