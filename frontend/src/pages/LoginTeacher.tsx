@@ -45,7 +45,7 @@ const LoginTeacher: React.FC = () => {
     };
 
     return (
-        <div className="login-container">
+        <GlobalWrapper>
             <Header />
             <Wrapper>
                 <ContentContainer>
@@ -83,16 +83,23 @@ const LoginTeacher: React.FC = () => {
                 </ButtonContainer>
             </Wrapper>
             <Footer />
-        </div>
+        </GlobalWrapper>
     );
 };
 
 export default LoginTeacher;
 
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
+
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 16px;
     padding: 32px 192px;

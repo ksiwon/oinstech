@@ -43,7 +43,7 @@ const FindStudent: React.FC = () => {
     }
 
     return (
-        <div>
+        <GlobalWrapper>
             <Header />
             <Title text="강사 찾기" />
             <WholeWrapper>
@@ -75,11 +75,18 @@ const FindStudent: React.FC = () => {
                 onPageChange={handlePageChange}
             />
             <Footer />
-        </div>
+        </GlobalWrapper>
     );
 };
 
 export default FindStudent;
+
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
 
 const WholeWrapper = styled.div`
     display: flex;

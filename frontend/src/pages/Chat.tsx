@@ -59,7 +59,7 @@ const Chat: React.FC = () => {
 
   if (!studentData) return <div>Loading student data...</div>;
   return (
-    <div>
+    <GlobalWrapper>
       <Header />
       <WholeWrapper>
         <LeftWrapper>
@@ -179,11 +179,18 @@ const Chat: React.FC = () => {
       </WholeWrapper>
       <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
       <Footer />
-    </div>
+    </GlobalWrapper>
   );
 };
 
 export default Chat;
+
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
 
 // Styled Components
 const WholeWrapper = styled.div`

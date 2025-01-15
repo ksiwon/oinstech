@@ -89,12 +89,12 @@ const Mygroup: React.FC = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <GlobalWrapper>Loading...</GlobalWrapper>;
     }
 
     if (!groups.length) {
         return (
-            <div>
+            <GlobalWrapper>
                 <Header />
                 <Title text="내가 만든 그룹" />
                 <ContentWrapper>
@@ -102,12 +102,12 @@ const Mygroup: React.FC = () => {
                     <Button onClick={() => navigate("/create-group")}>그룹 생성</Button>
                 </ContentWrapper>
                 <Footer />
-            </div>
+            </GlobalWrapper>
         );
     }
 
     return (
-        <div>
+        <GlobalWrapper>
             <Header />
             <Title text="내가 만든 그룹" />
             <WholeWrapper>
@@ -145,11 +145,18 @@ const Mygroup: React.FC = () => {
                     onClose={() => setShowModal(false)}
                 />
             )}
-        </div>
+        </GlobalWrapper>
     );
 };
 
 export default Mygroup;
+
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
 
 const ContentWrapper = styled.div`
     display: flex;

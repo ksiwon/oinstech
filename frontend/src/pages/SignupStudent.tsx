@@ -217,7 +217,7 @@ const SignupStudent: React.FC = () => {
     };
 
   return (
-    <div style={{ margin: "auto" }}>
+  <GlobalWrapper>
     <Header />
       <Title text="학생 회원가입" />
 
@@ -554,11 +554,18 @@ const SignupStudent: React.FC = () => {
         <Button2 onClick={() => handleSubmit()}>회원가입</Button2>
       </ButtonContainer>
       <Footer /> 
-    </div>
+    </GlobalWrapper>
   );
 };
 
 export default SignupStudent;
+
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
 
 const Wrapper = styled.div`
     display: flex;

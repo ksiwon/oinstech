@@ -71,84 +71,89 @@ const Grouppage: React.FC = () => {
     }
 
     return (
-        <div>
+        <GlobalWrapper>
             <Header />
-            <div>
-                <Title text="그룹 매칭" />
-                <WholeFrame>
-                    <TopFrame>
-                        <ImageFrame imageUrl={(groupData.gender === '남성') ? boy : girl}/>
-                        <ContentWrapper>
-                            <ContentFrame>
-                                <Content>
-                                    <ContentName>이름</ContentName>
-                                    <ContentInput>{groupData.name}</ContentInput>
-                                </Content>
-                                <Content>
-                                    <ContentName>성별</ContentName>
-                                    <ContentInput>{groupData.gender}</ContentInput>
-                                </Content>
-                            </ContentFrame>
-                            <Content>
-                                <ContentName>학교</ContentName>
-                                <ContentInput>{groupData.university} {groupData.major} {groupData.gradeUniversity}</ContentInput>
-                            </Content>
-                            <ContentFrame>
-                                <Content>
-                                    <ContentName>수업 과목</ContentName>
-                                    <ContentInput>
-                                        <SubjectBig subjects={[GetSubject(groupData.subject)]} />
-                                    </ContentInput>
-                                </Content>
-                                <Content>
-                                    <ContentName>모집 인원</ContentName>
-                                    <ContentInput>
-                                        {groupData.currentPersonnel} / {groupData.personnel}
-                                    </ContentInput>
-                                </Content>
-                            </ContentFrame>
-                        </ContentWrapper>
-                    </TopFrame>
-                    <BottomFrame>
+            <Title text="그룹 매칭" />
+            <WholeFrame>
+                <TopFrame>
+                    <ImageFrame imageUrl={(groupData.gender === '남성') ? boy : girl}/>
+                    <ContentWrapper>
                         <ContentFrame>
                             <Content>
-                                <ContentName>리더 성격</ContentName>
-                                <ContentInput>{groupData.personality.join(', ')}</ContentInput>
+                                <ContentName>이름</ContentName>
+                                <ContentInput>{groupData.name}</ContentInput>
                             </Content>
                             <Content>
-                                <ContentName>수업 방식</ContentName>
-                                <ContentInput>{groupData.tendency.join(', ')}</ContentInput>
+                                <ContentName>성별</ContentName>
+                                <ContentInput>{groupData.gender}</ContentInput>
                             </Content>
                         </ContentFrame>
                         <Content>
-                            <ContentName>수업 장소</ContentName>
-                            <ContentInput>{groupData.address}</ContentInput>
+                            <ContentName>학교</ContentName>
+                            <ContentInput>{groupData.university} {groupData.major} {groupData.gradeUniversity}</ContentInput>
+                        </Content>
+                        <ContentFrame>
+                            <Content>
+                                <ContentName>수업 과목</ContentName>
+                                <ContentInput>
+                                    <SubjectBig subjects={[GetSubject(groupData.subject)]} />
+                                </ContentInput>
+                            </Content>
+                            <Content>
+                                <ContentName>모집 인원</ContentName>
+                                <ContentInput>
+                                    {groupData.currentPersonnel} / {groupData.personnel}
+                                </ContentInput>
+                            </Content>
+                        </ContentFrame>
+                    </ContentWrapper>
+                </TopFrame>
+                <BottomFrame>
+                    <ContentFrame>
+                        <Content>
+                            <ContentName>리더 성격</ContentName>
+                            <ContentInput>{groupData.personality.join(', ')}</ContentInput>
                         </Content>
                         <Content>
-                            <ContentName>수업료</ContentName>
-                            <ContentInput>{groupData.pay.toLocaleString()}원 (시간 당)</ContentInput>
+                            <ContentName>수업 방식</ContentName>
+                            <ContentInput>{groupData.tendency.join(', ')}</ContentInput>
                         </Content>
-                        <Content style={{ height: '150px' }}>
-                            <ContentName>소개</ContentName>
-                            <ContentInput>{groupData.introduction}</ContentInput>
-                        </Content>
-                        <Content style={{ height: '300px' }}>
-                            <ContentName>상세 내용</ContentName>
-                            <ContentInput>{groupData.detail}</ContentInput>
-                        </Content>
-                    </BottomFrame>
-                </WholeFrame>
-                <ButtonContainer>
-                    <Button1 onClick={() => navigate(-1)}>이전</Button1>
-                    <Button2 onClick={() => navigate("/chat")}>문의하기</Button2>
-                </ButtonContainer>
-            </div>
+                    </ContentFrame>
+                    <Content>
+                        <ContentName>수업 장소</ContentName>
+                        <ContentInput>{groupData.address}</ContentInput>
+                    </Content>
+                    <Content>
+                        <ContentName>수업료</ContentName>
+                        <ContentInput>{groupData.pay.toLocaleString()}원 (시간 당)</ContentInput>
+                    </Content>
+                    <Content style={{ height: '150px' }}>
+                        <ContentName>소개</ContentName>
+                        <ContentInput>{groupData.introduction}</ContentInput>
+                    </Content>
+                    <Content style={{ height: '300px' }}>
+                        <ContentName>상세 내용</ContentName>
+                        <ContentInput>{groupData.detail}</ContentInput>
+                    </Content>
+                </BottomFrame>
+            </WholeFrame>
+            <ButtonContainer>
+                <Button1 onClick={() => navigate(-1)}>이전</Button1>
+                <Button2 onClick={() => navigate("/chat")}>문의하기</Button2>
+            </ButtonContainer>
             <Footer />
-        </div>
+        </GlobalWrapper>
     );
 };
 
 export default Grouppage;
+
+const GlobalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
 
 const ImageFrame = styled.div<{ imageUrl: string }>`
     width: 242px;
