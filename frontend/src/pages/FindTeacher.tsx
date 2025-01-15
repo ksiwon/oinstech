@@ -1,4 +1,3 @@
-// FindTeacher.tsx
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import SearchTab from "../components/SearchTab";
@@ -16,14 +15,19 @@ const FindTeacher: React.FC = () => {
   const [students, setStudents] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // 강사 데이터가 Redux에 저장되어 있다고 가정 (예: teacherData)
   const teacher = useSelector((state: RootState) => state.user.teacherData);
-  const teacherId = teacher?.id; // 사용자 지정 id로 조회
+  const teacherId = teacher?.id;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -33,16 +37,15 @@ const FindTeacher: React.FC = () => {
         let response;
         if (teacherId) {
           response = await axios.get(`http://localhost:5000/api/match-students/${teacherId}`, {
-            params: { page: currentPage, limit: 10 },
+            params: { page: currentPage, limit: 10, search: searchTerm },
           });
         } else {
-          // fallback: 강사 정보가 없으면 전체 학생 목록 조회
           response = await axios.get("http://localhost:5000/api/students/list", {
-            params: { page: currentPage, limit: 10 },
+            params: { page: currentPage, limit: 10, search: searchTerm },
           });
         }
         setStudents(response.data.students);
-        setTotalPages(Math.ceil(response.data.total / 10)); // total 값으로 페이지 수 계산
+        setTotalPages(Math.ceil(response.data.total / 10));
       } catch (error) {
         console.error("Failed to fetch students:", error);
       } finally {
@@ -51,7 +54,7 @@ const FindTeacher: React.FC = () => {
     };
 
     fetchStudents();
-  }, [teacherId, currentPage]);
+  }, [teacherId, currentPage, searchTerm]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -64,24 +67,28 @@ const FindTeacher: React.FC = () => {
       <WholeWrapper>
         <SearchTabWrapper>
           <SearchTabCover>
-            <SearchTab onSearch={(value) => alert(value)} />
+            <SearchTab onSearch={handleSearch} />
           </SearchTabCover>
         </SearchTabWrapper>
         <CardWrapper>
-          {students.map((student) => (
-            <StudentCard
-              key={student.id} // key 추가
-              id={student.id}
-              name={student.name}
-              gradeHighschool={student.gradeHighschool}
-              neighborhood={student.neighborhood}
-              introduction={student.introduction}
-              subject={student.subject}
-              prefered_personality={student.prefered_personality}
-              prefered_tendency={student.prefered_tendency}
-              score={student.score || 0}
-            />
-          ))}
+          {students.length > 0 ? (
+            students.map((student) => (
+              <StudentCard
+                key={student.id}
+                id={student.id}
+                name={student.name}
+                gradeHighschool={student.gradeHighschool}
+                neighborhood={student.neighborhood}
+                introduction={student.introduction}
+                subject={student.subject}
+                prefered_personality={student.prefered_personality}
+                prefered_tendency={student.prefered_tendency}
+                score={student.score || 0}
+              />
+            ))
+          ) : (
+            <div>검색 결과가 없습니다.</div>
+          )}
         </CardWrapper>
       </WholeWrapper>
       <Pagination
@@ -125,14 +132,14 @@ const SearchTabCover = styled.div`
 `;
 
 const CardWrapper = styled.div`
-  display: flex;
-  width: 90%;
-  padding: 32px 0;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  align-self: stretch;
-  flex-wrap: wrap;
-  margin: 0 auto;
-  justify-content: space-evenly;
+    display: flex;
+    width: 90%;
+    padding: 32px 0;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    align-self: stretch;
+    flex-wrap: wrap;
+    margin: 0 auto; /* 가운데 정렬 */
+    justify-content: space-evenly; /* 카드 간 간격 균등 */
 `;
