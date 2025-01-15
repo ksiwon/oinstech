@@ -62,7 +62,7 @@ const Header: React.FC = () => {
           <Nav>
             <NavItem onClick={() => handleNavClick("/search/teacher")}>강사 찾기</NavItem>
             <NavItem onClick={() => handleNavClick("/search/group")}>그룹 매칭</NavItem>
-            <NavItem onClick={() => handleNavClick("/chat/"+userId)}>채팅</NavItem>
+            <NavItem onClick={() => handleNavClick("/chat/"+userId+"/poiu")}>채팅</NavItem>
           </Nav>
         )}
       </LogoAndNav>
