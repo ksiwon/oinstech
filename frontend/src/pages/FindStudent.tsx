@@ -7,12 +7,16 @@ import Footer from "../components/Footer";
 import TeacherCard from "../components/TeacherCard";
 import styled from "styled-components";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const FindStudent: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [teachers, setTeachers] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [totalPages, setTotalPages] = useState<number>(1);
+    const user = useSelector((state: RootState) => state.user.studentData);
+    const studentId = user?.id;
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -21,22 +25,30 @@ const FindStudent: React.FC = () => {
 
     useEffect(() => {
         const fetchTeachers = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get("http://localhost:5000/api/teachers/list", {
-                    params: { page: currentPage, limit: 10 },
-                });
-                setTeachers(response.data.teachers);
-                setTotalPages(Math.ceil(response.data.total / 10));
-            } catch (error) {
-                console.error("Failed to fetch teachers:", error);
-            } finally {
-                setLoading(false);
+          try {
+            setLoading(true);
+            let response;
+            if (studentId) {
+              response = await axios.get(`http://localhost:5000/api/match-teachers/${studentId}`, {
+                params: { page: currentPage, limit: 10 },
+              });
+            } else {
+              response = await axios.get("http://localhost:5000/api/teachers/list", {
+                params: { page: currentPage, limit: 10 },
+              });
             }
+            setTeachers(response.data.teachers);
+            setTotalPages(Math.ceil(response.data.total / 10)); // total 값으로 페이지 수 계산
+          } catch (error) {
+            console.error("Failed to fetch teachers:", error);
+          } finally {
+            setLoading(false);
+          }
         };
-
+      
         fetchTeachers();
-    }, [currentPage]);
+      }, [studentId, currentPage]);
+      
 
     if (loading) {
         return <div>Loading...</div>;
@@ -65,6 +77,7 @@ const FindStudent: React.FC = () => {
                             subject={teacher.subject}
                             personality={teacher.personality}
                             tendency={teacher.tendency}
+                            score={teacher.score || 0}
                         />
                     ))}
                 </CardWrapper>

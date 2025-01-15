@@ -16,6 +16,7 @@ interface GroupCardProps {
     address: string;
     personnel: number;
     currentPersonnel: number;
+    score: number;
 }
 
 function GetSubject(subject: string) {
@@ -41,7 +42,7 @@ function GetSubject(subject: string) {
     }
 }
 
-const GroupCard: React.FC<GroupCardProps> = ({ id, teacherId, name, university, major, gradeUniversity, introduction, subject, personality, tendency, address, personnel, currentPersonnel }) => {
+const GroupCard: React.FC<GroupCardProps> = ({ id, teacherId, name, university, major, gradeUniversity, introduction, subject, personality, tendency, address, personnel, currentPersonnel, score }) => {
     const navigate = useNavigate();
     return (
         <CardFrame onClick={() => navigate("/search/group/"+id)}>
@@ -57,6 +58,10 @@ const GroupCard: React.FC<GroupCardProps> = ({ id, teacherId, name, university, 
                                 <i className="fas fa-user"></i>
                             </TopFlag>
                             <TopLoc>{currentPersonnel} / {personnel}</TopLoc>
+                            <TopFlag style={{ color: "#DFC100" }}>
+                                <i className="fas fa-star"></i>
+                            </TopFlag>
+                            <TopLoc>{score}</TopLoc>
                         </TopFlagLocFrame>
                     </TopContentAbove>
                     <TopContentBelow>
