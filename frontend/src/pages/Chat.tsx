@@ -12,7 +12,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:5000");
 
 interface Message {
   text: string;
@@ -32,35 +32,66 @@ const Chat: React.FC = () => {
 
   // Fetch chat messages
   useEffect(() => {
-      const fetchMessages = async () => {
-          try {
-              const response = await axios.get(`http://localhost:5000/chat/${userId}/${partnerId}`);
-              setMessages(response.data);
-          } catch (error) {
-              console.error("Failed to fetch messages:", error);
-          }
-      };
-      fetchMessages();
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/chat/${userId}/${partnerId}`);
+        setMessages(response.data);
+      } catch (error) {
+        console.error("Failed to fetch messages:", error);
+      }
+    };
+     fetchMessages();
+     socket.emit("joinRoom", { id1: userId, id2: partnerId });
+     console.log("Joining room", { id1: userId, id2: partnerId });
+
+     socket.on("newMessage", (message: Message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+    return () => {
+      socket.off("newMessage");
+    };
+  },  [userId, partnerId]);
+
+
+  // Join WebSocket room and listen for new messages
+  useEffect(() => {
+    socket.emit("joinRoom", { id1: userId, id2: partnerId });
+    console.log("Joining room", { id1: userId, id2: partnerId });
+    socket.on("newMessage", (message: Message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
   }, [userId, partnerId]);
+
+
 
   // Handle sending messages
   const handleSendMessage = async () => {
-      if (newMessage.trim()) {
-          const message = { text: newMessage, sender: userId, timestamp: new Date().toISOString() };
-          try {
-              await axios.post(`http://localhost:5000/chat/${userId}/${partnerId}`, message);
-              setMessages((prev) => [...prev, message]);
-              setNewMessage("");
-          } catch (error) {
-              console.error("Failed to send message:", error);
-          }
-      }
+    if (newMessage.trim()) {
+      const message = { text: newMessage, sender: userId, timestamp: new Date().toISOString() };
+
+      // Send message via REST API
+      // try {
+      //   await axios.post(`http://localhost:5000/chat/${userId}/${partnerId}`, message);
+      // } catch (error) {
+      //   console.error("Failed to send message via REST API:", error);
+      // }
+
+      // Emit message to WebSocket for real-time updates
+      socket.emit("sendMessage", { id1: userId, id2: partnerId, ...message });
+
+      // Update local state
+      setMessages((prev) => [...prev, message]);
+      setNewMessage("");
+    }
   };
 
 
-
   return (
-    <GlobalWrapper>
+    <div>
       <Header />
       <WholeWrapper>
         <LeftWrapper>
@@ -161,9 +192,10 @@ const Chat: React.FC = () => {
             {/* 메시지를 표시하는 영역 */}
             <MessagesWrapper>
               {messages.map((msg, index) => (
-                <MessageBubble key={index} isSent={msg.isSent}>
-                  {msg.text}
+                <MessageBubble key={index} isSent={msg.sender === userId}>
+                  <strong>{msg.sender}</strong>: {msg.text}
                 </MessageBubble>
+               
               ))}
             </MessagesWrapper>
             {/* 입력창과 전송 버튼 */}
@@ -180,18 +212,11 @@ const Chat: React.FC = () => {
       </WholeWrapper>
       <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
       <Footer />
-    </GlobalWrapper>
+    </div>
   );
 };
 
 export default Chat;
-
-const GlobalWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: ${({ theme }) => theme.colors.gray[100]};
-`;
 
 // Styled Components
 const WholeWrapper = styled.div`
