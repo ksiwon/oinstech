@@ -59,6 +59,8 @@ const Tester: React.FC = () => {
     detail: "10년 경력의 강사입니다.",
   };
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   // 로그아웃 핸들러
   const handleLogout = () => {
     dispatch(clearUserData());
@@ -67,7 +69,7 @@ const Tester: React.FC = () => {
 
   const handleStudentPost = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/students", studentData);
+      const response = await axios.post(`${apiUrl}/api/students`, studentData);
       console.log("Student created:", response.data);
     } catch (error) {
       console.error("Error creating student:", error);
@@ -76,7 +78,7 @@ const Tester: React.FC = () => {
 
   const handleTeacherPost = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/teachers", teacherData);
+      const response = await axios.post(`${apiUrl}/api/teachers`, teacherData);
       console.log("Teacher created:", response.data);
     } catch (error) {
       console.error("Error creating teacher:", error);

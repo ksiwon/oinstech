@@ -12,6 +12,8 @@ import EditModal from "../components/EditModal"; // 모달 컴포넌트 추가
 import SearchTab from "../components/SearchTab";
 import GroupCard from "../components/GroupCard";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const Mygroup: React.FC = () => {
     const navigate = useNavigate();
     const [groups, setGroups] = useState<any[]>([]);
@@ -34,7 +36,7 @@ const Mygroup: React.FC = () => {
         const fetchGroups = async () => {
           try {
             setLoading(true);
-            const response = await axios.get("http://localhost:5000/api/groups", {
+            const response = await axios.get(`${apiUrl}/api/groups`, {
                 params: {
                     teacherId,
                     page: currentPage,
@@ -62,7 +64,7 @@ const Mygroup: React.FC = () => {
         if (!window.confirm("이 그룹을 삭제하시겠습니까?")) return;
 
         try {
-            await axios.delete(`http://localhost:5000/api/groups/${groupId}`);
+            await axios.delete(`${apiUrl}/api/groups/${groupId}`);
             alert("그룹이 성공적으로 삭제되었습니다.");
             setGroups(groups.filter(group => group.id !== groupId));
         } catch (err: any) {
@@ -73,7 +75,7 @@ const Mygroup: React.FC = () => {
 
     const handleSaveGroup = async (updatedGroup: any) => {
         try {
-            await axios.put(`http://localhost:5000/api/groups/${updatedGroup.id}`, updatedGroup);
+            await axios.put(`${apiUrl}/api/groups/${updatedGroup.id}`, updatedGroup);
             alert("그룹이 성공적으로 수정되었습니다.");
             setGroups(groups.map(group => (group.id === updatedGroup.id ? updatedGroup : group)));
             setShowModal(false); // 모달 닫기

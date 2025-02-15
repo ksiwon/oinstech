@@ -19,6 +19,7 @@ const FindTeacher: React.FC = () => {
 
   const teacher = useSelector((state: RootState) => state.user.teacherData);
   const teacherId = teacher?.id;
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -36,11 +37,11 @@ const FindTeacher: React.FC = () => {
         setLoading(true);
         let response;
         if (teacherId) {
-          response = await axios.get(`http://localhost:5000/api/match-students/${teacherId}`, {
+          response = await axios.get(`${apiUrl}/api/match-students/${teacherId}`, {
             params: { page: currentPage, limit: 12, search: searchTerm },
           });
         } else {
-          response = await axios.get("http://localhost:5000/api/students/list", {
+          response = await axios.get(`${apiUrl}/api/students/list`, {
             params: { page: currentPage, limit: 12, search: searchTerm },
           });
         }
@@ -54,7 +55,7 @@ const FindTeacher: React.FC = () => {
     };
 
     fetchStudents();
-  }, [teacherId, currentPage, searchTerm]);
+  }, [teacherId, currentPage, searchTerm, apiUrl]);
 
   if (loading) {
     return <div>Loading...</div>;

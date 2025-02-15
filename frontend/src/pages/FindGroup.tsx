@@ -10,6 +10,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const FindGroup: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [groups, setGroups] = useState<any[]>([]);
@@ -37,11 +39,11 @@ const FindGroup: React.FC = () => {
         setLoading(true);
         let response;
         if (studentId) {
-          response = await axios.get(`http://localhost:5000/api/match-groups/${studentId}`, {
+          response = await axios.get(`${apiUrl}/api/match-groups/${studentId}`, {
             params: { page: currentPage, limit: 12, search: searchTerm },
           });
         } else {
-          response = await axios.get("http://localhost:5000/api/groups", {
+          response = await axios.get(`${apiUrl}/api/groups`, {
             params: { page: currentPage, limit: 12, search: searchTerm },
           });
         }

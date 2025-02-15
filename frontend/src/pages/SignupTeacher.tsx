@@ -92,6 +92,8 @@ const optionsMap = {
   face: ["대면", "비대면"],
 };
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const SignupTeacher: React.FC = () => {
   const navigate = useNavigate();
 
@@ -163,7 +165,7 @@ const SignupTeacher: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/teachers", formData);
+      const response = await axios.post(`${apiUrl}/api/teachers`, formData);
       console.log("Teacher created:", response.data);
       alert("회원가입이 완료되었습니다.");
       navigate("/");

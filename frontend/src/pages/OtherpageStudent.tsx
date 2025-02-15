@@ -24,6 +24,8 @@ function getAge(birth: string): number {
     return age;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const OtherpageStudent: React.FC = () => {
     const { id: studentId } = useParams<{ id: string }>(); // URL에서 studentId 읽기
     const navigate = useNavigate();
@@ -37,7 +39,7 @@ const OtherpageStudent: React.FC = () => {
         const fetchStudentData = async () => {
             try {
                 // API 호출로 student 정보를 가져옴
-                const response = await axios.post("http://localhost:5000/api/students/find", {
+                const response = await axios.post(`${apiUrl}/api/students/find`, {
                     id: studentId,
                 });
 
