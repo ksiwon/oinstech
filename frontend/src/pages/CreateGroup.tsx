@@ -209,11 +209,15 @@ export default CreateGroup;
 const GlobalWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  background: ${({ theme }) => theme.colors.gray[100]};
 `;
 
 const FormWrapper = styled.div`
-  padding: 64px 16px 32px 16px;
+  width: 100%;
+  padding: 32px 10%;
+  margin-bottom: auto;
+  box-sizing: border-box;
 `;
 
 const Content = styled.div`
@@ -230,25 +234,32 @@ const Label = styled.label`
   text-align: right;
   width: 100px;
   display: block;
-  font-size: 24px;
-  font-weight: bold;
-  color: #007bff;
+  font-size: ${({ theme }) => theme.typography.T4.fontSize};
+  font-weight: ${({ theme }) => theme.typography.T4.fontWeight};
+  font-family: ${({ theme }) => theme.typography.T4.fontFamily};
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const Input = styled.input`
   font-family: pretendard;
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colors.primary};
   border-radius: 4px;
+  font-size: ${({ theme }) => theme.typography.T5.fontSize};
+  font-weight: ${({ theme }) => theme.typography.T5.fontWeight};
+  font-family: ${({ theme }) => theme.typography.T5.fontFamily};
 `;
 
 const Textarea = styled.textarea`
   font-family: pretendard;
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colors.primary};
   border-radius: 4px;
+  font-size: ${({ theme }) => theme.typography.T4.fontSize};
+  font-weight: ${({ theme }) => theme.typography.T4.fontWeight};
+  font-family: ${({ theme }) => theme.typography.T4.fontFamily};
 `;
 
 const RadioGroup = styled.div`
@@ -261,45 +272,48 @@ const RadioLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: pretendard;
-  font-size: 18px;
+  font-size: ${({ theme }) => theme.typography.T5.fontSize};
+  font-weight: ${({ theme }) => theme.typography.T5.fontWeight};
+  font-family: ${({ theme }) => theme.typography.T5.fontFamily};
 `;
 
 const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 32px;
-  justify-content: center;
-  background: var(--Primary, #38E);
-  padding: 16px 0;
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    justify-content: center;
+    background: ${({ theme }) => theme.colors.primary};
+    padding: 16px 0;
 `;
 
 const Button1 = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--White, #FFF);
-  width: 160px;
-  height: 56px;
-  border-radius: 8px;
-  background: var(--Gray-400, #AFAFAF);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.white};
+    width: 144px;
+    height: 48px;
+    border-radius: 8px;
+    background: ${({ theme }) => theme.colors.gray[400]};
 
-  font-size: 30px;
-  font-weight: 600;
-  cursor: pointer;
-`;
+    align-item: center;
+    font-size: ${({ theme }) => theme.typography.T2.fontSize};
+    font-weight: ${({ theme }) => theme.typography.T2.fontWeight};
+    cursor: pointer;
+`
 
 const Button2 = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--Primary, #38E);
-  width: 160px;
-  height: 56px;
-  border-radius: 8px;
-  background: var(--White, #FFF);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.primary};
+    width: 144px;
+    height: 48px;
+    border-radius: 8px;
+    background: ${({ theme }) => theme.colors.white};
 
-  font-size: 30px;
-  font-weight: 600;
-  cursor: pointer;
-`;
+    align-item: center;
+    font-size: ${({ theme }) => theme.typography.T2.fontSize};
+    font-weight: ${({ theme }) => theme.typography.T2.fontWeight};
+    cursor: pointer;
+`

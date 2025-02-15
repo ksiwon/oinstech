@@ -5,9 +5,10 @@ interface EditModalProps {
     group: any;
     onSave: (updatedGroup: any) => void;
     onClose: () => void;
+    onClick?: () => void;
 }
 
-const EditModal: React.FC<EditModalProps> = ({ group, onSave, onClose }) => {
+const EditModal: React.FC<EditModalProps> = ({ group, onSave, onClose, onClick }) => {
     const [personnel, setPersonnel] = useState<number>(group.personnel);
     const [currentPersonnel, setCurrentPersonnel] = useState<number>(group.currentPersonnel);
 
@@ -22,7 +23,7 @@ const EditModal: React.FC<EditModalProps> = ({ group, onSave, onClose }) => {
                 <h2>그룹 수정</h2>
                 <label>
                     모집 인원:
-                    <input
+                    <input style={{ marginLeft: "4px" }}
                         type="number"
                         value={personnel}
                         onChange={(e) => setPersonnel(Number(e.target.value))}
@@ -30,15 +31,16 @@ const EditModal: React.FC<EditModalProps> = ({ group, onSave, onClose }) => {
                 </label>
                 <label>
                     현재 인원:
-                    <input
+                    <input style={{ marginLeft: "4px" }}
                         type="number"
                         value={currentPersonnel}
                         onChange={(e) => setCurrentPersonnel(Number(e.target.value))}
                     />
                 </label>
                 <ButtonContainer>
-                    <button onClick={handleSave}>저장</button>
                     <button onClick={onClose}>취소</button>
+                    <button onClick={onClick}>삭제</button>
+                    <button onClick={handleSave}>저장</button>
                 </ButtonContainer>
             </ModalContent>
         </ModalOverlay>

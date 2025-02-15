@@ -2,7 +2,7 @@ import { DefaultTheme } from "styled-components";
 
 export const theme: DefaultTheme = {
     colors: {
-        primary: "#3388EE",
+        primary: "#23C064",
         black: "#111111",
         white: "#FFFFFF",
         gray: {
@@ -20,7 +20,6 @@ export const theme: DefaultTheme = {
             100: "#FFF0F0",
         },
         blue: {
-            800: "#13539F",
             600: "#1668CA",
             300: "#AABDF0",
             100: "#EEF5FD",
@@ -35,44 +34,44 @@ export const theme: DefaultTheme = {
     typography: {
         T1: {
             fontFamily: "Pretendard",
-            fontWeight: 900, // Black
-            fontSize: "60px",
+            fontWeight: 800, // ExtraBold
+            fontSize: "36px",
             lineHeight: "auto",
         },
         T2: {
             fontFamily: "Pretendard",
-            fontWeight: 800, // ExtraBold
-            fontSize: "48px",
+            fontWeight: 700, // Bold
+            fontSize: "24px",
             lineHeight: "auto",
         },
         T3: {
             fontFamily: "Pretendard",
             fontWeight: 600, // SemiBold
-            fontSize: "36px",
+            fontSize: "20px",
             lineHeight: "auto",
         },
         T4: {
             fontFamily: "Pretendard",
             fontWeight: 600, // SemiBold
-            fontSize: "28px",
+            fontSize: "18px",
             lineHeight: "auto",
         },
         T5: {
             fontFamily: "Pretendard",
-            fontWeight: 600, // SemiBold
-            fontSize: "24px",
+            fontWeight: 500, // Medium
+            fontSize: "16px",
             lineHeight: "auto",
         },
         T6: {
             fontFamily: "Pretendard",
-            fontWeight: 600, // SemiBold
-            fontSize: "20px",
-            lineHeight: "auto",
+            fontWeight: 500, // Medium
+            fontSize: "14px",
+            lineHeight: "20px",
         },
         T7: {
             fontFamily: "Pretendard",
             fontWeight: 400, // Regular
-            fontSize: "16px",
+            fontSize: "12px",
             lineHeight: "auto",
         },
     },    

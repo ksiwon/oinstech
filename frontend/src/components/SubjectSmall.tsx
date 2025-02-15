@@ -8,8 +8,7 @@ const SubjectWrapper = styled.div<{ color: string }>`
   justify-content: center;
   align-items: center;
   background-color: ${({ color, theme }) => (theme.colors[color as keyof typeof theme.colors] as any)[600]};
-  width: 50px;
-  height: 27px;
+  padding: 4px 12px;
   border-radius: 16px;
 `;
 

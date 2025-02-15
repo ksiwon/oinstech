@@ -2,15 +2,16 @@ import styled from "styled-components";
 
 export const CardFrame = styled.div`
     display: flex;
-    width: 360px;
-    height: 480px;
-    padding: 20px;
+    width: 240px;
+    height: 320px;
+    padding: 16px;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
     border-radius: 16px;
     background: ${({ theme }) => theme.colors.white};
+    border: 4px solid ${({ theme }) => theme.colors.gray[200]};
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     boxing-sizing: border-box;
     cursor: pointer;
@@ -19,21 +20,21 @@ export const CardFrame = styled.div`
 export const TopFrame = styled.div`
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
     align-self: stretch;
 `;
 
-export const ImageFrame = styled.div`
+export const ImageFrame = styled.div<{ gender?: string }>`
     display: flex;
     flex-shrink: 0;
-    width: 60px;
+    width: 40px;
     justify-content: center;
     align-items: center;
     align-self: stretch;
-    color: ${({ theme }) => theme.colors.blue[600]};
-    font-size: 48px;
-    border-radius: 10px;
-    border: 1px solid ${({ theme }) => theme.colors.blue[300]};
+    color: ${({ theme, gender }) => (gender === "여성" ? theme.colors.red[600] : theme.colors.blue[600])};
+    font-size: 32px;
+    border-radius: 8px;
+    border: 1px solid ${({ theme, gender }) => (gender === "여성" ? theme.colors.red[300] : theme.colors.blue[300])};
     aspect-ratio: 1 / 1;
 `;
 
@@ -64,7 +65,7 @@ export const TopFlagLocFrame = styled.div`
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
-    gap: 8px;
+    gap: 6px;
 `;
 
 export const TopFlag = styled.div`
@@ -77,6 +78,7 @@ export const TopLoc = styled.div`
     font-size: ${({ theme }) => theme.typography.T7.fontSize};
     font-weight: ${({ theme }) => theme.typography.T7.fontWeight};
     color: ${({ theme }) => theme.colors.black};
+    margin: auto 0;
 `;
 
 export const TopContentBelow = styled.div`
@@ -85,22 +87,21 @@ export const TopContentBelow = styled.div`
     font-weight: ${({ theme }) => theme.typography.T7.fontWeight};
 `;
 
-export const CenterFrame = styled.div`
+export const CenterFrame = styled.div<{ gender?: string }>`
     display: flex;
-    width: 320px;
-    height: 128px;
-    padding: 20px;
+    width: 100%;
+    padding: 12px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
     border-radius: 8px;
-    background: ${({ theme }) => theme.colors.blue[100]};
+    background: ${({ theme, gender }) => (gender === "여성" ? theme.colors.red[100] : theme.colors.blue[100])};
     color: ${({ theme }) => theme.colors.black};
     font-family: "Handletter";
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 500;
+    text-align: left;
+    box-sizing: border-box;
 `;
 
 export const BottomFrame = styled.div`
@@ -108,7 +109,6 @@ export const BottomFrame = styled.div`
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-    flex-shrink: 0;
     align-self: stretch;
 `;
 

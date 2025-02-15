@@ -193,7 +193,7 @@ const Button1 = styled.div`
     width: 80px;
     height: 40px;
     border-radius: 8px;
-    background: var(--Gray-400, #AFAFAF);
+    background: ${({ theme }) => theme.colors.gray[400]};
 
     align-item: center;
     font-size: 16px;
@@ -205,7 +205,7 @@ const Button2 = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--Primary, #38E);
+    background: ${({ theme }) => theme.colors.primary};
     width: 80px;
     height: 40px;
     border-radius: 8px;
@@ -276,10 +276,10 @@ const TextContent = styled.div`
 
 // 텍스트 반복 (White와 Blue-300 교차)
 const RepeatedText = styled.div<{ isWhite: boolean }>`
-  font-size: 80px;
-  font-weight: 600;
+  font-size: 60px;
+  font-weight: 700;
   color: ${({ theme, isWhite }) =>
-    isWhite ? theme.colors.white : theme.colors.blue[300]};
+    isWhite ? theme.colors.white : theme.colors.green[600]};
   margin-right: 40px;
 `;
 

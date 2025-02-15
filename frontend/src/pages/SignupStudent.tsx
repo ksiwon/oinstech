@@ -563,7 +563,7 @@ export default SignupStudent;
 const GlobalWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: ${({ theme }) => theme.colors.gray[100]};
 `;
 
@@ -615,7 +615,7 @@ const ButtonContainer = styled.div`
     flex-direction: row;
     gap: 32px;
     justify-content: center;
-    background: var(--Primary, #38E);
+    background: ${({ theme }) => theme.colors.primary};
     padding: 16px 0;
 `;
 
@@ -627,7 +627,7 @@ const Button1 = styled.div`
     width: 160px;
     height: 56px;
     border-radius: 8px;
-    background: var(--Gray-400, #AFAFAF);
+    background: ${({ theme }) => theme.colors.gray[400]};
 
     align-item: center;
     font-size: 30px;
@@ -639,7 +639,7 @@ const Button2 = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--Primary, #38E);
+    color: ${({ theme }) => theme.colors.primary};
     width: 160px;
     height: 56px;
     border-radius: 8px;

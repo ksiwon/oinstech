@@ -9,49 +9,49 @@ import styled from "styled-components";
 import Title from "../components/Title";
 import axios from "axios";
 import EditModal from "../components/EditModal"; // 모달 컴포넌트 추가
+import SearchTab from "../components/SearchTab";
+import GroupCard from "../components/GroupCard";
 
 const Mygroup: React.FC = () => {
     const navigate = useNavigate();
     const [groups, setGroups] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [totalGroups, setTotalGroups] = useState<number>(0);
     const [selectedGroup, setSelectedGroup] = useState<any>(null); // 선택한 그룹 상태
     const [showModal, setShowModal] = useState<boolean>(false); // 모달 표시 상태
-    const groupsPerPage = 10;
+    const groupsPerPage = 12;
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     const user = useSelector((state: RootState) => state.user.teacherData);
     const teacherId = user?.id;
+    
+    const handleSearch = (value: string) => {
+        setSearchTerm(value);
+        setCurrentPage(1);
+    };
 
     useEffect(() => {
         const fetchGroups = async () => {
-            if (!teacherId) {
-                alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-                navigate("/");
-                return;
-            }
-
-            try {
-                const response = await axios.get(`http://localhost:5000/api/groups`, {
-                    params: {
-                        teacherId,
-                        page: currentPage,
-                        limit: groupsPerPage,
-                    },
-                });
-
-                setGroups(response.data.groups);
-                setTotalGroups(response.data.total);
-            } catch (err: any) {
-                console.error("Error fetching groups:", err);
-                alert("그룹 정보를 가져오는 중 문제가 발생했습니다.");
-            } finally {
-                setLoading(false);
-            }
+          try {
+            setLoading(true);
+            const response = await axios.get("http://localhost:5000/api/groups", {
+                params: {
+                    teacherId,
+                    page: currentPage,
+                    limit: groupsPerPage,
+                },
+            });
+            const filteredGroups = response.data.groups.filter((group: any) => group.teacherId === teacherId);
+            setGroups(filteredGroups);
+          } catch (error) {
+            console.error("Failed to fetch groups:", error);
+          } finally {
+            setLoading(false);
+          }
         };
 
         fetchGroups();
-    }, [teacherId, currentPage, navigate]);
+    }, [currentPage, searchTerm, teacherId]);
 
     const handleEditGroup = (group: any) => {
         setSelectedGroup(group); // 선택한 그룹 설정
@@ -65,7 +65,6 @@ const Mygroup: React.FC = () => {
             await axios.delete(`http://localhost:5000/api/groups/${groupId}`);
             alert("그룹이 성공적으로 삭제되었습니다.");
             setGroups(groups.filter(group => group.id !== groupId));
-            setTotalGroups(totalGroups - 1);
         } catch (err: any) {
             console.error("Error deleting group:", err);
             alert("그룹 삭제 중 문제가 발생했습니다.");
@@ -98,9 +97,9 @@ const Mygroup: React.FC = () => {
                 <Header />
                 <Title text="My Group" />
                 <ContentWrapper>
-                    <p>현재 생성된 그룹이 없습니다.</p>
-                    <Button onClick={() => navigate("/mygroup/create")}>그룹 생성</Button>
+                    <Button2 onClick={() => navigate("/mygroup/create")}>그룹 생성</Button2>
                 </ContentWrapper>
+                현재 생성된 그룹이 없습니다.
                 <Footer />
             </GlobalWrapper>
         );
@@ -111,37 +110,50 @@ const Mygroup: React.FC = () => {
             <Header />
             <Title text="My Group" />
             <WholeWrapper>
+                <SearchTabWrapper>
+                    <SearchTabCover>
+                        <SearchTab onSearch={handleSearch} />
+                    </SearchTabCover>
+                </SearchTabWrapper>
                 <Button2 onClick={() => navigate("/mygroup/create")}>그룹 생성</Button2>
-                <ContentWrapper>
-                    <GroupList>
-                        {groups.map(group => (
-                            <GroupCard key={group.id}>
-                                <GroupInfo>
-                                    <GroupName>{group.name}</GroupName>
-                                    <GroupDetail>과목: {group.subject}</GroupDetail>
-                                    <GroupDetail>수업료: {group.pay.toLocaleString()}원/시간</GroupDetail>
-                                    <GroupDetail>모집 인원: {group.currentPersonnel} / {group.personnel}</GroupDetail>
-                                    <GroupDetail>소개: {group.introduction}</GroupDetail>
-                                </GroupInfo>
-                                <ButtonContainer>
-                                    <Button onClick={() => handleEditGroup(group)}>수정</Button>
-                                    <Button bgcolor="#FA5858" onClick={() => handleDeleteGroup(group.id)}>삭제</Button>
-                                </ButtonContainer>
-                            </GroupCard>
-                        ))}
-                    </GroupList>
-                </ContentWrapper>
+                <CardWrapper>
+                {groups.length > 0 ? (
+                    groups.map((group) => (
+                    <GroupCard
+                        key={group.id}
+                        id={group.id}
+                        name={group.name}
+                        university={group.university}
+                        major={group.major}
+                        gradeUniversity={group.gradeUniversity}
+                        introduction={group.introduction}
+                        subject={group.subject}
+                        personality={group.personality}
+                        tendency={group.tendency}
+                        address={group.address}
+                        personnel={group.personnel}
+                        currentPersonnel={group.currentPersonnel}
+                        score={group.score || 0}
+                        gender={group.gender}
+                        onClick={() => handleEditGroup(group)}
+                    />
+                    ))
+                ) : (
+                    <div>검색 결과가 없습니다.</div>
+                )}
+                </CardWrapper>
             </WholeWrapper>
             {showModal && selectedGroup && (
                 <EditModal
                     group={selectedGroup}
                     onSave={handleSaveGroup}
                     onClose={() => setShowModal(false)}
+                    onClick={() => handleDeleteGroup(selectedGroup.id)}
                 />
             )}
             <Pagination
                 currentPage={currentPage}
-                totalPages={Math.ceil(totalGroups / groupsPerPage)}
+                totalPages={Math.ceil(groups.length / groupsPerPage)}
                 onPageChange={handlePageChange}
             />
             <Footer />
@@ -171,72 +183,38 @@ const ContentWrapper = styled.div`
     justify-content: space-evenly; /* 카드 간 간격 균등 */
 `;
 
-const GroupList = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-`;
-
-const GroupCard = styled.div`
-    width: 300px;
-    padding: 16px;
-    border: 1px solid ${({ theme }) => theme.colors.gray[200]};
-    border-radius: 8px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-    background-color: ${({ theme }) => theme.colors.blue[100]};
-`;
-
-const GroupInfo = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0 0 8px;
-    overflow: hidden;
-`;
-
-const GroupName = styled.h3`
-    font-family: pretendard;
-    margin: 4px 0 8px;
-    font-size: 24px;
-`;
-
-const GroupDetail = styled.p`
-    font-family: pretendard;
-    margin: 4px 0;
-    width: 100%;
-    text-align: left;
-    font-size: 18px;
-    color: #555;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-`;
-
-const ButtonContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
-const Button = styled.button<{ bgcolor?: string }>`
-    font-family: pretendard;
-    padding: 8px 16px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    background-color: ${({ bgcolor, theme }: { bgcolor?: string; theme: any }) => bgcolor || theme.colors.primary};
-    &:hover {
-        opacity: 0.5;
-    }
-`;
-
 const WholeWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+`;
+
+const SearchTabWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.colors.primary};
+  width: 100%;
+  padding: 32px 0;
+  align-self: center;
+`;
+
+const SearchTabCover = styled.div`
+  width: 80%;
+`;
+
+const CardWrapper = styled.div`
     display: flex;
-    flex-direction: column;
-    width: 100%;
+    width: 90%;
+    padding: 32px 0;
     align-items: center;
-    background-color: ${({ theme }) => theme.colors.gray[100]};
+    justify-content: center;
+    gap: 32px;
+    align-self: stretch;
+    flex-wrap: wrap;
+    margin: 0 auto; /* 가운데 정렬 */
+    justify-content: space-evenly; /* 카드 간 간격 균등 */
 `;
 
 const Button2 = styled.div`

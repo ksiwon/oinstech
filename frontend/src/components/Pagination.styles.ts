@@ -4,8 +4,8 @@ export const PaginationButton = styled.button<{ filled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: none;
   background-color: ${({ filled, theme }) =>
@@ -17,6 +17,8 @@ export const PaginationButton = styled.button<{ filled: boolean }>`
   font-weight: ${({ theme }) => theme.typography.T4.fontWeight};
 
   &:hover {
+    background-color: ${({ theme }) => theme.colors.white};
+    color: ${({ theme }) => theme.colors.primary};
     opacity: 0.8;
   }
 `;

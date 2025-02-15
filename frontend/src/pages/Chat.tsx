@@ -9,10 +9,12 @@ import ChatList from "../components/ChatList";
 import Answer from "../components/Answer";
 import React, { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {  useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "http://143.248.161.5:5000";
 
 const socket: Socket = io(BACKEND_URL, {
   transports: ["websocket", "polling"],
@@ -27,19 +29,21 @@ interface Message {
 }
 
 const Chat: React.FC = () => {
-  const { userId, partnerId } = useParams<{ userId: string; partnerId: string }>();
+  const { role, studentData, teacherData } = useSelector((state: RootState) => state.user);
+  const userId = role === "student" ? studentData?.id : teacherData?.id;
+  const partnerId = "abc";
+
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
 
   const sortedUserId = userId ?? "";
   const sortedPartnerId = partnerId ?? "";
-  const roomId = [sortedUserId, sortedPartnerId].sort().join("-");
+  //const roomId = [sortedUserId, sortedPartnerId].sort().join("-");
 
   useEffect(() => {
     if (!userId || !partnerId) {
       navigate("/", { replace: true });
-      return;
     }
 
     const handleNewMessage = (message: Message) => {
@@ -65,7 +69,7 @@ const Chat: React.FC = () => {
         socket.on("newMessage", handleNewMessage);
       } catch (error) {
         console.error("Failed to fetch messages:", error);
-        navigate("/", { replace: true });
+        //navigate("/", { replace: true });
       }
     };
 
@@ -247,7 +251,7 @@ width: 100%;
 `;
 
 const LeftWrapper = styled.div`
-width: 320px;
+width: 240px;
 display: flex;
 flex-direction: column;
 background-color: ${({ theme }) => theme.colors.primary};
@@ -258,7 +262,7 @@ const SearchTabWrapper = styled.div`
 display: flex;
 align-items: center;
 justify-content: center;
-padding: 20px;
+padding: 16px;
 background-color: ${({ theme }) => theme.colors.primary};
 box-sizing: border-box;
 `;
@@ -272,7 +276,7 @@ background-color: ${({ theme }) => theme.colors.white};
 
 const ChatHeader = styled.div`
 width: 100%;
-height: 100px;
+height: 92px;
 display: flex;
 justify-content: space-between;
 align-items: center;
@@ -397,7 +401,7 @@ cursor: pointer;
 transition: background-color 0.3s ease;
 
 &:hover {
-  background-color: ${({ theme }) => theme.colors.blue[800]};
+  background-color: ${({ theme }) => theme.colors.blue[600]};
 }
 
 &:active {
