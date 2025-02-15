@@ -93,6 +93,8 @@ const optionsMap = {
   payWant: ["상관 없음", "~3만원", "~4만원", "~5만원"],
 };
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const SignupStudent: React.FC = () => {
 
   const navigate = useNavigate();
@@ -166,7 +168,7 @@ const SignupStudent: React.FC = () => {
   
     try {
       // 중복이 없으면 새 학생 생성
-      const response = await axios.post("http://localhost:5000/api/students", formData);
+      const response = await axios.post(`${apiUrl}/api/students`, formData);
       console.log("Student created:", response.data);
       alert("회원가입이 완료되었습니다.");
       navigate("/");

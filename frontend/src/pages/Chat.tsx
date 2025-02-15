@@ -14,9 +14,9 @@ import axios from "axios";
 import {  useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
-const BACKEND_URL = "http://143.248.161.5:5000";
+const apiUrl = process.env.REACT_APP_API_URL;
 
-const socket: Socket = io(BACKEND_URL, {
+const socket: Socket = io(apiUrl, {
   transports: ["websocket", "polling"],
   autoConnect: false,
 });
@@ -58,7 +58,7 @@ const Chat: React.FC = () => {
     const initializeChat = async () => {
       try {
         const response = await axios.get<Message[]>(
-          `${BACKEND_URL}/chat/${userId}/${partnerId}`
+          `${apiUrl}/chat/${userId}/${partnerId}`
         );
         setMessages(response.data);
 
@@ -92,7 +92,7 @@ const Chat: React.FC = () => {
       };
 
       try {
-        await axios.post(`${BACKEND_URL}/chat/${sortedUserId}/${sortedPartnerId}`, message);
+        await axios.post(`${apiUrl}/chat/${sortedUserId}/${sortedPartnerId}`, message);
       } catch (error) {
         console.error("Failed to send message via REST API:", error);
       }

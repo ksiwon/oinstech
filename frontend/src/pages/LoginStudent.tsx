@@ -7,6 +7,8 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setStudentData } from "../redux/slices/userSlice"; // Redux 액션 가져오기
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const LoginStudent: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch(); // Redux 디스패치 함수
@@ -32,7 +34,7 @@ const LoginStudent: React.FC = () => {
         setError(""); // 오류 메시지 초기화
         try {
             // API 호출
-            const response = await axios.post("http://localhost:5000/api/students/login", {
+            const response = await axios.post(`${apiUrl}/api/students/login`, {
                 id,
                 password,
             });

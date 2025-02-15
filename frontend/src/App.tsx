@@ -52,6 +52,7 @@ function App() {
             <Route path="/mypage" element={<Mypage />} />
 
             <Route path="/tester" element={<Tester />} />
+            <Route path="*" element={<div>잘못된 접근입니다.</div>} />
           </Routes>
         </Router>
       </ThemeProvider>

@@ -28,6 +28,8 @@ interface GroupData {
   currentPersonnel: number;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const CreateGroup: React.FC = () => {
   const navigate = useNavigate();
   const teacher = useSelector((state: RootState) => state.user.teacherData);
@@ -57,7 +59,7 @@ const CreateGroup: React.FC = () => {
   useEffect(() => {
     const fetchGroupIds = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/groups");
+        const response = await axios.get(`${apiUrl}/api/groups`);
         const ids = response.data.map((group: GroupData) => group.id);
         setExistingIds(ids);
       } catch (error) {
@@ -109,7 +111,7 @@ const CreateGroup: React.FC = () => {
     try {
       const uniqueId = generateUniqueId();
       const newGroup = { ...formData, id: uniqueId };
-      await axios.post("http://localhost:5000/api/groups", newGroup);
+      await axios.post(`${apiUrl}/api/groups`, newGroup);
       alert("그룹 생성이 완료되었습니다.");
       navigate("/mygroup");
     } catch (error) {

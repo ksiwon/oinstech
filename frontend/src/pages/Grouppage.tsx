@@ -34,6 +34,8 @@ function GetSubject(subject: string) {
     }
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const Grouppage: React.FC = () => {
     const { id: groupId } = useParams<{ id: string }>(); // URL에서 groupId 읽기
     const navigate = useNavigate();
@@ -46,7 +48,7 @@ const Grouppage: React.FC = () => {
         const fetchGroupData = async () => {
             try {
                 // API 호출로 group 정보를 가져옴
-                const response = await axios.get(`http://localhost:5000/api/groups/${groupId}`);
+                const response = await axios.get(`${apiUrl}/api/groups/${groupId}`);
                 setGroupData(response.data); // 데이터 상태에 저장
             } catch (err: any) {
                 console.error("Error fetching group data:", err);

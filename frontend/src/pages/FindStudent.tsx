@@ -10,6 +10,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const FindStudent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [teachers, setTeachers] = useState<any[]>([]);
@@ -38,11 +40,11 @@ const FindStudent: React.FC = () => {
         setLoading(true);
         let response;
         if (studentId) {
-          response = await axios.get(`http://localhost:5000/api/match-teachers/${studentId}`, {
+          response = await axios.get(`${apiUrl}/api/match-teachers/${studentId}`, {
             params: { page: currentPage, limit: 12, search: searchTerm },
           });
         } else {
-          response = await axios.get("http://localhost:5000/api/teachers/list", {
+          response = await axios.get(`${apiUrl}/api/teachers/list`, {
             params: { page: currentPage, limit: 12, search: searchTerm },
           });
         }
