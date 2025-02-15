@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": "https://github.com/ksiwon/conext",
   "scripts": {
-    "serve": "nodemon backend/index.js",
+    "serve": "nodemon backend/src/index.js",
     "start": "cd backend && yarn install && yarn nodemon",
     "build": "cd frontend && yarn install && yarn build"
   },
