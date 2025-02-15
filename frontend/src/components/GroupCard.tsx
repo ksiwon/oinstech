@@ -4,7 +4,6 @@ import SubjectSmall from "./SubjectSmall";
 
 interface GroupCardProps {
     id: string;
-    teacherId: string;
     name: string;
     university: string;
     major: string;
@@ -17,6 +16,8 @@ interface GroupCardProps {
     personnel: number;
     currentPersonnel: number;
     score: number;
+    gender: string;
+    onClick?: () => void;
 }
 
 function GetSubject(subject: string) {
@@ -42,12 +43,20 @@ function GetSubject(subject: string) {
     }
 }
 
-const GroupCard: React.FC<GroupCardProps> = ({ id, teacherId, name, university, major, gradeUniversity, introduction, subject, personality, tendency, address, personnel, currentPersonnel, score }) => {
+const GroupCard: React.FC<GroupCardProps> = ({ id, name, university, major, gradeUniversity, introduction, subject, personality, tendency, address, personnel, currentPersonnel, score, gender, onClick }) => {
     const navigate = useNavigate();
+    const handleNavigate = () => {
+        if (onClick) {
+            onClick();
+        } else {
+            navigate(`/search/group/${id}`);
+        };
+    };
+
     return (
-        <CardFrame onClick={() => navigate("/search/group/"+id)}>
+        <CardFrame onClick={handleNavigate}>
             <TopFrame>
-                <ImageFrame>
+                <ImageFrame gender={gender}>
                     <i className="fas fa-user"></i>
                 </ImageFrame>
                 <TopContent>
@@ -69,7 +78,7 @@ const GroupCard: React.FC<GroupCardProps> = ({ id, teacherId, name, university, 
                     </TopContentBelow>
                 </TopContent>
             </TopFrame>
-            <CenterFrame>
+            <CenterFrame gender={gender}>
                 {introduction}
             </CenterFrame>
             <SubjectAddressWrapper>

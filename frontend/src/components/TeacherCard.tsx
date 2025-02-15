@@ -14,14 +14,15 @@ interface TeacherCardProps {
     personality: string[];
     tendency: string[];
     score: number;
+    gender: string;
 }
 
-const TeacherCard: React.FC<TeacherCardProps> = ({ id, name, university, major, gradeUniversity, neighborhood, introduction, subject, personality, tendency, score }) => {
+const TeacherCard: React.FC<TeacherCardProps> = ({ id, name, university, major, gradeUniversity, neighborhood, introduction, subject, personality, tendency, score, gender }) => {
     const navigate = useNavigate();
     return (
         <CardFrame onClick={() => navigate("/search/teacher/"+id)}>
             <TopFrame>
-                <ImageFrame>
+                <ImageFrame gender={gender}>
                     <i className="fas fa-user"></i>
                 </ImageFrame>
                 <TopContent>
@@ -43,7 +44,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({ id, name, university, major, 
                     </TopContentBelow>
                 </TopContent>
             </TopFrame>
-            <CenterFrame>
+            <CenterFrame gender={gender}>
                 {introduction}
             </CenterFrame>
             <BottomFrame>

@@ -22,7 +22,7 @@ const Wrapper = styled.div<{ type: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 120px;
+  width: 80px;
   padding: 4px 8px;
   border-radius: 8px;
   font-size: ${({ theme }) => theme.typography.T7.fontSize};

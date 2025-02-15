@@ -7,7 +7,7 @@ export const FooterContainer = styled.footer`
   align-items: center; /* 세로 중앙 정렬 */
   background-color: ${(props) => props.theme.colors.white};
   border-top: 2px solid ${(props) => props.theme.colors.gray[400]};
-  padding: 8px 32px;
+  padding: 8px 16px;
   box-sizing: border-box;
   margin-top: auto;
 `;
@@ -18,7 +18,11 @@ export const FooterLogo = styled.div`
   font-weight: ${(props) => props.theme.typography.T4.fontWeight};
   color: ${(props) => props.theme.colors.primary};
   display: inline-block;
-  margin-right: 32px; /* 로고와 첫 네비게이션 아이템 간의 최소 간격 */
+  margin: 0 32px 0 8px; /* 로고와 첫 네비게이션 아이템 간의 최소 간격 */
+  cursor: pointer;
+  &:hover {
+    color: ${(props) => props.theme.colors.green[600]}; /* Hover 시 색상 변경 */
+  }
 `;
 
 // Footer 네비게이션

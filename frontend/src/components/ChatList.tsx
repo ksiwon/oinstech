@@ -29,11 +29,11 @@ const ChatList: React.FC<ChatListProps> = (props) => {
 export default ChatList;
 
 const ChatListWrapper = styled.div<{ clicked: boolean }>`
-    display: inline-flex;
-    padding: 16px 32px;
+    display: flex;
+    padding: 8px 16px;
     align-items: center;
     justify-content: space-between;
-    background: ${({ theme, clicked }) => clicked ? theme.colors.blue[800] : theme.colors.blue[100]};
+    background: ${({ theme, clicked }) => clicked ? theme.colors.blue[600] : theme.colors.blue[100]};
     cursor: pointer;
 `;
 
@@ -43,12 +43,12 @@ const UserWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 8px;
+    gap: 4px;
 `;
 
 const UserSection = styled.div<{ clicked: boolean }>`
   font-size: ${({ theme }) => theme.typography.T4.fontSize};
-  font-weight: ${({ theme }) => theme.typography.T2.fontWeight};
+  font-weight: ${({ theme }) => theme.typography.T4.fontWeight};
   color: ${({ theme, clicked }) => clicked ? theme.colors.white : theme.colors.black};
 `;
 
@@ -67,7 +67,7 @@ const DetailsSection = styled.div`
 `;
 
 const DateText = styled.div<{ clicked: boolean }>`
-  font-size: ${({ theme }) => theme.typography.T6.fontSize};
+  font-size: ${({ theme }) => theme.typography.T7.fontSize};
   font-weight: ${({ theme }) => theme.typography.T7.fontWeight};
   color: ${({ theme, clicked }) => clicked ? theme.colors.white : theme.colors.black};
 `;

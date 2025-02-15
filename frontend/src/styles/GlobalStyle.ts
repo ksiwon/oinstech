@@ -18,6 +18,7 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     max-width: 100vw;
+    min-width: 720px;
   }
 `;
 

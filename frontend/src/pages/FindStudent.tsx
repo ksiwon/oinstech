@@ -39,15 +39,15 @@ const FindStudent: React.FC = () => {
         let response;
         if (studentId) {
           response = await axios.get(`http://localhost:5000/api/match-teachers/${studentId}`, {
-            params: { page: currentPage, limit: 10, search: searchTerm },
+            params: { page: currentPage, limit: 12, search: searchTerm },
           });
         } else {
           response = await axios.get("http://localhost:5000/api/teachers/list", {
-            params: { page: currentPage, limit: 10, search: searchTerm },
+            params: { page: currentPage, limit: 12, search: searchTerm },
           });
         }
         setTeachers(response.data.teachers);
-        setTotalPages(Math.ceil(response.data.total / 10));
+        setTotalPages(Math.ceil(response.data.total / 12));
       } catch (error) {
         console.error("Failed to fetch teachers:", error);
       } finally {
@@ -88,6 +88,7 @@ const FindStudent: React.FC = () => {
                 personality={teacher.personality}
                 tendency={teacher.tendency}
                 score={teacher.score || 0}
+                gender={teacher.gender}
               />
             ))
           ) : (

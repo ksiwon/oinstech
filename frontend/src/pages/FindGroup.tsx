@@ -38,15 +38,15 @@ const FindGroup: React.FC = () => {
         let response;
         if (studentId) {
           response = await axios.get(`http://localhost:5000/api/match-groups/${studentId}`, {
-            params: { page: currentPage, limit: 10, search: searchTerm },
+            params: { page: currentPage, limit: 12, search: searchTerm },
           });
         } else {
           response = await axios.get("http://localhost:5000/api/groups", {
-            params: { page: currentPage, limit: 10, search: searchTerm },
+            params: { page: currentPage, limit: 12, search: searchTerm },
           });
         }
         setGroups(response.data.groups);
-        setTotalPages(Math.ceil(response.data.total / 10));
+        setTotalPages(Math.ceil(response.data.total / 12));
       } catch (error) {
         console.error("Failed to fetch groups:", error);
       } finally {
@@ -77,7 +77,6 @@ const FindGroup: React.FC = () => {
               <GroupCard
                 key={group.id}
                 id={group.id}
-                teacherId={group.teacherId}
                 name={group.name}
                 university={group.university}
                 major={group.major}
@@ -90,6 +89,7 @@ const FindGroup: React.FC = () => {
                 personnel={group.personnel}
                 currentPersonnel={group.currentPersonnel}
                 score={group.score || 0}
+                gender={group.gender}
               />
             ))
           ) : (

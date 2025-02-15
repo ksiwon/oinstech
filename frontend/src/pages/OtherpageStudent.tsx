@@ -178,7 +178,7 @@ const OtherpageStudent: React.FC = () => {
                         <ContentName>희망 금액</ContentName>
                         <ContentInput>{studentData.payWant} (시간 당)</ContentInput>
                     </Content>
-                    <Content style={{ height: '150px' }}>
+                    <Content style={{ height: '100px' }}>
                         <ContentName>소개</ContentName>
                         <ContentInput>{studentData.introduction}</ContentInput>
                     </Content>
@@ -202,33 +202,30 @@ export default OtherpageStudent;
 const GlobalWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: ${({ theme }) => theme.colors.gray[100]};
 `;
 
 const ImageFrame = styled.div<{ imageUrl: string }>`
-    width: 328px;
-    height: 328px;
+    width: 208px;
+    height: 208px;
     flex-shrink: 0;
     border-radius: 32px;
     border: 4px solid ${({ theme }) => theme.colors.primary};
-    background: url(${({ imageUrl }) => imageUrl}) transparent -23.226px -23.226px / 116.129% 116.129% no-repeat;
+    background: url(${({ imageUrl }) => imageUrl}) transparent -17.226px -17.226px / 116.129% 116.129% no-repeat;
 `;
 
 const ContentName = styled.div`
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    width: 140px;
+    width: 100px;
     height: 100%;
     font-size: ${({ theme }) => theme.typography.T4.fontSize};
     font-weight: ${({ theme }) => theme.typography.T4.fontWeight};
-    color: ${({ theme }) => theme.colors.white};
-    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.primary};
     text-align: center;
     justify-content: center;
-    border-radius: 8px 0px 0px 8px;
-    border: 1px solid ${({ theme }) => theme.colors.primary};
 `;
 
 const ContentInput = styled.div`
@@ -242,7 +239,7 @@ const ContentInput = styled.div`
     font-weight: ${({ theme }) => theme.typography.T5.fontWeight};
     color: ${({ theme }) => theme.colors.black};
     background-color: ${({ theme }) => theme.colors.white};
-    border-radius: 0px 8px 8px 0px;
+    border-radius: 8px;
     border: 1px solid ${({ theme }) => theme.colors.primary};
     padding: 0 16px;
 `;
@@ -251,8 +248,7 @@ const Content = styled.div<{ height?: string, width?: string }>`
     display: flex;
     flex-direction: row;
     width: 100%;
-    min-width: 336px;
-    height: 70px;
+    height: 40px;
     align-items: center;
     border-radius: 8px;
 `;
@@ -261,8 +257,8 @@ const ContentTemp = styled.div`
     display: flex;
     flex-direction: row;
     flex-shrink: 0;
-    width: 336px;
-    height: 70px;
+    width: 200px;
+    height: 40px;
     align-items: center;
     border-radius: 8px;
 `;
@@ -271,8 +267,8 @@ const ContentFrame = styled.div`
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 70px;
-    gap: 16px;
+    height: 40px;
+    gap: 8px;
 `;
 
 const ContentWrapper = styled.div`
@@ -307,7 +303,8 @@ const WholeFrame = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 16px;
-    padding: 32px 0;
+    padding: 32px 10%;
+    box-sizing: border-box;
 `;
 
 const ButtonContainer = styled.div`
@@ -315,7 +312,7 @@ const ButtonContainer = styled.div`
     flex-direction: row;
     gap: 32px;
     justify-content: center;
-    background: var(--Primary, #38E);
+    background: ${({ theme }) => theme.colors.primary};
     padding: 16px 0;
 `;
 
@@ -323,15 +320,15 @@ const Button1 = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--White, #FFF);
-    width: 160px;
-    height: 56px;
+    color: ${({ theme }) => theme.colors.white};
+    width: 144px;
+    height: 48px;
     border-radius: 8px;
-    background: var(--Gray-400, #AFAFAF);
+    background: ${({ theme }) => theme.colors.gray[400]};
 
     align-item: center;
-    font-size: 30px;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.typography.T2.fontSize};
+    font-weight: ${({ theme }) => theme.typography.T2.fontWeight};
     cursor: pointer;
 `
 
@@ -339,14 +336,14 @@ const Button2 = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--Primary, #38E);
-    width: 160px;
-    height: 56px;
+    color: ${({ theme }) => theme.colors.primary};
+    width: 144px;
+    height: 48px;
     border-radius: 8px;
-    background: var(--White, #FFF);
+    background: ${({ theme }) => theme.colors.white};
 
     align-item: center;
-    font-size: 30px;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.typography.T2.fontSize};
+    font-weight: ${({ theme }) => theme.typography.T2.fontWeight};
     cursor: pointer;
 `

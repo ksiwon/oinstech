@@ -6,7 +6,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 32px;
+  padding: 8px 16px;
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
@@ -18,21 +18,32 @@ export const HeaderContainer = styled.header`
 export const LogoAndNav = styled.div`
   display: flex;
   align-items: center;
+  gap: 32px;
 `;
 
 // 로고
 export const Logo = styled.div`
-  font-size: ${({ theme }) => theme.typography.T1.fontSize};
-  font-weight: ${({ theme }) => theme.typography.T1.fontWeight};
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
   color: ${({ theme }) => theme.colors.primary};
   cursor: pointer;
-  margin-right: 32px;
+  align-items: center;
 `;
+
+export const LogoText = styled.div`
+  font-size: ${({ theme }) => theme.typography.T1.fontSize};
+  font-weight: ${({ theme }) => theme.typography.T1.fontWeight};
+`
 
 // 네비게이션 컨테이너
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
+
+  @media screen and (max-width: 700px) {
+    display: none;
+  }
 `;
 
 // 네비게이션 아이템
@@ -56,7 +67,7 @@ export const NavItem = styled.div`
 export const AuthSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
 `;
 
 // 유저 섹션 (로그인 상태)
@@ -77,7 +88,7 @@ export const AuthButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 20px;
+  padding: 8px 16px;
   font-size: ${({ theme }) => theme.typography.T4.fontSize};
   font-weight: ${({ theme }) => theme.typography.T4.fontWeight};
   color: ${({ theme }) => theme.colors.white};

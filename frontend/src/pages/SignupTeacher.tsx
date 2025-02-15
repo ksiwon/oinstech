@@ -542,7 +542,7 @@ export default SignupTeacher;
 const GlobalWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: ${({ theme }) => theme.colors.gray[100]};
 `;
 
@@ -590,38 +590,42 @@ const Content = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 32px;
-  justify-content: center;
-  background: var(--Primary, #38E);
-  padding: 16px 0;
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    justify-content: center;
+    background: ${({ theme }) => theme.colors.primary};
+    padding: 16px 0;
 `;
 
 const Button1 = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--White, #FFF);
-  width: 160px;
-  height: 56px;
-  border-radius: 8px;
-  background: var(--Gray-400, #AFAFAF);
-  font-size: 30px;
-  font-weight: 600;
-  cursor: pointer;
-`;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--White, #FFF);
+    width: 160px;
+    height: 56px;
+    border-radius: 8px;
+    background: ${({ theme }) => theme.colors.gray[400]};
+
+    align-item: center;
+    font-size: 30px;
+    font-weight: 600;
+    cursor: pointer;
+`
 
 const Button2 = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--Primary, #38E);
-  width: 160px;
-  height: 56px;
-  border-radius: 8px;
-  background: var(--White, #FFF);
-  font-size: 30px;
-  font-weight: 600;
-  cursor: pointer;
-`;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.primary};
+    width: 160px;
+    height: 56px;
+    border-radius: 8px;
+    background: var(--White, #FFF);
+
+    align-item: center;
+    font-size: 30px;
+    font-weight: 600;
+    cursor: pointer;
+`
