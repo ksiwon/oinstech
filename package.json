@@ -7,7 +7,7 @@
   "repository": "https://github.com/ksiwon/conext",
   "scripts": {
     "serve": "nodemon backend/src/index.js",
-    "start": "cd backend && yarn install && yarn nodemon",
+    "start": "cd frontend && yarn install && yarn start",
     "build": "cd frontend && yarn install && yarn build"
   },
   "dependencies": {
