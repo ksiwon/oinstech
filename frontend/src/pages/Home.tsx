@@ -37,6 +37,29 @@ const MainContent = styled.main`
   }
 `;
 
+const MissionSection = styled.div`
+  display: flex;
+  width: calc(100% - 4rem);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
+
+const MissionStatement = styled.p`
+  font-family: ${theme.typography.T1.fontFamily};
+  font-weight: ${theme.typography.T1.fontWeight};
+  font-size: ${theme.typography.T1.fontSize};
+  color: ${theme.colors.primary};
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: ${theme.typography.T4.fontSize};
+    line-height: 1.5;
+  }
+`;
+
 const AccessButton = styled.button`
   background: linear-gradient(135deg, ${theme.colors.blue[600]} 0%, ${theme.colors.turkey[600]} 100%);
   color: ${theme.colors.white};
@@ -320,7 +343,7 @@ const teamMembers: TeamMember[] = [
       "KAIST SPARCS 디자이너",
       "KAIST AI Experience Lab 인턴",
       "삼성휴먼테크논문대상 물리/지구과학 부문 은상",
-      "Kakao 테크포인팩트 캠퍼스 공감인기상상",
+      "Kakao 테크포임팩트 캠퍼스 공감인기상",
       "전국과학전람회 물리 부문 우수상",
       "전국과학전람회 지구 및 환경 부문 장려상",
       "부산미래과학자상 과학 부문 최우수상",
@@ -339,7 +362,7 @@ const teamMembers: TeamMember[] = [
       "2023 제32기 정보올림피아드 겨울학교 수료",
       "전국학생통계활용대회 은상",
       "전국과학전람회 SW/IT 부문 장려상",
-      "전국 고등학교 동아리 소프트웨어 경경진대회 장려상",
+      "전국 고등학교 동아리 소프트웨어 경진대회 장려상",
       "2023 AI Youth Challenge 우수상"
     ]
   }
@@ -384,6 +407,12 @@ const Home: React.FC = () => {
       <Header />
       
       <MainContent>
+        <MissionSection>
+          <MissionStatement>
+            ONIS는 AI 기술을 바탕으로 교육의 비효율을 혁신하여, 교육의 새로운 패러다임을 만들어 갑니다.
+          </MissionStatement>
+        </MissionSection>
+
         <TopSection>
           <AccessButton onClick={handleAccessClick}>
             AI 채점 시스템 접속
