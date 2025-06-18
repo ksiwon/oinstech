@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { ThemeProvider } from 'styled-components';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { theme } from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Home from './pages/Home';
@@ -15,9 +15,9 @@ function App() {
         <GlobalStyle />
         <Router>
           <Routes>
-            {/* 라우트 설정 */}
             <Route path="/" element={<OinsHomepage />} />
-            <Route path="*" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Router>
       </ThemeProvider>
