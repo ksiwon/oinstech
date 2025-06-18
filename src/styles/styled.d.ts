@@ -31,6 +31,26 @@ declare module "styled-components" {
             turkey: {
                 600: string;
             };
+            purple: {
+                700: string;
+                600: string; 
+                400: string;
+                300: string;
+                100: string;
+            },
+            indigo: {
+                900: string;
+                800: string;
+                700: string;
+                600: string;
+            },
+            slate: {
+                900: string;
+                800: string;
+                700: string;
+                600: string;
+                500: string;
+            }
         };
         typography: {
             T1: TypographyStyle;
