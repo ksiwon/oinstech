@@ -20,6 +20,7 @@ export const theme: DefaultTheme = {
             100: "#FFF0F0",
         },
         blue: {
+            800: "#003A95",
             600: "#1668CA",
             300: "#AABDF0",
             100: "#EEF5FD",
@@ -49,7 +50,10 @@ export const theme: DefaultTheme = {
             700: "#334155",
             600: "#475569",
             500: "#64748b"
-        }
+        },
+        orange: {
+            300: "#FFD1C4",
+        },
     },
     typography: {
         T1: {

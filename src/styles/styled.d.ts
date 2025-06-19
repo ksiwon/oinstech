@@ -21,6 +21,7 @@ declare module "styled-components" {
                 100: string;
             };
             blue: {
+                800: string;
                 600: string;
                 300: string;
                 100: string;
@@ -50,7 +51,10 @@ declare module "styled-components" {
                 700: string;
                 600: string;
                 500: string;
-            }
+            },
+            orange: {
+                300: string;
+            };
         };
         typography: {
             T1: TypographyStyle;

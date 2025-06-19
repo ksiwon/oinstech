@@ -69,23 +69,8 @@ const gradientShift = keyframes`
 const Container = styled.div`
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(-45deg, ${theme.colors.blue[600]}, ${theme.colors.primary}, ${theme.colors.turkey[600]}, ${theme.colors.blue[300]});
-  background-size: 400% 400%;
-  animation: ${gradientShift} 15s ease infinite;
   position: relative;
   overflow-x: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%239C92AC" fill-opacity="0.05"><path d="m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>') repeat;
-    opacity: 0.1;
-    pointer-events: none;
-  }
 `;
 
 const Header = styled.header<{ $isScrolled: boolean }>`
@@ -150,9 +135,9 @@ const NavLinks = styled.div`
 const NavLink = styled.a`
   text-decoration: none;
   color: ${theme.colors.black};
-  font-family: ${theme.typography.T5.fontFamily};
-  font-weight: ${theme.typography.T4.fontWeight};
-  font-size: ${theme.typography.T5.fontSize};
+  font-family: ${theme.typography.T3.fontFamily};
+  font-weight: ${theme.typography.T3.fontWeight};
+  font-size: ${theme.typography.T3.fontSize};
   position: relative;
   transition: all 0.3s ease;
   
@@ -214,35 +199,84 @@ const AccessButton = styled.button`
 
 const HeroSection = styled.section`
   padding: 10rem 2rem 6rem;
-  text-align: center;
   color: ${theme.colors.white};
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  flex-direction: column;
   position: relative;
   z-index: 1;
+  background-image: url('/assets/hero_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    z-index: -1;
+  }
 `;
 
-const HeroContent = styled.div`
-  max-width: 1000px;
+const HeroWrapper = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  align-items: center;
+  justify-content: center;
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+`;
+
+const HeroTextContent = styled.div`
   ${css`
     animation: ${fadeInUp} 1s ease;
   `}
 `;
 
+const HeroImageContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${css`
+    animation: ${slideInRight} 1s ease 0.3s both;
+  `}
+  margin-left: 3rem;
+`;
+
+const HeroImage = styled.img`
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+  ${css`
+    animation: ${float} 6s ease-in-out infinite;
+  `}
+`;
+
 const CompanyBadge = styled.div`
   display: inline-block;
-  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   padding: 0.8rem 2rem;
   border-radius: 50px;
-  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   font-family: ${theme.typography.T5.fontFamily};
   font-size: ${theme.typography.T5.fontSize};
   font-weight: ${theme.typography.T4.fontWeight};
+  color: ${theme.colors.white};
   ${css`
     animation: ${fadeInUp} 1s ease 0.2s both;
   `}
@@ -253,36 +287,55 @@ const HeroTitle = styled.h1`
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: ${theme.typography.T1.fontWeight};
   margin-bottom: 2rem;
-  line-height: 1.1;
-  background: linear-gradient(135deg, ${theme.colors.white}, ${theme.colors.blue[100]}, ${theme.colors.blue[300]});
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height: 1.2;
+  color: ${theme.colors.white};
+  text-align: left;
   ${css`
     animation: ${fadeInUp} 1s ease 0.4s both;
   `}
+  
+  @media (max-width: 968px) {
+    text-align: center;
+  }
+`;
+
+const GradientText = styled.span`
+  background: linear-gradient(45deg, ${theme.colors.purple[600]}, ${theme.colors.orange[300]}, ${theme.colors.yellow[600]}, ${theme.colors.turkey[600]}, ${theme.colors.blue[600]});
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: ${gradientShift} 4s ease-in-out infinite;
 `;
 
 const HeroSubtitle = styled.p`
   font-family: ${theme.typography.T3.fontFamily};
-  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: ${theme.typography.T5.fontWeight};
   margin-bottom: 3rem;
   opacity: 0.9;
   line-height: 1.6;
+  text-align: left;
   ${css`
     animation: ${fadeInUp} 1s ease 0.6s both;
   `}
+  
+  @media (max-width: 968px) {
+    text-align: center;
+  }
 `;
 
 const CTAButtons = styled.div`
   display: flex;
   gap: 1.5rem;
-  justify-content: center;
   margin-bottom: 4rem;
   ${css`
     animation: ${fadeInUp} 1s ease 0.8s both;
   `}
+  
+  @media (max-width: 968px) {
+    justify-content: center;
+  }
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -294,7 +347,7 @@ const PrimaryButton = styled.button`
   background: linear-gradient(135deg, ${theme.colors.white}, ${theme.colors.gray[100]});
   color: ${theme.colors.blue[600]};
   border: none;
-  padding: 1.2rem 2.5rem;
+  padding: 1.2rem;
   border-radius: 50px;
   font-family: ${theme.typography.T3.fontFamily};
   font-size: ${theme.typography.T4.fontSize};
@@ -332,7 +385,7 @@ const SecondaryButton = styled.button`
   background: transparent;
   color: ${theme.colors.white};
   border: 2px solid rgba(255, 255, 255, 0.3);
-  padding: 1.2rem 2.5rem;
+  padding: 1.2rem;
   border-radius: 50px;
   font-family: ${theme.typography.T3.fontFamily};
   font-size: ${theme.typography.T4.fontSize};
@@ -349,31 +402,11 @@ const SecondaryButton = styled.button`
   }
 `;
 
-const FloatingElements = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-`;
-
-const FloatingShape = styled.div<{ $delay: number; $size: number; $left: string; $top: string }>`
-  position: absolute;
-  left: ${props => props.$left};
-  top: ${props => props.$top};
-  width: ${props => props.$size}px;
-  height: ${props => props.$size}px;
-  background: linear-gradient(135deg, rgba(87, 151, 253, 0.1), rgba(32, 182, 182, 0.1));
-  border-radius: 50%;
-  ${props => css`
-    animation: ${float} ${3 + props.$delay}s ease-in-out infinite;
-  `}
-  animation-delay: ${props => props.$delay}s;
-`;
-
-const ContentSection = styled.section<{ $bgColor?: string }>`
-  background: ${props => props.$bgColor || theme.colors.white};
+const ContentSection = styled.section<{ $bgColor?: string; $bgImage?: string }>`
+  background: ${props => props.$bgImage ? props.$bgImage : (props.$bgColor || theme.colors.white)};
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   padding: 8rem 2rem;
   position: relative;
   overflow: hidden;
@@ -406,7 +439,7 @@ const SectionTitle = styled.h2`
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: ${theme.typography.T1.fontWeight};
   margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, ${theme.colors.black}, ${theme.colors.blue[600]});
+  background: linear-gradient(135deg, ${theme.colors.blue[100]}, ${theme.colors.blue[600]});
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -425,14 +458,15 @@ const SectionSubtitle = styled.p`
 const TechGrid = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6rem;
-  margin-bottom: 6rem;
+  gap: 2rem;
+  align-items: center;
 `;
 
 const TechRow = styled.div<{ $isReverse?: boolean }>`
   display: flex;
   align-items: center;
-  gap: 4rem;
+  gap: 6rem;
+  margin-bottom: 2rem;
   flex-direction: ${props => props.$isReverse ? 'row-reverse' : 'row'};
   
   @media (max-width: 968px) {
@@ -455,12 +489,11 @@ const TechContent = styled.div<{ $delay: number }>`
   }
 `;
 
-
 const TechVisual = styled.div<{ $delay: number }>`
-  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   min-height: 300px;
   opacity: 0;
   transform: translateX(${props => props.$delay % 2 === 0 ? '50px' : '-50px'});
@@ -472,7 +505,8 @@ const TechVisual = styled.div<{ $delay: number }>`
 
 const TechCard = styled.div`
   background: ${theme.colors.white};
-  padding: 3rem;
+  padding: 1rem 2rem;
+  max-width: 400px;
   border-radius: 24px;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
   transition: all 0.4s ease;
@@ -501,27 +535,17 @@ const TechCard = styled.div`
   }
 `;
 
-const TechIcon = styled.div`
-  width: 80px;
-  height: 80px;
+const LargeTechIcon = styled.div`
+  width: 160px;
+  height: 160px;
   background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.blue[600]});
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
-  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-size: 4rem;
   color: ${theme.colors.white};
-  ${css`
-    animation: ${glow} 3s ease-in-out infinite;
-  `}
-`;
-
-const LargeTechIcon = styled(TechIcon)`
-  width: 120px;
-  height: 120px;
-  font-size: 3rem;
-  background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.blue[600]});
   ${css`
     animation: ${glow} 3s ease-in-out infinite;
   `}
@@ -531,15 +555,15 @@ const TechTitle = styled.h3`
   font-family: ${theme.typography.T2.fontFamily};
   font-size: ${theme.typography.T2.fontSize};
   font-weight: ${theme.typography.T2.fontWeight};
-  margin-bottom: 1rem;
-  color: ${theme.colors.black};
+  color: ${theme.colors.primary};
 `;
 
 const TechDescription = styled.p`
   font-family: ${theme.typography.T5.fontFamily};
   font-size: ${theme.typography.T5.fontSize};
   font-weight: ${theme.typography.T5.fontWeight};
-  color: ${theme.colors.gray[400]};
+  color: ${theme.colors.black};
+  text-align: left;
   line-height: 1.7;
   margin-bottom: 1.5rem;
 `;
@@ -547,6 +571,7 @@ const TechDescription = styled.p`
 const TechFeatures = styled.ul`
   list-style: none;
   padding: 0;
+  text-align: left;
 `;
 
 const TechFeature = styled.li`
@@ -577,7 +602,9 @@ const TechFeature = styled.li`
 `;
 
 const TeamSection = styled.section`
-  background: linear-gradient(135deg, ${theme.colors.black}, ${theme.colors.gray[400]});
+  background: linear-gradient(135deg, ${theme.colors.black}, ${theme.colors.blue[800]});
+  background-size: 400% 400%;
+  animation: ${gradientShift} 4s ease-in-out infinite;
   color: ${theme.colors.white};
   padding: 8rem 2rem;
   position: relative;
@@ -597,7 +624,7 @@ const TeamSection = styled.section`
 const TeamGrid = styled.div`
   display: flex;
   gap: 2.5rem;
-  margin-top: 4rem;
+  margin-top: 2rem;
   position: relative;
   z-index: 1;
   overflow-x: auto;
@@ -613,7 +640,7 @@ const TeamCard = styled.div<{ $delay: number }>`
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 2.5rem;
+  padding: 1rem;
   border-radius: 24px;
   transition: all 0.4s ease;
   position: relative;
@@ -682,8 +709,8 @@ const TeamInfo = styled.div`
 `;
 
 const TeamRole = styled.div`
-  font-family: ${theme.typography.T3.fontFamily};
-  font-size: ${theme.typography.T3.fontSize};
+  font-family: ${theme.typography.T2.fontFamily};
+  font-size: ${theme.typography.T2.fontSize};
   font-weight: ${theme.typography.T2.fontWeight};
   background: linear-gradient(135deg, ${theme.colors.blue[300]}, ${theme.colors.primary});
   -webkit-background-clip: text;
@@ -693,9 +720,9 @@ const TeamRole = styled.div`
 `;
 
 const TeamClass = styled.div`
-  font-family: ${theme.typography.T6.fontFamily};
-  font-size: ${theme.typography.T6.fontSize};
-  font-weight: ${theme.typography.T6.fontWeight};
+  font-family: ${theme.typography.T4.fontFamily};
+  font-size: ${theme.typography.T4.fontSize};
+  font-weight: ${theme.typography.T4.fontWeight};
   opacity: 0.7;
 `;
 
@@ -704,6 +731,7 @@ const TeamDetails = styled.ul`
   padding: 0;
   position: relative;
   z-index: 1;
+  text-align: left;
 `;
 
 const TeamDetail = styled.li`
@@ -960,77 +988,59 @@ const OinsHomepage: React.FC = () => {
     {
       role: "CEO",
       name: "오상근",
-      class: "KAIST CS '22",
+      class: "KAIST",
       image: `/assets/ceo.png`,
       details: [
-        "KAIST 전산학부 부학생회장",
-        "KAIST 학부 동아리연합회 회장",
-        "Karost 사이트 개발 PM",
-        "대전 노벨과학동아리 발표대회 대상",
-        "KAIST 전체학생대표자회의 대의원",
-        "KAIST 중앙운영위원",
-        "KAIST 사회분과 학생회장",
-        "학원 강사 및 조교 경력 (3년 이상)",
-        "과학 학원 대표 강사 (1년)"
+        "KAIST 전산학부 학사",
+        "KAIST 전산학부 부학생회장 및 중앙운영위원",
+        "KAIST 학부 동아리연합회장 및 전체학생대표자회의 대의원",
+        "KAROST PM"
       ]
     },
     {
       role: "CTO",
-      name: "이도윤",
-      class: "KAIST TS '22",
+      name: "이도운",
+      class: "KAIST",
       image: `/assets/cto.png`,
       details: [
-        "KAIST 융합인재학부 학생회장",
-        "KAIST Ctrl Lab 개발연구",
-        "교육 스타트업 회사 인턴 경험 有",
-        "캄보디아 영어회화 교육로봇 하드웨어 개발팀장",
-        "KAIST 글로벌리더십 봉사부문 수상",
-        "학원 강사 경력 (1년)"
+        "KAIST 융합인재학부 학사",
+        "컴퓨터비전, 드론 강화학습 연구(CLAB)",
+        "前 (주)제로엑스플로우 인턴",
+        "캄보디아 영어회화 교육 로봇 하드웨어 개발 팀장"
       ]
     },
     {
       role: "COO",
       name: "윤성수",
-      class: "KAIST CS '23",
+      class: "KAIST",
       image: `/assets/coo.png`,
       details: [
-        "KAIST 전산학부 집행위원",
-        "Karost 사이트 개발 백엔드 APM",
-        "세종과학영재학교 자율연구발표대회 금상",
-        "과학영재학교 우수 R&E 공동발표회 우수상"
+        "KAIST 전산학부 학사",
+        "딥러닝·강화학습 기반 AI 연구 및 학술 논문 집필",
+        "KAROST Backend APM"
       ]
     },
     {
       role: "CCO",
       name: "박정원",
-      class: "KAIST CS / ID '22",
+      class: "KAIST",
       image: `/assets/cco.png`,
       details: [
+        "KAIST 산업디자인학과, 전산학부 학사",
         "KAIST 전산학부 학생회장",
         "KAIST SPARCS 디자이너",
-        "KAIST AI Experience Lab 인턴",
-        "삼성휴먼테크논문대상 물리/지구과학 부문 은상",
-        "Kakao 테크포임팩트 캠퍼스 공감인기상",
-        "전국과학전람회 물리 부문 우수상",
-        "전국과학전람회 지구 및 환경 부문 장려상",
-        "부산미래과학자상 과학 부문 최우수상",
-        "한국산업융합학회 추계 학술대회 우수 발표 논문",
-        "창의과제연구(R&E) 최종 발표대회 동상",
-        "학원 강사 경력 (3년) & 총괄 팀장 역임"
+        "KAIST AI Experience Lab 인턴"
       ]
     },
     {
       role: "CIO",
       name: "박대훈",
-      class: "KAIST CS '24",
+      class: "KAIST",
       image: `/assets/cio.png`,
       details: [
+        "KAIST 전산학부 학사",
         "KAIST 전산학부 집행위원",
-        "2023 제32기 정보올림피아드 겨울학교 수료",
-        "전국학생통계활용대회 은상",
-        "전국과학전람회 SW/IT 부문 장려상",
-        "전국 고등학교 동아리 소프트웨어 경진대회 장려상",
-        "2023 AI Youth Challenge 우수상"
+        "제32기 정보올림피아드 겨울학교 수료"
       ]
     }
   ];
@@ -1053,43 +1063,41 @@ const OinsHomepage: React.FC = () => {
       </Header>
 
       <HeroSection>
-        <FloatingElements>
-          <FloatingShape $delay={0} $size={60} $left="10%" $top="20%" />
-          <FloatingShape $delay={1} $size={40} $left="85%" $top="15%" />
-          <FloatingShape $delay={2} $size={80} $left="15%" $top="70%" />
-          <FloatingShape $delay={0.5} $size={50} $left="90%" $top="60%" />
-          <FloatingShape $delay={1.5} $size={30} $left="5%" $top="45%" />
-        </FloatingElements>
-        
-        <HeroContent>
-          <CompanyBadge>
-            🚀 OINS · Our Insights, New Solution
-          </CompanyBadge>
-          
-          <HeroTitle>
-            AI 기술을 바탕으로<br />
-            교육의 비효율을 혁신하여<br />
-            <span style={{background: `linear-gradient(135deg, ${theme.colors.blue[300]}, ${theme.colors.primary})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
-              교육의 새로운 패러다임
-            </span>을<br />
-            만들어 갑니다
-          </HeroTitle>
-          
-          <HeroSubtitle>
-            OINS는 교육기관과 학습자에게 혁신적인 학습 환경과 방식을 제공하여<br />
-            미래 교육을 새롭게 정의하는 에듀테크 스타트업입니다.<br />
-            <strong>교수·조교·학생 모두에게 보다 투명하고 신뢰성 높은 평가 경험을 제공합니다.</strong>
-          </HeroSubtitle>
+        <HeroWrapper>
+          <HeroTextContent>
+            <HeroTitle>
+              교육의 새로운<br />
+              <GradientText>패러다임</GradientText>을<br />
+              만들어 갑니다
+            </HeroTitle>
+            
+            <HeroSubtitle>
+              OINS는 교육기관과 학습자에게 혁신적인<br />
+              학습 환경과 방식을 제공하여 미래 교육을<br />
+              새롭게 정의하는 에듀테크 스타트업입니다.<br />
+              <br />
+              <strong>교수·조교·학생 모두에게 보다 투명하고<br />
+              신뢰성 높은 평가 경험을 제공합니다.<br />
+              </strong>
+            </HeroSubtitle>
 
-          <CTAButtons>
-            <PrimaryButton onClick={handleAccessClick}>
-              AI 채점 시스템 체험하기
-            </PrimaryButton>
-            <SecondaryButton>
-              서비스 둘러보기
-            </SecondaryButton>
-          </CTAButtons>
-        </HeroContent>
+            <CTAButtons>
+              <PrimaryButton onClick={handleAccessClick}>
+                AI 채점 시스템 체험하기
+              </PrimaryButton>
+              <SecondaryButton>
+                서비스 둘러보기
+              </SecondaryButton>
+            </CTAButtons>
+          </HeroTextContent>
+          
+          <HeroImageContent>
+            <HeroImage 
+              src="/assets/hero_ai.png" 
+              alt="AI 교육 솔루션"
+            />
+          </HeroImageContent>
+        </HeroWrapper>
       </HeroSection>
 
       <ContentSection id="tech">
@@ -1108,8 +1116,6 @@ const OinsHomepage: React.FC = () => {
               <TechRow key={index} $isReverse={index % 2 === 1}>
                 <TechContent $delay={index} data-card>
                   <TechCard>
-                    <TechIcon>{feature.icon}</TechIcon>
-                    <TechTitle>{feature.title}</TechTitle>
                     <TechDescription>{feature.description}</TechDescription>
                     <TechFeatures>
                       {feature.features.map((item, itemIndex) => (
@@ -1120,6 +1126,7 @@ const OinsHomepage: React.FC = () => {
                 </TechContent>
                 <TechVisual $delay={index} data-card>
                   <LargeTechIcon>{feature.icon}</LargeTechIcon>
+                  <TechTitle>{feature.title}</TechTitle>
                 </TechVisual>
               </TechRow>
             ))}
@@ -1133,7 +1140,7 @@ const OinsHomepage: React.FC = () => {
             <SectionBadge style={{background: `linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))`, color: theme.colors.blue[300], border: `1px solid rgba(255,255,255,0.2)`}}>
               👥 팀 소개
             </SectionBadge>
-            <SectionTitle style={{ color: theme.colors.white }}>
+            <SectionTitle>
               KAIST 출신 엘리트 개발팀
             </SectionTitle>
             <SectionSubtitle style={{ color: 'rgba(255,255,255,0.8)' }}>
@@ -1166,10 +1173,12 @@ const OinsHomepage: React.FC = () => {
         </ContentContainer>
       </TeamSection>
 
-      <ContentSection $bgColor={`linear-gradient(135deg, ${theme.colors.gray[100]} 0%, ${theme.colors.blue[100]} 100%)`}>
+      <ContentSection $bgImage="url('/assets/vision_bg.png')">
         <ContentContainer>
           <SectionHeader>
-            <SectionBadge>🎯 비전</SectionBadge>
+            <CompanyBadge>
+              Our Insights, New Solution
+            </CompanyBadge>
             <SectionTitle>교육의 미래를 함께 만들어갑니다</SectionTitle>
             <SectionSubtitle>
               OINS의 AI 기술로 더욱 효율적이고 정확한 교육 평가 시스템을 경험해보세요.<br />
