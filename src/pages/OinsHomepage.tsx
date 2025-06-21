@@ -1,6 +1,8 @@
 import styled, { css, keyframes } from 'styled-components';
 import { theme } from '../styles/theme';
 import { useEffect, useRef, useState } from 'react';
+import Footer from '../components/Footer';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 // 애니메이션 키프레임
 const fadeInUp = keyframes`
@@ -17,7 +19,7 @@ const fadeInUp = keyframes`
 const slideInLeft = keyframes`
   from {
     opacity: 0;
-    transform: translateX(-50px);
+    transform: translateX(-100px);
   }
   to {
     opacity: 1;
@@ -28,7 +30,7 @@ const slideInLeft = keyframes`
 const slideInRight = keyframes`
   from {
     opacity: 0;
-    transform: translateX(50px);
+    transform: translateX(100px);
   }
   to {
     opacity: 1;
@@ -94,33 +96,20 @@ const Nav = styled.nav`
 `;
 
 const Logo = styled.div`
-  font-family: ${theme.typography.T2.fontFamily};
-  font-size: 2rem;
-  font-weight: ${theme.typography.T1.fontWeight};
-  background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.blue[600]}, ${theme.colors.turkey[600]});
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  position: relative;
+  display: flex;
+  align-items: center;
   cursor: pointer;
+  transition: all 0.3s ease;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, ${theme.colors.primary}, ${theme.colors.turkey[600]}, ${theme.colors.yellow[600]});
-    border-radius: 8px;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  &:hover {
+    transform: scale(1.05);
   }
-  
-  &:hover::before {
-    opacity: 0.1;
-  }
+`;
+
+const LogoImage = styled.img`
+  height: 40px;
+  width: auto;
+  object-fit: contain;
 `;
 
 const NavLinks = styled.div`
@@ -140,6 +129,7 @@ const NavLink = styled.a`
   font-size: ${theme.typography.T3.fontSize};
   position: relative;
   transition: all 0.3s ease;
+  cursor: pointer;
   
   &::after {
     content: '';
@@ -439,7 +429,7 @@ const SectionTitle = styled.h2`
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: ${theme.typography.T1.fontWeight};
   margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, ${theme.colors.blue[100]}, ${theme.colors.blue[600]});
+  background: linear-gradient(90deg, ${theme.colors.blue[600]}, ${theme.colors.blue[300]}, ${theme.colors.blue[800]});
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -753,6 +743,136 @@ const TeamDetail = styled.li`
   }
 `;
 
+const VideoWrapper = styled.div`
+  position: relative;
+  width: 80%;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
+  background: ${theme.colors.gray[100]};
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const StyledIframe = styled.iframe`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+`;
+
+const ContactSection = styled.section`
+  background: ${theme.colors.blue[100]};
+  padding: 8rem 2rem;
+  position: relative;
+`;
+
+const ContactGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+`;
+
+const ContactCard = styled.div`
+  background: ${theme.colors.white};
+  padding: 1rem 2rem;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const ContactTitle = styled.h3`
+  font-family: ${theme.typography.T2.fontFamily};
+  font-size: ${theme.typography.T2.fontSize};
+  font-weight: ${theme.typography.T2.fontWeight};
+  color: ${theme.colors.primary};
+  margin-bottom: 2rem;
+  text-align: center;
+`;
+
+const ContactInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const ContactItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: ${theme.colors.gray[100]};
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${theme.colors.blue[100]};
+    transform: translateX(5px);
+  }
+`;
+
+const ContactIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.blue[600]});
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: ${theme.colors.white};
+`;
+
+const ContactText = styled.div`
+  font-family: ${theme.typography.T5.fontFamily};
+  font-size: ${theme.typography.T5.fontSize};
+  font-weight: ${theme.typography.T5.fontWeight};
+  color: ${theme.colors.black};
+`;
+
+const MapContainer = styled.div`
+  width: 100%;
+  height: 400px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+`;
+
+const MapIframe = styled.iframe`
+  width: 100%;
+  height: 100%;
+  border: none;
+`;
+
+const AddressText = styled.p`
+  font-family: ${theme.typography.T4.fontFamily};
+  font-size: ${theme.typography.T4.fontSize};
+  font-weight: ${theme.typography.T4.fontWeight};
+  color: ${theme.colors.black};
+  text-align: center;
+  margin-top: 1rem;
+  line-height: 1.5;
+`;
+
 const Modal = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
@@ -867,6 +987,14 @@ const OinsHomepage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isRecruitModalOpen, setIsRecruitModalOpen] = useState(false);
+  
+  // 각 섹션별 ref 추가
+  const heroRef = useRef<HTMLDivElement>(null);
+  const techRef = useRef<HTMLDivElement>(null);
+  const teamRef = useRef<HTMLDivElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const contactRef = useRef<HTMLDivElement>(null);
   const techCardsRef = useRef<HTMLDivElement>(null);
   const teamCardsRef = useRef<HTMLDivElement>(null);
 
@@ -908,6 +1036,24 @@ const OinsHomepage: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
+  // 스무스 스크롤 함수
+  const smoothScrollTo = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
+  const handleRecruitClick = () => {
+    setIsRecruitModalOpen(true);
+  };
+
+  const handleRecruitModalClose = () => {
+    setIsRecruitModalOpen(false);
+  };
+
   const handleAccessClick = () => {
     setIsModalOpen(true);
     setPassword('');
@@ -935,6 +1081,10 @@ const OinsHomepage: React.FC = () => {
     if (e.key === 'Enter') {
       handlePasswordSubmit();
     }
+  };
+
+  const handleLogoClick = () => {
+    smoothScrollTo(heroRef);
   };
 
   const techFeatures = [
@@ -1049,12 +1199,17 @@ const OinsHomepage: React.FC = () => {
     <Container>
       <Header $isScrolled={isScrolled}>
         <Nav>
-          <Logo>OINS</Logo>
+          <Logo onClick={handleLogoClick}>
+            <LogoImage 
+              src="/assets/Blue_Logo.png" 
+              alt="OINS 로고"
+            />
+          </Logo>
           <NavLinks>
-            <NavLink href="#tech">기술</NavLink>
-            <NavLink href="#team">팀</NavLink>
-            <NavLink href="#about">회사소개</NavLink>
-            <NavLink href="#contact">문의</NavLink>
+            <NavLink onClick={() => smoothScrollTo(techRef)}>기술</NavLink>
+            <NavLink onClick={() => smoothScrollTo(teamRef)}>팀</NavLink>
+            <NavLink onClick={() => smoothScrollTo(aboutRef)}>회사소개</NavLink>
+            <NavLink onClick={() => smoothScrollTo(contactRef)}>문의</NavLink>
           </NavLinks>
           <AccessButton onClick={handleAccessClick}>
             AI 채점 시스템 접속
@@ -1062,7 +1217,7 @@ const OinsHomepage: React.FC = () => {
         </Nav>
       </Header>
 
-      <HeroSection>
+      <HeroSection ref={heroRef}>
         <HeroWrapper>
           <HeroTextContent>
             <HeroTitle>
@@ -1085,7 +1240,7 @@ const OinsHomepage: React.FC = () => {
               <PrimaryButton onClick={handleAccessClick}>
                 AI 채점 시스템 체험하기
               </PrimaryButton>
-              <SecondaryButton>
+              <SecondaryButton onClick={() => smoothScrollTo(techRef)}>
                 서비스 둘러보기
               </SecondaryButton>
             </CTAButtons>
@@ -1100,7 +1255,7 @@ const OinsHomepage: React.FC = () => {
         </HeroWrapper>
       </HeroSection>
 
-      <ContentSection id="tech">
+      <ContentSection ref={techRef} $bgColor={theme.colors.gray[100]}>
         <ContentContainer>
           <SectionHeader>
             <SectionBadge>💡 혁신 기술</SectionBadge>
@@ -1134,7 +1289,7 @@ const OinsHomepage: React.FC = () => {
         </ContentContainer>
       </ContentSection>
 
-      <TeamSection id="team">
+      <TeamSection ref={teamRef}>
         <ContentContainer>
           <SectionHeader>
             <SectionBadge style={{background: `linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))`, color: theme.colors.blue[300], border: `1px solid rgba(255,255,255,0.2)`}}>
@@ -1173,6 +1328,98 @@ const OinsHomepage: React.FC = () => {
         </ContentContainer>
       </TeamSection>
 
+      <ContentSection ref={aboutRef} $bgColor={theme.colors.white}>
+        <ContentContainer>
+          <SectionHeader>
+            <SectionBadge>🏢 회사소개</SectionBadge>
+            <SectionTitle>OINS의 교육 혁신 스토리</SectionTitle>
+            <SectionSubtitle>
+              교육 현장의 실제 문제를 해결하기 위해 시작된 OINS의 여정과<br />
+              AI 기술을 통한 교육 평가 시스템의 혁신 과정을 담았습니다.
+            </SectionSubtitle>
+          </SectionHeader>
+          <VideoWrapper>
+            <StyledIframe
+              src="https://www.youtube.com/embed/DWAvm2FR4bs"
+              title="OINS 회사 소개 영상"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </VideoWrapper>
+        </ContentContainer>
+      </ContentSection>
+
+      <ContactSection ref={contactRef}>
+        <ContentContainer>
+          <SectionHeader>
+            <SectionBadge>📞 문의하기</SectionBadge>
+            <SectionTitle>언제든지 연락주세요</SectionTitle>
+            <SectionSubtitle>
+              OINS의 AI 채점 시스템에 대해 궁금한 점이 있으시면<br />
+              언제든지 편하게 문의해주세요.
+            </SectionSubtitle>
+          </SectionHeader>
+          
+          <ContactGrid>
+            <ContactCard>
+              <ContactTitle>Contact</ContactTitle>
+              <ContactInfo>
+                <ContactItem>
+                  <ContactIcon>📞</ContactIcon>
+                  <ContactText>010-5693-6727</ContactText>
+                </ContactItem>
+                <ContactItem>
+                  <ContactIcon>✉️</ContactIcon>
+                  <ContactText>oinsnio24@gmail.com</ContactText>
+                </ContactItem>
+              </ContactInfo>
+            </ContactCard>
+            
+            <ContactCard>
+              <ContactTitle>채용 안내</ContactTitle>
+              <ContactInfo>
+                <ContactItem>
+                  <ContactIcon>💼</ContactIcon>
+                  <ContactText>함께 성장할 동료를 찾고 있습니다</ContactText>
+                </ContactItem>
+              </ContactInfo>
+              <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                <PrimaryButton 
+                  onClick={handleRecruitClick}
+                  style={{
+                    fontSize: '0.9rem',
+                    padding: '0.8rem 1.5rem',
+                    background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.blue[600]})`,
+                    color: theme.colors.white,
+                    marginBottom: '1.8rem',
+                  }}
+                >
+                  채용 공고 보기
+                </PrimaryButton>
+              </div>
+            </ContactCard>
+          </ContactGrid>
+            
+          <ContactGrid style={{ marginTop: '3rem' }}>
+            <ContactCard style={{ gridColumn: '1 / -1' }}>
+              <ContactTitle>오시는 길</ContactTitle>
+              <AddressText>
+                대전광역시 유성구 대학로 291 W8 교육지원동 314호
+              </AddressText>
+              <MapContainer>
+                <MapIframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3214.2841234567890!2d127.35759331531842!3d36.36996478004445!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35654bb7bf479483%3A0x36d2732f1f0dcbc0!2z6rWQ7Jyh7KeA7JuQ64-ZKFc4KQ!5e0!3m2!1sko!2skr!4v1632987654321!5m2!1sko!2skr"
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </MapContainer>
+            </ContactCard>
+          </ContactGrid>
+        </ContentContainer>
+      </ContactSection>
+
       <ContentSection $bgImage="url('/assets/vision_bg.png')">
         <ContentContainer>
           <SectionHeader>
@@ -1202,6 +1449,8 @@ const OinsHomepage: React.FC = () => {
         </ContentContainer>
       </ContentSection>
 
+      <Footer />
+
       <Modal $isOpen={isModalOpen} data-open={isModalOpen} onClick={handleModalClose}>
         <ModalContent onClick={(e) => e.stopPropagation()}>
           <ModalTitle>AI 채점 시스템 접속</ModalTitle>
@@ -1224,6 +1473,16 @@ const OinsHomepage: React.FC = () => {
           </ModalButtons>
         </ModalContent>
       </Modal>
+
+      <ConfirmationModal
+        isOpen={isRecruitModalOpen}
+        onClose={handleRecruitModalClose}
+        onConfirm={handleRecruitModalClose}
+        title="채용 안내"
+        message="현재 채용 공고 기간이 아닙니다."
+        confirmText="확인"
+        showCancelButton={false}
+      />
     </Container>
   );
 };
