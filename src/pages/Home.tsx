@@ -381,7 +381,7 @@ const Home: React.FC = () => {
 
   const handlePasswordSubmit = (): void => {
     if (password === 'oins314') { // 예시 비밀번호
-      window.open('https://dab4u.oinstech.com', '_blank');
+      window.open('https://dab4n.oinstech.com', '_blank');
       setIsModalOpen(false);
       setPassword('');
       setError('');
