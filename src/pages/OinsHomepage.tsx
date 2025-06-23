@@ -1062,7 +1062,7 @@ const OinsHomepage: React.FC = () => {
 
   const handlePasswordSubmit = () => {
     if (password === 'oins314') {
-      window.open('https://dab4u.oinstech.com', '_blank');
+      window.open('https://dab4n.oinstech.com', '_blank');
       setIsModalOpen(false);
       setPassword('');
       setError('');
