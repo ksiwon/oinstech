@@ -1,6 +1,6 @@
+import React, { useEffect, useRef, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { theme } from '../styles/theme';
-import { useEffect, useRef, useState } from 'react';
 import Footer from '../components/Footer';
 import ConfirmationModal from '../components/ConfirmationModal';
 
@@ -68,6 +68,7 @@ const gradientShift = keyframes`
   }
 `;
 
+// Styled Components
 const Container = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -224,7 +225,7 @@ const HeroWrapper = styled.div`
   justify-content: center;
   
   @media (max-width: 968px) {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 3rem;
     text-align: center;
   }
@@ -244,6 +245,10 @@ const HeroImageContent = styled.div`
     animation: ${slideInRight} 1s ease 0.3s both;
   `}
   margin-left: 3rem;
+  
+  @media (max-width: 968px) {
+    margin-left: 0;
+  }
 `;
 
 const HeroImage = styled.img`
@@ -253,22 +258,6 @@ const HeroImage = styled.img`
   object-fit: contain;
   ${css`
     animation: ${float} 6s ease-in-out infinite;
-  `}
-`;
-
-const CompanyBadge = styled.div`
-  display: inline-block;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  padding: 0.8rem 2rem;
-  border-radius: 50px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  font-family: ${theme.typography.T5.fontFamily};
-  font-size: ${theme.typography.T5.fontSize};
-  font-weight: ${theme.typography.T4.fontWeight};
-  color: ${theme.colors.white};
-  ${css`
-    animation: ${fadeInUp} 1s ease 0.2s both;
   `}
 `;
 
@@ -898,9 +887,33 @@ const ModalContent = styled.div`
   width: 90%;
   transform: scale(0.9);
   transition: transform 0.3s ease;
+  position: relative;
   
   ${Modal}[data-open="true"] & {
     transform: scale(1);
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: ${theme.colors.gray[400]};
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${theme.colors.gray[100]};
+    color: ${theme.colors.gray[400]};
   }
 `;
 
@@ -916,77 +929,73 @@ const ModalTitle = styled.h3`
   background-clip: text;
 `;
 
-const PasswordInput = styled.input`
-  width: calc(100% - 3rem);
-  padding: 1.2rem;
-  border: 2px solid ${theme.colors.gray[200]};
-  border-radius: 12px;
-  font-family: ${theme.typography.T5.fontFamily};
-  font-size: ${theme.typography.T5.fontSize};
-  font-weight: ${theme.typography.T5.fontWeight};
-  margin-bottom: 1.5rem;
-  transition: all 0.3s ease;
-  
-  &:focus {
-    outline: none;
-    border-color: ${theme.colors.primary};
-    box-shadow: 0 0 0 3px rgba(87, 151, 253, 0.1);
-  }
-`;
-
-const ModalButtons = styled.div`
+const ServiceButtons = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 1rem;
 `;
 
-const ModalButton = styled.button<{ $variant: 'primary' | 'secondary' }>`
-  flex: 1;
-  padding: 1rem;
-  border: none;
+const ServiceButton = styled.button`
+  width: 100%;
+  padding: 1.5rem;
+  border: 2px solid ${theme.colors.gray[200]};
   border-radius: 12px;
-  font-family: ${theme.typography.T5.fontFamily};
+  background: ${theme.colors.white};
+  font-family: ${theme.typography.T4.fontFamily};
+  font-size: ${theme.typography.T4.fontSize};
   font-weight: ${theme.typography.T4.fontWeight};
-  font-size: ${theme.typography.T5.fontSize};
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
   
-  ${props => props.$variant === 'primary' ? `
-    background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.blue[600]});
-    color: ${theme.colors.white};
+  &:hover {
+    border-color: ${theme.colors.primary};
+    background: ${theme.colors.blue[100]};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(87, 151, 253, 0.2);
+  }
+  
+  &:first-child {
+    color: ${theme.colors.blue[600]};
     
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(87, 151, 253, 0.3);
+      background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.blue[600]});
+      color: ${theme.colors.white};
+      border-color: ${theme.colors.primary};
     }
-  ` : `
-    background: ${theme.colors.gray[100]};
-    color: ${theme.colors.gray[400]};
+  }
+  
+  &:last-child {
+    color: ${theme.colors.purple[600]};
     
     &:hover {
-      background: ${theme.colors.gray[200]};
-      transform: translateY(-2px);
+      background: linear-gradient(135deg, ${theme.colors.purple[600]}, ${theme.colors.purple[700]});
+      color: ${theme.colors.white};
+      border-color: ${theme.colors.purple[600]};
     }
+  }
+`;
+
+const CompanyBadge = styled.div`
+  display: inline-block;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: ${theme.typography.T5.fontFamily};
+  font-size: ${theme.typography.T5.fontSize};
+  font-weight: ${theme.typography.T4.fontWeight};
+  color: ${theme.colors.white};
+  ${css`
+    animation: ${fadeInUp} 1s ease 0.2s both;
   `}
 `;
 
-const ErrorMessage = styled.div`
-  color: ${theme.colors.red[600]};
-  font-family: ${theme.typography.T6.fontFamily};
-  font-size: ${theme.typography.T6.fontSize};
-  font-weight: ${theme.typography.T6.fontWeight};
-  text-align: center;
-  margin-bottom: 1rem;
-  padding: 0.8rem;
-  background: ${theme.colors.red[100]};
-  border-radius: 8px;
-  border: 1px solid ${theme.colors.red[300]};
-`;
-
+// Main Component
 const OinsHomepage: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isRecruitModalOpen, setIsRecruitModalOpen] = useState(false);
   
   // 각 섹션별 ref 추가
@@ -1056,31 +1065,19 @@ const OinsHomepage: React.FC = () => {
 
   const handleAccessClick = () => {
     setIsModalOpen(true);
-    setPassword('');
-    setError('');
   };
 
-  const handlePasswordSubmit = () => {
-    if (password === 'oins314') {
+  const handleServiceSelect = (service: 'dab4n' | 'socra') => {
+    if (service === 'dab4n') {
       window.open('https://dab4n.oinstech.com', '_blank');
-      setIsModalOpen(false);
-      setPassword('');
-      setError('');
     } else {
-      setError('비밀번호가 올바르지 않습니다.');
+      window.open('https://socra.oinstech.com', '_blank');
     }
+    setIsModalOpen(false);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setPassword('');
-    setError('');
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handlePasswordSubmit();
-    }
   };
 
   const handleLogoClick = () => {
@@ -1453,24 +1450,22 @@ const OinsHomepage: React.FC = () => {
 
       <Modal $isOpen={isModalOpen} data-open={isModalOpen} onClick={handleModalClose}>
         <ModalContent onClick={(e) => e.stopPropagation()}>
-          <ModalTitle>AI 채점 시스템 접속</ModalTitle>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          <PasswordInput
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="비밀번호를 입력하세요"
-            autoFocus
-          />
-          <ModalButtons>
-            <ModalButton $variant="secondary" onClick={handleModalClose}>
-              취소
-            </ModalButton>
-            <ModalButton $variant="primary" onClick={handlePasswordSubmit}>
-              접속하기
-            </ModalButton>
-          </ModalButtons>
+          <CloseButton onClick={handleModalClose}>×</CloseButton>
+          <ModalTitle>AI 채점 시스템 선택</ModalTitle>
+          <ServiceButtons>
+            <ServiceButton onClick={() => handleServiceSelect('dab4n')}>
+              📝 DAB4N
+              <div style={{ fontSize: '0.9rem', marginTop: '0.5rem', opacity: 0.7 }}>
+                AI 기반 채점 시스템
+              </div>
+            </ServiceButton>
+            <ServiceButton onClick={() => handleServiceSelect('socra')}>
+              🧠 SOCRA
+              <div style={{ fontSize: '0.9rem', marginTop: '0.5rem', opacity: 0.7 }}>
+                AI 구술 시험 플랫폼
+              </div>
+            </ServiceButton>
+          </ServiceButtons>
         </ModalContent>
       </Modal>
 
