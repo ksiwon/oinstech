@@ -418,10 +418,11 @@ const SectionTitle = styled.h2`
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: ${theme.typography.T1.fontWeight};
   margin-bottom: 1.5rem;
-  background: linear-gradient(90deg, ${theme.colors.blue[600]}, ${theme.colors.blue[300]}, ${theme.colors.blue[800]});
+  background: linear-gradient(90deg, ${theme.colors.blue[600]}, ${theme.colors.blue[300]}, ${theme.colors.blue[600]});
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
 `;
 
 const SectionSubtitle = styled.p`
@@ -557,7 +558,7 @@ const TechFeature = styled.li`
   font-family: ${theme.typography.T6.fontFamily};
   font-size: ${theme.typography.T6.fontSize};
   font-weight: ${theme.typography.T6.fontWeight};
-  color: ${theme.colors.gray[400]};
+  color: ${theme.colors.gray[700]};
   margin-bottom: 0.8rem;
   padding-left: 1.8rem;
   position: relative;
@@ -1417,7 +1418,7 @@ const OinsHomepage: React.FC = () => {
         </ContentContainer>
       </ContactSection>
 
-      <ContentSection $bgImage="url('/assets/vision_bg.png')">
+      <ContentSection $bgImage="url('/assets/vision_bg.png')" style={{ filter: 'brightness(1.3)' }}>
         <ContentContainer>
           <SectionHeader>
             <CompanyBadge>
